@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.account">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name="com.activeandroid.app.Application"
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="decoration.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="2" />
+
+        <activity
+            android:name=".AccountTotalActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.account.AccountStartActivity"
+            android:label="@string/start_input_title" >
+        </activity>
+        <activity
+            android:name="com.example.account.AccountDetailActivity"
+            android:label="@string/cost_detail_title" >
+        </activity>
+        <activity
+            android:name="com.example.account.AccountAddCommentActivity"
+            android:label="@string/add_comments_app_name" >
+        </activity>
+        <activity
+            android:name="com.example.account.AccountAddCategoryActivity"
+            android:label="@string/add_category_app_name" >
+        </activity>
+
+        <activity
+            android:name="com.example.account.AccountAddPositionActivity"
+            android:label="@string/add_position_app_name" >
+        </activity>
+
+        <activity
+            android:name="com.example.account.AccountAddBrandActivity"
+            android:label="@string/add_brand_app_name" >
+        </activity>
+
+        <activity
+            android:name="com.example.account.AccountImageSelectorActivity"
+            android:label="@string/image_selector_app_name" >
+        </activity>
+    </application>
+
+</manifest>

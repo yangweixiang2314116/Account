@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string-array name="more_info_list_text">
+     <item>"添加标签"</item>
+     <item>"添加品牌"</item>
+     <item>"添加位置"</item>
+     <item>"添加文字"</item>
+     <item>"添加图片"</item>
+</string-array>
+
+</resources>

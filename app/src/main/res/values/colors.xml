@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="activity_background_color">#f0eff5</color>
+    <color name="more_info_text_color">#8B949D</color>
+    <color name="white_color">#ffffff</color>
+    <color name="black_color">#000000</color>
+    <color name="red_color">#ff0000</color>
+    <color name="detail_label_color">#5c5c5c</color>
+    <color name="detail_comments_color">#b0b0b0</color>
+    <color name="list_line_color">#CFCFCF</color>
+    <color name="account_top_background_color">#5f7fb0</color>
+
+    <color name="content_text_color">#666666</color>
+
+</resources>

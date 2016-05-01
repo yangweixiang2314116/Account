@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">装修记账</string>
+    <string name="action_settings">设置</string>
+
+    <!--Common -->
+    <string name="btn_name_ok">确认</string>
+    <string name="btn_name_cancel">取消</string>
+    <!--Common-->
+
+    <string name="action_sync">Sync</string>
+    <string name="default_total_date">2016/03/21</string>
+    <string name="total_cost">总共支出</string>
+    <string name="default_total_cost">0.00</string>
+    <string name="input_start_cost">请输入金额</string>
+    <string name="start_input_title">记一笔</string>
+    <string name="cost_detail_title">支出详细</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_login">登陆</string>
+    <string name="menu_sync">同步</string>
+    <string name="menu_finish">完成</string>
+    <string name="menu_preview">预览</string>
+    <string name="menu_edit">编辑</string>
+    <string name="menu_list">换行</string>
+    <string name="detail_total_value">总额</string>
+    <string name="detail_total_date">日期：</string>
+    <string name="detail_category_label">标签：</string>
+    <string name="detail_brand_label">品牌：</string>
+    <string name="detail_position_label">位置：</string>
+    <string name="detail_comments_label">备注：</string>
+
+    <string name="total_list_indicator">|</string>
+    <string name="total_list_brand_default">无</string>
+    <string name="total_list_category_default">默认分类</string>
+
+    <string name="add_comments_app_name">添加备注</string>
+    <string name="image_selector_app_name">选择图片</string>
+    <string name="image_number_name">张</string>
+    <string name="image_scan_no_name">哈哈，这里空空如也</string>
+    <string name="image_scan_loading">正在加载</string>
+    <string name="image_scan_no_external_device">暂无外部存储</string>
+
+    <string name="delete_title">提示</string>
+    <string name="give_up_edit">确定要删除这条记录吗？</string>
+    <string name="give_up_sure">确定</string>
+    <string name="give_up_cancel">取消</string>
+    <string name="give_up_title">提示</string>
+    <string name="give_up_success">删除成功</string>
+    <string name="get_data_error">获取数据失败</string>
+
+    <!--ADD Category -->
+    <string name="add_category_app_name">添加分类</string>
+    <string name="hot_category_label_text">热门分类</string>
+    <string name="menu_add">添加</string>
+    <string name="add_new_category">新建分类</string>
+    <string name="add_new_category_hint">输入新的分类，如地板</string>
+    <string name="no_data_brand">没有对应的热门标签，自己添加一个吧</string>
+    <!--ADD Category -->
+
+    <!--ADD Brand -->
+    <string name="add_brand_app_name">添加品牌</string>
+    <string name="hot_brand_label_text">热门品牌</string>
+    <string name="add_new_brand">新建品牌</string>
+    <string name="add_new_brand_hint">输入新的品牌，如大自然</string>
+    <!--ADD Brand -->
+
+    <!--ADD Position -->
+    <string name="add_position_app_name">添加位置</string>
+    <string name="hot_position_label_text">热门位置</string>
+    <string name="add_new_position">新建位置</string>
+    <string name="add_new_position_hint">输入新的位置，如红星美凯龙</string>
+    <!--ADD Position -->
+
+</resources>

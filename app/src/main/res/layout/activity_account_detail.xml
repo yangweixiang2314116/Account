@@ -1,0 +1,211 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background_color"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/myScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_marginBottom="10dp" >
+
+        <RelativeLayout
+            android:id="@+id/account_detail_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#ffffff"
+            android:padding="10dp" >
+
+            <RelativeLayout
+                android:id="@+id/account_detail_value_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp" >
+
+                <TextView
+                    android:id="@+id/detail_total_value_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/detail_total_value"
+                    android:textColor="@color/detail_label_color"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/detail_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="@dimen/detail_cost_value_left"
+                    android:layout_toRightOf="@id/detail_total_value_lable"
+                    android:text="123.00"
+                    android:textColor="@color/black_color"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/detail_total_date_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/detail_total_value_lable"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/detail_total_date"
+                    android:textColor="@color/detail_label_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_total_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/detail_total_value"
+                    android:layout_marginLeft="@dimen/detail_others_value_left"
+                    android:layout_toRightOf="@id/detail_total_date_lable"
+                    android:text="2016年3月6日"
+                    android:textColor="@color/black_color"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/detail_total_date_lable"
+                    android:background="?android:attr/listDivider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/account_detail_category_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/account_detail_value_content"
+                android:layout_margin="10dp" >
+
+                <TextView
+                    android:id="@+id/detail_total_category_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/detail_category_label"
+                    android:textColor="@color/detail_label_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_category_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="@dimen/detail_others_value_left"
+                    android:layout_toRightOf="@id/detail_total_category_lable"
+                    android:text="地板"
+                    android:textColor="@color/black_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_brand_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/detail_category_value"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/detail_brand_label"
+                    android:textColor="@color/detail_label_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_brand_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/detail_category_value"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="@dimen/detail_others_value_left"
+                    android:layout_toRightOf="@id/detail_brand_lable"
+                    android:text="大自然"
+                    android:textColor="@color/black_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_postion_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/detail_brand_value"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/detail_position_label"
+                    android:textColor="@color/detail_label_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_position_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/detail_brand_value"
+                    android:layout_marginLeft="@dimen/detail_others_value_left"
+                    android:layout_toRightOf="@id/detail_postion_lable"
+                    android:text="卡子门红星美凯龙"
+                    android:textColor="@color/black_color"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/detail_postion_lable"
+                    android:background="?android:attr/listDivider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/account_detail_comments_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/account_detail_category_content"
+                android:layout_margin="10dp" >
+
+                <TextView
+                    android:id="@+id/detail_comments_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/detail_comments_label"
+                    android:textColor="@color/detail_label_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/detail_comments_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/detail_comments_lable"
+                    android:layout_marginBottom="10dp"
+                    android:text="房间看看,检查一下水电，有没有不规范的地方"
+                    android:textColor="@color/detail_comments_color"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/detail_comments_value"
+                    android:background="?android:attr/listDivider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/account_detail_image_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/account_detail_comments_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" >
+
+                <com.example.account.LinearLayoutForListView
+                    android:id="@+id/account_detail_image_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+ 					android:orientation="vertical">
+                </com.example.account.LinearLayoutForListView>
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
