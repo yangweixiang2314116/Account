@@ -1,7 +1,7 @@
 package com.example.account;
 
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import java.text.DecimalFormat;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import com.activeandroid.ActiveAndroid;
 import com.example.module.Account;
 import com.example.module.MoreInfoItem;
+import com.melnykov.fab.FloatingActionButton;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -39,7 +40,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     private ListView m_TotalAllAccountList = null;
 
-    private Button m_AddNewAccountButton = null;
+    private FloatingActionButton m_AddNewAccountButton = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
     private Context mContext = null;
     private TextView m_TotalCostText = null;
@@ -59,10 +60,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         mContext = this;
         m_SyncTask = new AccountSyncTask(mContext);
-        setContentView(R.layout.activity_account_total);
+
         Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
 
         ActiveAndroid.setLoggingEnabled(false);
+
+        m_TotalAllAccountList = (ListView) findViewById(R.id.account_detail_list);
 
         m_InitAddButton();
 
@@ -151,7 +154,6 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     private void m_InitalTotalAccountList()
     {
-        m_TotalAllAccountList = (ListView) findViewById(R.id.account_detail_list);
 
         m_DetailListAdapter = new AccountTotalDetailListAdapter(this,mDetailListDataSource);
         m_TotalAllAccountList.setAdapter(m_DetailListAdapter);
@@ -197,7 +199,10 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     private void m_InitAddButton()
     {
-        m_AddNewAccountButton = (Button) findViewById(R.id.AddButton);
+
+        m_AddNewAccountButton = (FloatingActionButton) findViewById(R.id.fab);
+        m_AddNewAccountButton.attachToListView(m_TotalAllAccountList);
+
         m_AddNewAccountButton.setOnClickListener(new OnClickListener(){
 
             @Override

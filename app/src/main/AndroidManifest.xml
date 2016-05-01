@@ -10,9 +10,9 @@
     <application
         android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
-        android:supportsRtl="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="AA_DB_NAME"
