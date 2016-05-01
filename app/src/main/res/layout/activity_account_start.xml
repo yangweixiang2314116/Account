@@ -58,33 +58,5 @@
         android:listSelector="@android:color/transparent" >
     </ListView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-         >
-
-        <View
-            android:id="@+id/placeholder"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerHorizontal="true" />
-
-        <Button
-            android:id="@+id/account_preview"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignRight="@id/placeholder"
-            android:text="@string/menu_preview" />
-
-        <Button
-            android:id="@+id/account_finish"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/placeholder"
-            android:layout_alignParentRight="true"
-            android:text="@string/menu_finish" />
-    </RelativeLayout>
 
 </RelativeLayout>

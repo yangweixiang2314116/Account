@@ -98,6 +98,7 @@ public class Account extends Model implements Parcelable {
     	Category = "";
     	Brand = "";
     	Position = "";
+		Comments = "";
     	Cost = 0.0;
     	
     	SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD;

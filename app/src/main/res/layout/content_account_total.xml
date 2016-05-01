@@ -67,6 +67,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:src="@mipmap/ic_action_content_new"
         fab:fab_colorNormal="@color/fa_colorPrimary"
         fab:fab_colorPressed="@color/fa_colorPrimaryDark"
         fab:fab_colorRipple="@color/fa_colorAccent" />

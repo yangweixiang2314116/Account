@@ -150,14 +150,15 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 				holderText = (ViewHolderText) convertView.getTag();
 				holderText.leftLabel.setText(mMoreInfoItemList.get(position).itemLable);
 				holderText.rightValue.setText(mMoreInfoItemList.get(position).itemValue);
-				if(mMoreInfoItemList.get(position).itemValue == null)
+				Log.i(Constants.TAG, "-----position--" + position + "----holderText--------" + holderText);
+				Log.i(Constants.TAG, "-----position--" + position + "----itemLable--------" + mMoreInfoItemList.get(position).itemLable);
+				Log.i(Constants.TAG, "-----position--"+position+"-----------itemValue--------"+mMoreInfoItemList.get(position).itemValue);
+				if(mMoreInfoItemList.get(position).itemValue.isEmpty())
 				{
-					Log.i(Constants.TAG, "-----------get(position).itemValue == null--------");
 					holderText.check.setImageResource(R.mipmap.checkbox_normal);
 				}
 				else
 				{
-					Log.i(Constants.TAG, "-----------get(position).itemValue--------"+mMoreInfoItemList.get(position).itemValue);
 					holderText.check.setImageResource(R.mipmap.checkbox_checked);
 				}
 				break;
@@ -165,9 +166,11 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 				holderImage = (ViewHolderImage) convertView.getTag();
 				holderImage.leftLabel.setText(mMoreInfoItemList.get(position).itemLable);
 				String ImagePath = mMoreInfoItemList.get(position).itemValue;
+				Log.i(Constants.TAG, "-----------ImagePath--------"+ImagePath+"----position---"+position);
+				Log.i(Constants.TAG, "-----------LABEL--------"+mMoreInfoItemList.get(position).itemLable);
 				if(ImagePath.isEmpty())
 				{
-					Log.i(Constants.TAG, "-----------get(position).itemValue == null--------");
+					Log.i(Constants.TAG, "-----------ImagePath == null--------");
 					holderImage.check.setImageResource(R.mipmap.checkbox_normal);
 				}
 				else
@@ -175,9 +178,8 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 					Log.i(Constants.TAG, "-----------get(position).itemValue--------"+mMoreInfoItemList.get(position).itemValue);
 					holderImage.check.setImageResource(R.mipmap.checkbox_checked);
 				}
-			
-				
-				Log.i(Constants.TAG, "-----------ImagePath--------"+ImagePath);
+
+
 				
 				//if(ImagePath.isEmpty() == false)
 				//{

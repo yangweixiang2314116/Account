@@ -76,11 +76,12 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		m_CurrentAccountId = m_CurrentAccount.getId();
 		
 		m_InitEditText();
-		m_InitMoreInfoList();
-		m_InitBottomButton();// preview/finish
+		//m_InitBottomButton();// preview/finish
 		
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		//getWindow().setSoftInputMode(
+		//		WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+		m_InitMoreInfoList();
 	}
 
 	@Override
@@ -289,6 +290,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		return true;
 	}
 
+	/*
 	private boolean m_InitBottomButton() {
 		m_ButtonPreview = (Button) findViewById(R.id.account_preview);
 		m_ButtonPreview.setOnClickListener(new OnClickListener() {
@@ -316,6 +318,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		});
 		return true;
 	}
+	*/
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
