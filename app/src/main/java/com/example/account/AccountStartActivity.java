@@ -230,8 +230,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 					
 					String firstImage = "";
-						List<ImageItem> images = m_CurrentAccount.Imageitems();
-						Log.i(Constants.TAG, "----images.size-" + images.size());
+
+						List<ImageItem> images = ImageItem.GetImageItems(m_CurrentAccount);
+						Log.i(Constants.TAG, "---GetImageItems ---images.size-" + images.size());
 						if (images.size() > 0) {
 							Log.i(Constants.TAG, "----images.get(0).Path-" + images.get(0).Path);
 		
@@ -463,6 +464,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					try {
 
 						List<ImageItem> existImagelist = m_CurrentAccount.Imageitems();
+
+						Log.i(Constants.TAG, "----existImagelist-data size--" + existImagelist.size());
+
 						for (int index = 0; index < imageSelectedlist.size(); index++) {
 							String addPath = imageSelectedlist.get(index);
 							
@@ -471,14 +475,21 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 							boolean bExistImage = false;
 							for(int findIndex = 0; findIndex < existImagelist.size(); findIndex++)
 							{
-								if(existImagelist.get(findIndex).Path == addPath)
+								Log.i(Constants.TAG, "--existImagelist.get(findIndex).Path---" + existImagelist.get(findIndex).Path);
+								Log.i(Constants.TAG, "-----findIndex--"+ findIndex +"---addPath---" + addPath);
+
+								if(existImagelist.get(findIndex).Path.equals(addPath))
 								{
 									bExistImage = true;
+									Log.i(Constants.TAG, "----bExistImage---" + bExistImage);
+									break;
 								}
 							}
 							
 							if(!bExistImage)
 							{
+								Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
+
 								ImageItem item = new ImageItem();
 								item.Path = addPath;
 								item.account = m_CurrentAccount;

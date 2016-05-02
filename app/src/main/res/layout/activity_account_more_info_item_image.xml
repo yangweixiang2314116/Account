@@ -26,12 +26,16 @@
 
     <ImageView
         android:id="@+id/more_info_item_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:background="@mipmap/pictures_items"
+        android:paddingBottom="17dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="9dp"
+        android:scaleType="fitXY"
         android:src="@mipmap/info_item_image" />
 
     <View
