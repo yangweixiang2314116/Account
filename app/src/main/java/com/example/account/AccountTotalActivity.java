@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import com.activeandroid.ActiveAndroid;
 import com.example.module.Account;
 import com.example.module.MoreInfoItem;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.melnykov.fab.FloatingActionButton;
 
 import android.annotation.SuppressLint;
@@ -48,6 +49,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private Double m_CurrentTotalCost = 0.0;
     private Menu m_OptionsMenu = null;
     private AccountSyncTask m_SyncTask = null;
+    private   SlidingMenu m_Menu  = null;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
     @Override
@@ -73,6 +75,42 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_CurrentTimeText = (TextView) findViewById(R.id.total_date_title);
         String sCurrentDate = AccountCommonUtil.ConverDateToString(System.currentTimeMillis());
         m_CurrentTimeText.setText(sCurrentDate);
+
+        // configure the SlidingMenu
+        m_Menu = new SlidingMenu(this);
+        m_Menu.setMode(SlidingMenu.LEFT);
+
+        m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        m_Menu.setShadowWidthRes(R.dimen.shadow_width);
+//        menu.setShadowDrawable(R.drawable.shadow);
+
+
+        m_Menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+
+        m_Menu.setFadeDegree(0.35f);
+        /**
+         * SLIDING_WINDOW will include the Title/ActionBar in the content
+         * section of the SlidingMenu, while SLIDING_CONTENT does not.
+         */
+        m_Menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+
+        m_Menu.setMenu(R.layout.menu_frame);
+
+        toolbar.setNavigationIcon(R.mipmap.g_menu_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(m_Menu.isMenuShowing())
+                {
+                    m_Menu.showContent();
+                }
+                else
+                {
+                    m_Menu.showMenu();
+                }
+
+            }
+        });
 
         new PrepareTask().execute();
 
@@ -112,17 +150,17 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Log.i(Constants.TAG, "------onOptionsItemSelected--------");
         switch (item.getItemId()) {
             case R.id.menu_sync:
-                Toast.makeText(AccountTotalActivity.this, "" + "Í¬²½", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountTotalActivity.this, "" + "Í¬ï¿½ï¿½", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_login: {
 
 
-                Toast.makeText(AccountTotalActivity.this, "" + "µÇÂ½", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountTotalActivity.this, "" + "ï¿½ï¿½Â½", Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.menu_setting: {
 
-                Toast.makeText(AccountTotalActivity.this, "" + "ÉèÖÃ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountTotalActivity.this, "" + "ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.total_account_sync:{
