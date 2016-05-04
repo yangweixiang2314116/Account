@@ -2,14 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp" >
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/total_list_item_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:textColor="@color/more_info_text_color"
         android:textSize="14sp" />
 
@@ -18,7 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/total_list_item_date"
         android:text="@string/total_list_indicator"
         android:textColor="@color/more_info_text_color"
@@ -29,7 +26,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/total_list_item_indicator"
         android:text="@string/total_list_brand_default"
         android:textColor="@color/more_info_text_color"
@@ -41,7 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/total_list_item_date"
-        android:layout_marginBottom="10dp"
         android:text="@string/total_list_category_default"
         android:textColor="@color/black_color"
         android:textSize="16sp" />
@@ -52,15 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/total_list_item_date"
-        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
         android:text="@string/default_total_cost"
         android:textColor="@color/account_top_background_color"
         android:textSize="18sp" />
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_below="@id/total_list_item_category"
-        android:background="@color/list_line_color" />
 
 </RelativeLayout>

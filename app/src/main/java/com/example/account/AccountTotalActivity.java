@@ -1,5 +1,7 @@
 package com.example.account;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.MenuItemCompat;
 //import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -8,6 +10,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.activeandroid.ActiveAndroid;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.module.Account;
 import com.example.module.MoreInfoItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -39,7 +45,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         AdapterView.OnItemLongClickListener
 {
 
-    private ListView m_TotalAllAccountList = null;
+    private SwipeMenuListView m_TotalAllAccountList = null;
 
     private FloatingActionButton m_AddNewAccountButton = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
@@ -67,7 +73,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         ActiveAndroid.setLoggingEnabled(false);
 
-        m_TotalAllAccountList = (ListView) findViewById(R.id.account_detail_list);
+        m_InitSwipeMenuList();
 
         m_InitAddButton();
 
@@ -80,7 +86,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_Menu = new SlidingMenu(this);
         m_Menu.setMode(SlidingMenu.LEFT);
 
-        m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+       // m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         m_Menu.setShadowWidthRes(R.dimen.shadow_width);
 //        menu.setShadowDrawable(R.drawable.shadow);
 
@@ -241,7 +247,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_AddNewAccountButton = (FloatingActionButton) findViewById(R.id.fab);
         m_AddNewAccountButton.attachToListView(m_TotalAllAccountList);
 
-        m_AddNewAccountButton.setOnClickListener(new OnClickListener(){
+        m_AddNewAccountButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -254,6 +260,76 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         });
     }
 
+    private void m_InitSwipeMenuList()
+    {
+        m_TotalAllAccountList = (SwipeMenuListView) findViewById(R.id.account_detail_list);
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "open" item
+                SwipeMenuItem editItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                editItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                editItem.setWidth(AccountCommonUtil.dp2px(mContext, 90));
+                // set item title
+                editItem.setTitle(getResources().getText(R.string.menu_edit).toString());
+                // set item title fontsize
+                editItem.setTitleSize(18);
+                // set item title font color
+                editItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(editItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item title
+                deleteItem.setTitle(getResources().getText(R.string.menu_delete).toString());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item title fontsize
+                deleteItem.setTitleSize(18);
+                // set item title font color
+                deleteItem.setTitleColor(Color.WHITE);
+
+                // set item width
+                deleteItem.setWidth(AccountCommonUtil.dp2px(mContext,90));
+                // set a icon
+                //deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        // set creator
+        m_TotalAllAccountList.setMenuCreator(creator);
+
+        m_TotalAllAccountList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        // edit
+                        m_editSelectedItem(position);
+                        break;
+                    case 1:
+                        // delete
+                        m_ShowDeletePoup(position);
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+
+        m_TotalAllAccountList.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+    }
 
     private class PrepareTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -312,6 +388,31 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // TODO Auto-generated method stub
 
+
+        m_ShowDeletePoup(position);
+
+        return false;
+    }
+
+    private void m_editSelectedItem(int position)
+    {
+        Account current = mDetailListDataSource.get(position);
+
+        Bundle mBundle = new Bundle();
+        if (current == null) {
+            Log.i(Constants.TAG, "--current == null--"+position);
+        }
+        Log.i(Constants.TAG, "-m_CurrentAccount-id--" + current.getId());
+
+        mBundle.putLong("id", current.getId());
+
+        Intent intent = new Intent(this, AccountStartActivity.class);
+        intent.putExtras(mBundle);
+        this.startActivity(intent);
+
+    }
+    private void m_ShowDeletePoup(int position)
+    {
         final Account current = mDetailListDataSource.get(position);
 
         Log.i(Constants.TAG, "------onItemLongClick--------"+current.getId());
@@ -340,9 +441,5 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                             }
                         }).setNegativeButton(R.string.give_up_cancel, null)
                 .create().show();
-
-
-        return false;
     }
-
 }

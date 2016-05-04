@@ -48,16 +48,14 @@
             android:textSize="60sp" />
     </RelativeLayout>
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/account_detail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/account_total_top"
         android:layout_marginTop ="10dp"
-        android:divider="#00000000"
-        android:dividerHeight="0dp"
-        android:listSelector="@android:color/transparent" >
-    </ListView>
+        android:divider="?android:attr/listDivider"
+        android:dividerHeight="1px" />
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
