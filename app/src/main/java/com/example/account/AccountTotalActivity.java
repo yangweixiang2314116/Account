@@ -8,6 +8,9 @@ import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.activeandroid.ActiveAndroid;
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -32,9 +35,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +51,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 {
 
     private SwipeMenuListView m_TotalAllAccountList = null;
+    private ListView m_SlideMenuList = null;
 
     private FloatingActionButton m_AddNewAccountButton = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
@@ -56,6 +62,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private Menu m_OptionsMenu = null;
     private AccountSyncTask m_SyncTask = null;
     private   SlidingMenu m_Menu  = null;
+    private Toolbar  m_ToolBar = null;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
     @Override
@@ -63,8 +70,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_account_total);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        m_ToolBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(m_ToolBar);
 
         mContext = this;
         m_SyncTask = new AccountSyncTask(mContext);
@@ -82,41 +89,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         String sCurrentDate = AccountCommonUtil.ConverDateToString(System.currentTimeMillis());
         m_CurrentTimeText.setText(sCurrentDate);
 
-        // configure the SlidingMenu
-        m_Menu = new SlidingMenu(this);
-        m_Menu.setMode(SlidingMenu.LEFT);
+        m_InitSlidingMenu();
 
-       // m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        m_Menu.setShadowWidthRes(R.dimen.shadow_width);
-//        menu.setShadowDrawable(R.drawable.shadow);
-
-
-        m_Menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-
-        m_Menu.setFadeDegree(0.35f);
-        /**
-         * SLIDING_WINDOW will include the Title/ActionBar in the content
-         * section of the SlidingMenu, while SLIDING_CONTENT does not.
-         */
-        m_Menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-
-        m_Menu.setMenu(R.layout.menu_frame);
-
-        toolbar.setNavigationIcon(R.mipmap.g_menu_white);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(m_Menu.isMenuShowing())
-                {
-                    m_Menu.showContent();
-                }
-                else
-                {
-                    m_Menu.showMenu();
-                }
-
-            }
-        });
+        m_InitSlidingMenuContent();
 
         new PrepareTask().execute();
 
@@ -134,7 +109,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Log.i(Constants.TAG, "The AccountTotalActivity---->onReatart");
     }
 
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onResume");
     }
@@ -239,6 +214,66 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Account current = mDetailListDataSource.get(position);
         intent.putExtra("id", current.getId());
         this.startActivity(intent);
+    }
+
+    private void m_InitSlidingMenu()
+    {
+        // configure the SlidingMenu
+        m_Menu = new SlidingMenu(this);
+        m_Menu.setMode(SlidingMenu.LEFT);
+
+        // m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        m_Menu.setShadowWidthRes(R.dimen.shadow_width);
+//        menu.setShadowDrawable(R.drawable.shadow);
+
+
+        m_Menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+
+        m_Menu.setFadeDegree(0.35f);
+        /**
+         * SLIDING_WINDOW will include the Title/ActionBar in the content
+         * section of the SlidingMenu, while SLIDING_CONTENT does not.
+         */
+        m_Menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+
+        m_Menu.setMenu(R.layout.slide_menu_frame);
+
+        m_ToolBar.setNavigationIcon(R.mipmap.g_menu_white);
+        m_ToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (m_Menu.isMenuShowing()) {
+                    m_Menu.showContent();
+                } else {
+                    m_Menu.showMenu();
+                }
+
+            }
+        });
+    }
+
+    private void m_InitSlidingMenuContent()
+    {
+        Log.i(Constants.TAG, "------start m_InitSlidingMenuContent--------");
+         int[] icons = { R.mipmap.ic_ascending,  R.mipmap.ic_descending,
+                R.mipmap.ic_search,R.mipmap.ic_comment_icon,R.mipmap.ic_drawer_settings};
+        int[] titles = {R.string.account_sort_asc,R.string.account_sort_desc,
+                R.string.account_search,R.string.account_comment,R.string.account_setting};
+
+        List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < icons.length; i++) {
+            Map<String, Object> listem = new HashMap<String, Object>();
+            listem.put("icon", icons[i]);
+            listem.put("title", getString(titles[i]));
+            listems.add(listem);
+        }
+        SimpleAdapter adapter = new SimpleAdapter(this, listems,
+                R.layout.slide_menu_list_item, new String[] { "icon", "title"},
+                new int[] { R.id.slidemenu_list_icon, R.id.slidemenu_list_title});
+
+        m_SlideMenuList = (ListView) findViewById(R.id.account_slidemenu_list);
+        m_SlideMenuList.setAdapter(adapter);
+
     }
 
     private void m_InitAddButton()

@@ -19,5 +19,6 @@
     <color name="fa_colorAccent">#FF4081</color>
 
     <color name="content_text_color">#666666</color>
+    <color name="slide_menu_background">#3e97e7</color>
 
 </resources>

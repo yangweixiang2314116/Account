@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/total_account_sync"
-        android:icon="@drawable/account_sync_press"
+        android:icon="@mipmap/ic_refresh"
         android:title="@string/action_sync"
         app:showAsAction="ifRoom">
     </item>

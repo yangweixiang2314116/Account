@@ -71,4 +71,13 @@
     <string name="add_new_position_hint">输入新的位置，如红星美凯龙</string>
     <!--ADD Position -->
 
+    <!--Slide Menu-->
+    <string name="account_not_log_in">未登陆</string>
+    <string name="account_sort_desc">按金额由大到小显示</string>
+    <string name="account_sort_asc">按金额由小到大显示</string>
+    <string name="account_search">搜索</string>
+    <string name="account_comment">意见反馈</string>
+    <string name="account_setting">设置</string>
+    <!--Slide Menu -->
+
 </resources>
