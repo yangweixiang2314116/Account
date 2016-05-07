@@ -59,8 +59,13 @@
         </activity>
 
         <activity
-            android:name="com.example.account.AccountImageSelectorActivity"
-            android:label="@string/image_selector_app_name" >
+        android:name="com.example.account.AccountImageSelectorActivity"
+        android:label="@string/image_selector_app_name" >
+    </activity>
+
+        <activity
+            android:name="com.example.account.AccountLoginRegisterActivity"
+            android:label="@string/account_login_register_text" >
         </activity>
     </application>
 

@@ -3,11 +3,8 @@ package com.example.account;
 public class Constants {
 
 	// Config
-	  public static final int TAB_INDEX_DIARY_LIST = 0;
 	  
 	  public static final String TAG = "51";
-	  
-	  public static final String NULL_STRING = "null";
 	  
 	  public static final int ACCOUNT_MORE_INFO_CATEGORY = 0;
 	  public static final int ACCOUNT_MORE_INFO_BRAND = 1;
@@ -17,7 +14,10 @@ public class Constants {
 	  
 	  public static final int ACCOUNT_MORE_INFO_TYPE_TEXT = 0;
 	  public static final int ACCOUNT_MORE_INFO_TYPE_IMAGE = 1;
-	  
+
+	  public static final int ACCOUNT_TAB_INDEX_REGISTER = 0;
+	  public static final int ACCOUNT_TAB_INDEX_LOGIN = 1;
+
 		/**
 		 * need to do nothing
 		 */

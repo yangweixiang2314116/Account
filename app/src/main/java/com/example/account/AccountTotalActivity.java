@@ -3,7 +3,6 @@ package com.example.account;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.MenuItemCompat;
-//import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import java.text.DecimalFormat;
@@ -18,7 +17,6 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.module.Account;
-import com.example.module.MoreInfoItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -31,14 +29,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +60,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private Menu m_OptionsMenu = null;
     private AccountSyncTask m_SyncTask = null;
     private   SlidingMenu m_Menu  = null;
+    private  RelativeLayout m_LoginLayout = null;
     private Toolbar  m_ToolBar = null;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
@@ -255,9 +254,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private void m_InitSlidingMenuContent()
     {
         Log.i(Constants.TAG, "------start m_InitSlidingMenuContent--------");
-         int[] icons = { R.mipmap.ic_ascending,  R.mipmap.ic_descending,
+         int[] icons = { R.mipmap.ic_ascending,  R.mipmap.ic_descending, R.mipmap.ic_refresh,
                 R.mipmap.ic_search,R.mipmap.ic_comment_icon,R.mipmap.ic_drawer_settings};
-        int[] titles = {R.string.account_sort_asc,R.string.account_sort_desc,
+        int[] titles = {R.string.account_sort_asc,R.string.account_sort_desc,R.string.account_sort_sync,
                 R.string.account_search,R.string.account_comment,R.string.account_setting};
 
         List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
@@ -273,6 +272,16 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         m_SlideMenuList = (ListView) findViewById(R.id.account_slidemenu_list);
         m_SlideMenuList.setAdapter(adapter);
+
+         m_LoginLayout = (RelativeLayout) findViewById(R.id.account_start_login);
+        m_LoginLayout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                        //TODO if not login , show text , indictor already login
+                        m_ShowLoginPoup();
+            }
+        });
 
     }
 
@@ -450,7 +459,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     {
         final Account current = mDetailListDataSource.get(position);
 
-        Log.i(Constants.TAG, "------onItemLongClick--------"+current.getId());
+        Log.i(Constants.TAG, "------onItemLongClick--------" + current.getId());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(R.string.give_up_edit)
@@ -476,5 +485,28 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                             }
                         }).setNegativeButton(R.string.give_up_cancel, null)
                 .create().show();
+    }
+
+    private void m_ShowLoginPoup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        View content_view = LayoutInflater.from(AccountTotalActivity.this).inflate(R.layout.account_login_popup, null);
+
+        RelativeLayout registerLayout =(RelativeLayout) content_view.findViewById(R.id.account_login_register);
+        registerLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(Constants.TAG, "------start AccountLoginRegisterActivity--------");
+                Intent intent = new Intent(mContext, AccountLoginRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setTitle(R.string.account_login)
+                .setView(content_view)
+                .setNegativeButton(R.string.give_up_cancel, null)
+                .setCancelable(false)
+                .create().show();
+
     }
 }

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+    >
+
+    <RelativeLayout
+        android:id="@+id/account_login_weixin"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/login_popup_button_bg"
+        >
+
+        <ImageView
+            android:id="@+id/account_login_weixin_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/share_wechat" />
+
+        <TextView
+            android:id="@+id/account_login_weixin_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_login_weixin_icon"
+            android:text="@string/account_login_weixin"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/account_login_weibo"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@+id/account_login_weixin"
+        android:background="@drawable/login_popup_button_bg"
+        >
+
+        <ImageView
+            android:id="@+id/account_login_weibo_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/share_weibo" />
+
+        <TextView
+            android:id="@+id/account_login_weibo_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_login_weibo_icon"
+            android:text="@string/account_login_weibo"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/account_login_qq"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@+id/account_login_weibo"
+        android:background="@drawable/login_popup_button_bg"
+        >
+
+        <ImageView
+            android:id="@+id/account_login_qq_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/share_qq" />
+
+        <TextView
+            android:id="@+id/account_login_qq_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_login_qq_icon"
+            android:text="@string/account_login_qq"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/account_login_register"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@+id/account_login_qq"
+        android:background="@drawable/login_popup_button_bg"
+        >
+
+        <ImageView
+            android:id="@+id/account_login_51_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/ic_51_login" />
+
+        <TextView
+            android:id="@+id/account_login_51_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_login_51_icon"
+            android:text="@string/account_login_register_text"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

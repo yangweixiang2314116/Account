@@ -20,5 +20,6 @@
 
     <color name="content_text_color">#666666</color>
     <color name="slide_menu_background">#3e97e7</color>
+    <color name="weibo_listtab_off">#8d8d8d</color>
 
 </resources>

@@ -75,9 +75,19 @@
     <string name="account_not_log_in">未登陆</string>
     <string name="account_sort_desc">按金额由大到小显示</string>
     <string name="account_sort_asc">按金额由小到大显示</string>
+    <string name="account_sort_sync">同步</string>
     <string name="account_search">搜索</string>
     <string name="account_comment">意见反馈</string>
     <string name="account_setting">设置</string>
     <!--Slide Menu -->
+
+    <!--Login poup-->
+    <string name="account_login">登陆</string>
+    <string name="account_login_weixin">微信</string>
+    <string name="account_login_weibo">微博</string>
+    <string name="account_login_qq">QQ</string>
+    <string name="account_login_register">注册</string>
+    <string name="account_login_register_text">注册/登陆</string>
+    <!--Login poup -->
 
 </resources>
