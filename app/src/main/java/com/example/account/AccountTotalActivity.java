@@ -505,7 +505,6 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         builder.setTitle(R.string.account_login)
                 .setView(content_view)
                 .setNegativeButton(R.string.give_up_cancel, null)
-                .setCancelable(false)
                 .create().show();
 
     }
