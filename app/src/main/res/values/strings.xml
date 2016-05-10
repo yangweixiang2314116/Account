@@ -90,6 +90,8 @@
     <string name="account_login_register_text">注册/登陆</string>
     <string name="account_username_hint_text">用户名（5-20个字符，由字母和数字组成）</string>
     <string name="account_password_hint_text">密码（6-20位）</string>
+    <string name="account_login_success">登陆成功</string>
+    <string name="account_already_login_success">已登陆</string>
     <!--Login poup -->
 
 </resources>

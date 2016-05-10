@@ -1,7 +1,9 @@
 package com.example.account;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 
@@ -62,6 +64,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private   SlidingMenu m_Menu  = null;
     private  RelativeLayout m_LoginLayout = null;
     private Toolbar  m_ToolBar = null;
+    private SharedPreferences mSharedPreferences = null;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
     @Override
@@ -74,6 +77,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         mContext = this;
         m_SyncTask = new AccountSyncTask(mContext);
+
+        mSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
 
         Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
 
@@ -279,10 +285,24 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             @Override
             public void onClick(View v) {
                         //TODO if not login , show text , indictor already login
-                        m_ShowLoginPoup();
+                        Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
+                if (mSharedPreferences.getBoolean(
+                        "is_login", false)) {
+                    Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    m_ShowLoginPoup();
+                }
             }
         });
 
+        if (mSharedPreferences.getBoolean(
+                "is_login", false)) {
+            String userName = mSharedPreferences.getString("user_name", "");
+            Log.i(Constants.TAG, "------login user name --------"+userName);
+            TextView userNameText = (TextView) findViewById(R.id.total_value_label);
+            userNameText.setText(userName);
+        }
     }
 
     private void m_InitAddButton()
@@ -488,24 +508,32 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     }
 
     private void m_ShowLoginPoup() {
+
+        Log.i(Constants.TAG, "------start m_ShowLoginPoup--------");
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
         View content_view = LayoutInflater.from(AccountTotalActivity.this).inflate(R.layout.account_login_popup, null);
+        builder.setTitle(R.string.account_login)
+                .setView(content_view)
+                .setNegativeButton(R.string.give_up_cancel, null);
+
+        final AlertDialog  LoginWindow  = builder.create();
+
+        LoginWindow.show();
+
 
         RelativeLayout registerLayout =(RelativeLayout) content_view.findViewById(R.id.account_login_register);
         registerLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(Constants.TAG, "------start AccountLoginRegisterActivity--------");
+                LoginWindow.dismiss();
+
                 Intent intent = new Intent(mContext, AccountLoginRegisterActivity.class);
                 startActivity(intent);
             }
         });
-
-        builder.setTitle(R.string.account_login)
-                .setView(content_view)
-                .setNegativeButton(R.string.give_up_cancel, null)
-                .create().show();
 
     }
 }

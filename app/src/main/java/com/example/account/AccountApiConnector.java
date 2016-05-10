@@ -25,11 +25,26 @@ public class AccountApiConnector {
 		}
 		return mInstance;
 	}
-	
+
+	public void getToken(String userName, String pwd, JsonHttpResponseHandler handler) {
+
+		String url = "auth/";
+
+		Log.i(Constants.TAG, "-start to -login in and get token --"+url);
+
+		RequestParams params = new RequestParams();
+
+		params.put("username",userName);
+		params.put("password",pwd);
+
+		AccountRestClient.postNoToken(url, params, handler);
+
+	}
+
 	public void getDetailList(JsonHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all account --");
 		
-		String url = "details/";
+		String url = "jz/details/";
 		AccountRestClient.get(url, null, handler);
 		
 	}
@@ -37,7 +52,7 @@ public class AccountApiConnector {
 	public void getHotTagList(double value, JsonHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all hot tag --");
 		
-		String url = "tags/hot/?price="+value;
+		String url = "jz/tags/hot/?price="+value;
 		AccountRestClient.get(url, null, handler);
 		
 	}
@@ -45,8 +60,8 @@ public class AccountApiConnector {
 	public void getHotBrandList(String category, JsonHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all hot brand --");
 		
-		String city = "南京";
-		String url = "brands/hot/?tag="+category+"&city="+city;
+		String city = "锟较撅拷";
+		String url = "jz/brands/hot/?tag="+category+"&city="+city;
 		AccountRestClient.get(url, null, handler);
 		
 	}
@@ -54,8 +69,8 @@ public class AccountApiConnector {
 	public void getHotPositionList(JsonHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all hot position --");
 		
-		String city = "南京";
-		String url = "shops/hot/?city="+city;
+		String city = "锟较撅拷";
+		String url = "jz/shops/hot/?city="+city;
 		AccountRestClient.get(url, null, handler);
 		
 	}
@@ -65,7 +80,7 @@ public class AccountApiConnector {
 	{
 		Log.i(Constants.TAG, "-start to -post account item id--"+item.getId());
 		
-		String url = "details/";
+		String url = "jz/details/";
 		RequestParams params = new RequestParams();
 
 		params.put("local_id",item.getId());
@@ -117,7 +132,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "-start to -delete account item id--"+item.getId());
 		Log.i(Constants.TAG, "-start to -delete account AccountId-"+item.AccountId);
 		
-		String url = "details/"+item.AccountId+"/";
+		String url = "jz/details/"+item.AccountId+"/";
 		Log.i(Constants.TAG, "--post account item id--"+item.AccountId);
 		AccountRestClient.delete(url, handler);
 	}
@@ -128,7 +143,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "-start to -put account AccountId-"+item.AccountId);
 		
 		
-		String url = "details/"+item.AccountId+"/";
+		String url = "jz/details/"+item.AccountId+"/";
 		RequestParams params = new RequestParams();
 		
 		params.put("price",item.Cost);
