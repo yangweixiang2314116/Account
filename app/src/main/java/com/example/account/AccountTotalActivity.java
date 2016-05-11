@@ -18,6 +18,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.example.account.wxapi.WXEntryActivity;
 import com.example.module.Account;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.melnykov.fab.FloatingActionButton;
@@ -531,6 +532,18 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 LoginWindow.dismiss();
 
                 Intent intent = new Intent(mContext, AccountLoginRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        RelativeLayout wxLoginLayout =(RelativeLayout) content_view.findViewById(R.id.account_login_weixin);
+        wxLoginLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(Constants.TAG, "------start WXEntryActivity--------");
+                LoginWindow.dismiss();
+
+                Intent intent = new Intent(mContext, WXEntryActivity.class);
                 startActivity(intent);
             }
         });

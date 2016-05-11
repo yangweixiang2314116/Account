@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -68,6 +69,8 @@ public class AccountLoginFragment extends Fragment {
             //TODO check username
             final String checkUserName = userName;
             //TODO check password
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         AccountApiConnector.instance().getToken(userName, password, new JsonHttpResponseHandler() {
 
@@ -101,7 +104,7 @@ public class AccountLoginFragment extends Fragment {
                 Log.i(Constants.TAG, "---getToken--onFailure--statusCode---" + statusCode);
                 Log.i(Constants.TAG, "---getToken--onFailure--responseString---" + response);
 
-                Toast.makeText(getActivity(), R.string.get_data_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.account_login_failed, Toast.LENGTH_SHORT).show();
             }
 
             @Override
