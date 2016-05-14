@@ -19,7 +19,7 @@ android:padding="10dp">
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@mipmap/bg_auth_logo" />
+            android:background="@mipmap/ic_account_mything" />
 
         <TextView
             android:id="@+id/total_value_label"

@@ -46,6 +46,10 @@ import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+import cn.smssdk.gui.RegisterPage;
+
 @SuppressWarnings("deprecation")
 public class AccountTotalActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener
@@ -83,6 +87,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 .getDefaultSharedPreferences(this);
 
         Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
+
+        SMSSDK.initSDK(this, Constants.ACCOUNT_LOGIN_SMS_APP_KEY, Constants.ACCOUNT_LOGIN_SMS_APP_SECRET);
 
         ActiveAndroid.setLoggingEnabled(false);
 
@@ -292,7 +298,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    m_ShowLoginPoup();
+                  //  m_ShowLoginPoup();
+                    m_ShowSMSLoginPoup();
                 }
             }
         });
@@ -508,6 +515,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 .create().show();
     }
 
+
     private void m_ShowLoginPoup() {
 
         Log.i(Constants.TAG, "------start m_ShowLoginPoup--------");
@@ -548,5 +556,43 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             }
         });
 
+    }
+
+    private void m_ShowSMSLoginPoup() {
+        Log.i(Constants.TAG, "------start m_ShowSMSLoginPoup--------");
+//打开注册页面
+        RegisterPage registerPage = new RegisterPage();
+        registerPage.setRegisterCallback(new EventHandler() {
+            public void afterEvent(int event, int result, Object data) {
+                Log.i(Constants.TAG, "------afterEvent----event----"+event+"--result--"+result+"---data--"+data);
+// 解析注册结果
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    switch(event)
+                    {
+                        case SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE:
+                        {
+                            @SuppressWarnings("unchecked")
+                            HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
+                            String country = (String) phoneMap.get("country");
+                            String phone = (String) phoneMap.get("phone");
+                            Log.i(Constants.TAG, "------afterEvent----country----"+country+"--phone--"+phone);
+
+                            mSharedPreferences.edit().putBoolean("is_login", true)
+                                    .apply();
+
+                            mSharedPreferences.edit().putString("user_name", phone)
+                                    .apply();
+                            // 提交用户信息到服务端获取TOKEN
+                            //  registerUser(country, phone);
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            }
+        });
+        registerPage.show(mContext);
     }
 }

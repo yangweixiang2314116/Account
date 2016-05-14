@@ -5,7 +5,10 @@ public class Constants {
 	// Config
 	  
 	  public static final String TAG = "51";
-	  
+
+	public static final String ACCOUNT_LOGIN_SMS_APP_KEY = "12b9eb2bc8f00";
+	public static final String ACCOUNT_LOGIN_SMS_APP_SECRET = "7687d60f5a5f529313c0e53f51839473";
+
 	  public static final int ACCOUNT_MORE_INFO_CATEGORY = 0;
 	  public static final int ACCOUNT_MORE_INFO_BRAND = 1;
 	  public static final int ACCOUNT_MORE_INFO_POSITION = 2;
