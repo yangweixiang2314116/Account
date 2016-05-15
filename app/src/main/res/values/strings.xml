@@ -72,7 +72,7 @@
     <!--ADD Position -->
 
     <!--Slide Menu-->
-    <string name="account_not_log_in">未登陆</string>
+    <string name="account_not_log_in">立即登陆</string>
     <string name="account_sort_desc">按金额由大到小显示</string>
     <string name="account_sort_asc">按金额由小到大显示</string>
     <string name="account_sort_sync">同步</string>

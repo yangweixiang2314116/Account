@@ -69,7 +69,7 @@ public class AccountSyncTask {
 				return null;
 			}
 			// if (mEvernoteSession.isLoggedIn() == false) {
-			// Logger.e(LogTag, "δ�Ǐ�);
+			// Logger.e(LogTag, "δ�Ǐ�);
 			// publishProgress(new Integer[] { SYNC_ERROR });
 			// return null;
 			// }
@@ -111,7 +111,7 @@ public class AccountSyncTask {
 							// TODO Auto-generated method stub
 							
 							
-							AccountApiConnector.instance().postAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
+							AccountApiConnector.instance(mContext).postAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
 				            
 								 @Override
 						            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -152,7 +152,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance().updateAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
+							AccountApiConnector.instance(mContext).updateAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
 				            
 								 @Override
 						            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -193,7 +193,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance().deleteAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
+							AccountApiConnector.instance(mContext).deleteAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
 				            
 								 @Override
 						            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -224,7 +224,7 @@ public class AccountSyncTask {
 				public void run() {
 					// TODO Auto-generated method stub
 					
-					AccountApiConnector.instance().getDetailList(new JsonHttpResponseHandler() {
+					AccountApiConnector.instance(mContext).getDetailList(new JsonHttpResponseHandler() {
 		            
 			            @Override
 			            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

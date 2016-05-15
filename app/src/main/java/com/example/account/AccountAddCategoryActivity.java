@@ -79,7 +79,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	}
 	
 	public void init() {
-		AccountApiConnector.instance().getHotTagList(mCost, new JsonHttpResponseHandler() {
+		AccountApiConnector.instance(this).getHotTagList(mCost, new JsonHttpResponseHandler() {
             
 			 @Override
 	            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -109,7 +109,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	}
 	
 	public void addTextView(String tvName) {
-		//¼ÓÔØTextView²¢ÉèÖÃÃû³Æ£¬²¢ÉèÖÃÃû³Æ
+		//ï¿½ï¿½ï¿½ï¿½TextViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		TextView categoryTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
 		categoryTag.setText(tvName);
 		categoryTag.setOnClickListener(new OnClickListener(){
@@ -129,7 +129,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 			}
 			
 		});
-		//°ÑTextView¼ÓÈëÁ÷Ê½²¼¾Ö
+		//ï¿½ï¿½TextViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		mHotFlowLayout.addView(categoryTag);
 	}
 	

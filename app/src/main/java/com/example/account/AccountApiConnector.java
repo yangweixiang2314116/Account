@@ -10,34 +10,51 @@ import com.example.module.ImageItem;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import android.content.Context;
 import android.util.Log;
 
 public class AccountApiConnector {
 
 	private static AccountApiConnector mInstance;
+	private static Context mcontext = null;
 	
     private AccountApiConnector() {
 	};
 
-	public static AccountApiConnector instance() {
+	public static AccountApiConnector instance(Context context) {
 		if (mInstance == null) {
 			mInstance = new AccountApiConnector();
+			mcontext  =  context;
 		}
 		return mInstance;
+	}
+
+	public void  registerMobile(String userName, JsonHttpResponseHandler handler)
+	{
+		String url = "register2/";
+
+		Log.i(Constants.TAG, "-start to registerMobile and get token --" + url);
+
+		RequestParams params = new RequestParams();
+
+		params.put("username",userName);
+		params.put("type", "mobile");
+
+		AccountRestClient.instance(mcontext).postNoToken(url, params, handler);
 	}
 
 	public void getToken(String userName, String pwd, JsonHttpResponseHandler handler) {
 
 		String url = "auth/";
 
-		Log.i(Constants.TAG, "-start to -login in and get token --"+url);
+		Log.i(Constants.TAG, "-start to -login in and get token --" + url);
 
 		RequestParams params = new RequestParams();
 
 		params.put("username",userName);
-		params.put("password",pwd);
+		params.put("password", pwd);
 
-		AccountRestClient.postNoToken(url, params, handler);
+		AccountRestClient.instance(mcontext).postNoToken(url, params, handler);
 
 	}
 
@@ -45,7 +62,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "-start to -get all account --");
 		
 		String url = "jz/details/";
-		AccountRestClient.get(url, null, handler);
+		AccountRestClient.instance(mcontext).get(url, null, handler);
 		
 	}
 	
@@ -53,7 +70,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "-start to -get all hot tag --");
 		
 		String url = "jz/tags/hot/?price="+value;
-		AccountRestClient.get(url, null, handler);
+		AccountRestClient.instance(mcontext).get(url, null, handler);
 		
 	}
 	
@@ -62,7 +79,7 @@ public class AccountApiConnector {
 		
 		String city = "�Ͼ�";
 		String url = "jz/brands/hot/?tag="+category+"&city="+city;
-		AccountRestClient.get(url, null, handler);
+		AccountRestClient.instance(mcontext).get(url, null, handler);
 		
 	}
 	
@@ -71,7 +88,7 @@ public class AccountApiConnector {
 		
 		String city = "�Ͼ�";
 		String url = "jz/shops/hot/?city="+city;
-		AccountRestClient.get(url, null, handler);
+		AccountRestClient.instance(mcontext).get(url, null, handler);
 		
 	}
 	
@@ -124,7 +141,7 @@ public class AccountApiConnector {
 		}
 		
 		
-		AccountRestClient.post(url, params, handler);
+		AccountRestClient.instance(mcontext).post(url, params, handler);
 	}
 	
 	public void deleteAccountItem(Account item, JsonHttpResponseHandler handler)
@@ -134,7 +151,7 @@ public class AccountApiConnector {
 		
 		String url = "jz/details/"+item.AccountId+"/";
 		Log.i(Constants.TAG, "--post account item id--"+item.AccountId);
-		AccountRestClient.delete(url, handler);
+		AccountRestClient.instance(mcontext).delete(url, handler);
 	}
 	
 	public void updateAccountItem(Account item, JsonHttpResponseHandler handler)
@@ -188,6 +205,6 @@ public class AccountApiConnector {
 		}
 		
 		
-		AccountRestClient.put(url, params, handler);
+		AccountRestClient.instance(mcontext).put(url, params, handler);
 	}
 }

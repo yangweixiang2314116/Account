@@ -72,7 +72,7 @@ public class AccountLoginFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        AccountApiConnector.instance().getToken(userName, password, new JsonHttpResponseHandler() {
+        AccountApiConnector.instance(getContext()).getToken(userName, password, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

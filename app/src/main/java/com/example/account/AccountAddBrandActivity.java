@@ -79,7 +79,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	}
 	
 	public void init() {
-		AccountApiConnector.instance().getHotBrandList(mCategory, new JsonHttpResponseHandler() {
+		AccountApiConnector.instance(this).getHotBrandList(mCategory, new JsonHttpResponseHandler() {
             
 			 @Override
 	            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -116,7 +116,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	}
 	
 	public void addTextView(String tvName) {
-		//¼ÓÔØTextView²¢ÉèÖÃÃû³Æ£¬²¢ÉèÖÃÃû³Æ
+		//ï¿½ï¿½ï¿½ï¿½TextViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		TextView brandTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
 		brandTag.setText(tvName);
 		brandTag.setOnClickListener(new OnClickListener(){
@@ -136,7 +136,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 			}
 			
 		});
-		//°ÑTextView¼ÓÈëÁ÷Ê½²¼¾Ö
+		//ï¿½ï¿½TextViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		mHotFlowLayout.addView(brandTag);
 	}
 	

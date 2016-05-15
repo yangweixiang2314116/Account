@@ -20,7 +20,9 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.account.wxapi.WXEntryActivity;
 import com.example.module.Account;
+import com.example.module.AccountRestClient;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 
 import android.annotation.SuppressLint;
@@ -46,9 +48,14 @@ import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
+import cz.msebera.android.httpclient.Header;
 
 @SuppressWarnings("deprecation")
 public class AccountTotalActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener,
@@ -296,6 +303,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 if (mSharedPreferences.getBoolean(
                         "is_login", false)) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
+                    m_RegisterUser("86","15062256959");
                 }
                 else {
                   //  m_ShowLoginPoup();
@@ -582,8 +590,13 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
                             mSharedPreferences.edit().putString("user_name", phone)
                                     .apply();
+
+                            Log.i(Constants.TAG, "------login user name --------" + phone);
+                            TextView userNameText = (TextView) findViewById(R.id.total_value_label);
+                            userNameText.setText(phone);
+
                             // 提交用户信息到服务端获取TOKEN
-                            //  registerUser(country, phone);
+                            m_RegisterUser(country, phone);
                         }
                             break;
                         default:
@@ -594,5 +607,43 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             }
         });
         registerPage.show(mContext);
+    }
+
+    private boolean m_RegisterUser(String country, String phone) {
+        Log.i(Constants.TAG, "--start -m_RegisterUser---" + phone);
+        AccountApiConnector.instance(mContext).registerMobile(phone, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+                Log.i(Constants.TAG, "---getToken--onSuccess--response---" + response);
+
+                String token = null;
+                try {
+                    token = response.getString("message");
+                    AccountRestClient.SetClientToken(token);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                super.onFailure(statusCode, headers, throwable, response);
+                Log.i(Constants.TAG, "---getToken--onFailure--statusCode---" + statusCode);
+                Log.i(Constants.TAG, "---getToken--onFailure--responseString---" + response);
+
+                Toast.makeText(mContext, R.string.account_login_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+
+        });
+        return true;
     }
 }

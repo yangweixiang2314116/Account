@@ -64,7 +64,7 @@ public class AccountAddPositionActivity extends ActionBarActivity {
 	}
 	
 	public void init() {
-		AccountApiConnector.instance().getHotPositionList( new JsonHttpResponseHandler() {
+		AccountApiConnector.instance(this).getHotPositionList( new JsonHttpResponseHandler() {
             
 			 @Override
 	            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -94,7 +94,7 @@ public class AccountAddPositionActivity extends ActionBarActivity {
 	}
 	
 	public void addTextView(String tvName) {
-		//¼ÓÔØTextView²¢ÉèÖÃÃû³Æ£¬²¢ÉèÖÃÃû³Æ
+		//ï¿½ï¿½ï¿½ï¿½TextViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		TextView positionTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
 		positionTag.setText(tvName);
 		positionTag.setOnClickListener(new OnClickListener(){
@@ -114,7 +114,7 @@ public class AccountAddPositionActivity extends ActionBarActivity {
 			}
 			
 		});
-		//°ÑTextView¼ÓÈëÁ÷Ê½²¼¾Ö
+		//ï¿½ï¿½TextViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		mHotFlowLayout.addView(positionTag);
 	}
 	
