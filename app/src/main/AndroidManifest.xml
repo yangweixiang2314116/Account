@@ -79,6 +79,11 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
+        <activity
+            android:name="com.example.account.AccountSortActivity"
+            android:label="@string/account_sort_asc" >
+        </activity>
+
     </application>
 
 </manifest>

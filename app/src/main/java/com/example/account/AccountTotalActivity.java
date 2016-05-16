@@ -292,6 +292,38 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         m_SlideMenuList = (ListView) findViewById(R.id.account_slidemenu_list);
         m_SlideMenuList.setAdapter(adapter);
+        m_SlideMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(Constants.TAG, "------onItemClick  position--------"+position);
+                switch (position) {
+                    case Constants.ACCOUNT_SLIDEING_MENU_ASCEND:
+                    case Constants.ACCOUNT_SLIDEING_MENU_DESCEND:
+                    {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, AccountSortActivity.class);
+
+                        Log.i(Constants.TAG, "------enter into AccountSortActivity--------");
+
+                        Bundle mBundle = new Bundle();
+                        mBundle.putInt("value", position);
+                        intent.putExtras(mBundle);
+                        startActivity(intent);
+                    }
+                        break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_SYNC:
+                        break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_SEARCH:
+                        break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_COMMENT:
+                        break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_SETTING:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
          m_LoginLayout = (RelativeLayout) findViewById(R.id.account_start_login);
         m_LoginLayout.setOnClickListener(new OnClickListener() {
