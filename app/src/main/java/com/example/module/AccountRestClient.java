@@ -23,7 +23,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
     //private static final String BASE_URL = "https://192.168.1.105:8000/";
-	private static final String BASE_URL = "http://192.168.1.107/";
+	private static final String BASE_URL = "https://192.168.1.107/";
 
     private static AsyncHttpClient client = null;
 	private static String TokenPre = " Token ";

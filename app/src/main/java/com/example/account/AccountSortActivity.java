@@ -114,7 +114,7 @@ public class AccountSortActivity  extends ActionBarActivity  implements AdapterV
             }
             else if(mSortType == Constants.ACCOUNT_SLIDEING_MENU_DESCEND)
             {
-                mDetailListDataSource = (ArrayList<Account>) Account.getSortDescAclcounts();
+                mDetailListDataSource = (ArrayList<Account>) Account.getSortDescAccounts();
             }
 
             Log.i(Constants.TAG, "------mDetailListDataSource.size()--------"+mDetailListDataSource.size());

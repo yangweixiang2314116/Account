@@ -143,13 +143,28 @@ public class Account extends Model implements Parcelable {
                 .execute();
     }
 
-	public static List<Account> getSortDescAclcounts(){
+	public static List<Account> getSortDescAccounts(){
 		return new Select()
 				.from(Account.class)
 				.where("SyncStatus != ?", Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE)
 				.orderBy("Cost desc")
 				.execute();
 	}
+
+	public static List<Account> getSearchResultAccounts( String content){
+		return new Select()
+				.from(Account.class)
+				.where("Category like ?  and SyncStatus != ?", content,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE)
+				.orderBy("Cost desc")
+				.execute();
+
+		//Cost = cost;
+		//Category = category;
+		//Brand = brand;
+		//Position = position;
+		//Comments = comments;
+	}
+
 
 	public static List<Account> getSortAscAclcounts(){
 		return new Select()

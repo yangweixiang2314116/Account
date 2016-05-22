@@ -80,8 +80,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <activity
-            android:name="com.example.account.AccountSortActivity"
-            android:label="@string/account_sort_asc" >
+        android:name="com.example.account.AccountSortActivity"
+        android:label="@string/account_sort_asc" >
+    </activity>
+
+        <activity
+            android:name="com.example.account.AccountSearchActivity"
+            android:label="@string/account_search" >
         </activity>
 
     </application>

@@ -149,18 +149,13 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         // as you specify a parent activity in AndroidManifest.xml.
         Log.i(Constants.TAG, "------onOptionsItemSelected--------");
         switch (item.getItemId()) {
-            case R.id.menu_sync:
-                Toast.makeText(AccountTotalActivity.this, "" + "ͬ��", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.menu_login: {
+            case R.id.total_account_search: {
+                Intent intent = new Intent();
+                intent.setClass(mContext, AccountSearchActivity.class);
 
+                Log.i(Constants.TAG, "------enter into AccountSearchActivity--------");
 
-                Toast.makeText(AccountTotalActivity.this, "" + "��½", Toast.LENGTH_SHORT).show();
-            }
-            break;
-            case R.id.menu_setting: {
-
-                Toast.makeText(AccountTotalActivity.this, "" + "����", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
             }
             break;
             case R.id.total_account_sync:{
@@ -314,6 +309,14 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     case Constants.ACCOUNT_SLIDEING_MENU_SYNC:
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SEARCH:
+                    {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, AccountSearchActivity.class);
+
+                        Log.i(Constants.TAG, "------enter into AccountSearchActivity--------");
+
+                        startActivity(intent);
+                    }
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_COMMENT:
                         break;
@@ -332,6 +335,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             public void onClick(View v) {
                         //TODO if not login , show text , indictor already login
                         Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
+                m_RegisterUser("86","15062256959");
+                /*
                 if (mSharedPreferences.getBoolean(
                         "is_login", false)) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
@@ -340,7 +345,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 else {
                   //  m_ShowLoginPoup();
                     m_ShowSMSLoginPoup();
-                }
+                }*/
             }
         });
 

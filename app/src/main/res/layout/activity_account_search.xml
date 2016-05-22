@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/account_search_result_part"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:background="@android:color/white" >
+
+    <TextView
+        android:id="@+id/total_search_number_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="@string/account_search_indicator"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/total_search_number_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/total_search_number_label"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="14sp" />
+
+    <ListView
+        android:id="@+id/account_search_result_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop ="20dp"
+        android:divider="?android:attr/listDivider"
+        android:dividerHeight="1px" />
+    </RelativeLayout>
+
+</RelativeLayout>
