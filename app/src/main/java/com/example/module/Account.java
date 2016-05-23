@@ -152,17 +152,15 @@ public class Account extends Model implements Parcelable {
 	}
 
 	public static List<Account> getSearchResultAccounts( String content){
+
+		String filter = "%"+content+"%";
+
 		return new Select()
 				.from(Account.class)
-				.where("Category like ?  and SyncStatus != ?", content,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE)
+				.where("( Cost = ?  or Category LIKE  ?  or Brand LIKE  ?  or Position LIKE  ?  or  Comments LIKE ? ) and SyncStatus != ?",
+						content,  filter, filter,filter,filter, Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE)
 				.orderBy("Cost desc")
 				.execute();
-
-		//Cost = cost;
-		//Category = category;
-		//Brand = brand;
-		//Position = position;
-		//Comments = comments;
 	}
 
 

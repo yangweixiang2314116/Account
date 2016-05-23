@@ -10,8 +10,6 @@
         android:iconifiedByDefault="true"
         android:inputType="textCapWords"
         android:imeOptions="actionSearch"
-        android:backgroundTint="@android:color/white"
-        android:background="@android:color/white"
         android:queryHint=""
         >
         

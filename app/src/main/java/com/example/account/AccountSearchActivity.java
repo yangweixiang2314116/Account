@@ -19,14 +19,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.module.Account;
+import com.example.module.SearchHistory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/5/22.
@@ -36,11 +42,17 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
     private Intent mIntent = null;
     private Context mContext = null;
     private SearchView  mSearchView  = null;
-    private RelativeLayout mSearchResultLayout = null;
+    private String mCurSearchContent = "";
+    private SearchView.SearchAutoComplete mEdit = null;
+
+    private ListView m_SearchHistorytList = null;
+    protected ArrayList<SearchHistory> mSearchHistoryDataSource = new ArrayList<SearchHistory>();
+    private RelativeLayout mSearchHistoryLayout = null;
 
     private ListView m_SearchAccountList = null;
     private AccountTotalDetailListAdapter m_SearchListAdapter = null;
     protected ArrayList<Account> mSearchListDataSource = new ArrayList<Account>();
+    private RelativeLayout mSearchResultLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +73,57 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
 
         setContentView(R.layout.activity_account_search);
 
+        m_InitSearchView();
+
+        getWindow() . setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) ;
+
+        m_SearchAccountList = (ListView) findViewById(R.id.account_search_result_list);
+
+        m_SearchHistorytList = (ListView) findViewById(R.id.account_search_history_list);
+
+        mSearchResultLayout = (RelativeLayout)findViewById(R.id.account_search_result_part);
+
+        mSearchHistoryLayout = (RelativeLayout)findViewById(R.id.account_search_history_part);
+
+        mShowSearchHistoryList();
+        mHideSearchResultContent();
+        Log.i(Constants.TAG, "------enter into AccountSearchActivity----onCreate--end--");
+
+    }
+
+    private void mShowSearchHistoryList()
+    {
+        mSearchHistoryLayout.setVisibility(View.VISIBLE);
+
+        mSearchHistoryDataSource = (ArrayList<SearchHistory>) SearchHistory.GetHistoryItems();
+
+        Log.i(Constants.TAG, "------mSearchHistoryDataSource.size()--------"+mSearchHistoryDataSource.size());
+
+        if(mSearchHistoryDataSource.size() > 0)
+        {
+            List<HashMap<String,Object>> data = new ArrayList<HashMap<String,Object>>();
+            for(int index = 0 ; index < mSearchHistoryDataSource.size(); index++){
+                HashMap<String,Object>map = new HashMap<String,Object>();
+                map.put("content", mSearchHistoryDataSource.get(index).Content);
+                data.add(map);
+            }
+            SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.account_search_history_list_item, new String[]{"content"}, new int[]{R.id.search_history_content});
+            m_SearchHistorytList.setAdapter(adapter);
+        }
+        else
+        {
+             m_SearchHistorytList.setAdapter(null);
+        }
+    }
+
+    private void mHideSearchHistoryList()
+    {
+        mSearchHistoryLayout.setVisibility(View.GONE);
+    }
+
+    private void m_InitSearchView()
+    {
         LayoutInflater inflater = ( LayoutInflater ) getSystemService ( Context . LAYOUT_INFLATER_SERVICE ) ;
 
         View customActionBarView = inflater . inflate ( R . layout . search_view_title , null ) ;
@@ -84,42 +147,50 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(mContext, "begin search", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "begin search", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Toast.makeText(mContext, "text change", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "text change", Toast.LENGTH_SHORT).show();
 
                 if (newText != null && newText.length() > 0) {
                     //show search result
+                    mCurSearchContent = newText;
                     new PrepareSearchTask(newText).execute();
                 } else {
                     // show search history
                     mHideSearchResultContent();
+                    mShowSearchHistoryList();
                 }
                 return false;
             }
         });
 
-       LayoutParams params = new LayoutParams( LayoutParams. WRAP_CONTENT ,
+        LayoutParams params = new LayoutParams( LayoutParams. WRAP_CONTENT ,
                 LayoutParams. WRAP_CONTENT , Gravity . CENTER_VERTICAL
                 | Gravity. RIGHT ) ;
 
         getSupportActionBar(). setCustomView(customActionBarView, params) ;
 
-        getWindow() . setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) ;
+        m_ChangeSearchViewDefaultStyle();
+    }
 
+    private void m_ChangeSearchViewDefaultStyle()
+    {
+        //mEdit = (SearchView.SearchAutoComplete) mSearchView.findViewById(R.id.search_src_text);
+        //mEdit.setTextColor(getResources().getColor(R.color.white_color));
+        //mEdit.setHintTextColor(getResources().getColor(R.color.list_line_color));
 
-        m_SearchAccountList = (ListView) findViewById(R.id.account_search_result_list);
+        LinearLayout  inputLine   = (LinearLayout) mSearchView.findViewById(R.id.search_plate);
+        inputLine.setBackgroundColor(Color.WHITE);
 
-        mSearchResultLayout = (RelativeLayout)findViewById(R.id.account_search_result_part);
+        //ImageView icTip = (ImageView) mSearchView.findViewById(R.id.search_button);
+        //icTip.setImageResource(R.mipmap.ic_search);
 
-        mHideSearchResultContent();
-        Log.i(Constants.TAG, "------enter into AccountSearchActivity----onCreate--end--");
-
+        //ImageView  CloseButton  = (ImageView) mSearchView.findViewById(R.id.search_close_btn);
+        //CloseButton.setImageResource(R.mipmap.abc_ic_clear_mtrl_alpha);
     }
 
     private void mHideSearchResultContent()
@@ -129,6 +200,7 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
 
     private void mShowSearchResultContent()
     {
+        mHideSearchHistoryList();
         mSearchResultLayout.setVisibility(View.VISIBLE);
     }
 
@@ -174,6 +246,7 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
         else
         {
                 //TODO
+            m_SearchAccountList.setAdapter(null);
         }
 
         mShowSearchResultContent();
@@ -183,6 +256,10 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.i(Constants.TAG, "------start AccountDetailActivity--------");
         Intent intent = new Intent(this, AccountDetailActivity.class);
+
+        SearchHistory item = new SearchHistory();
+        item.Content = mCurSearchContent;
+        item.save();
 
         Account current = mSearchListDataSource.get(position);
         intent.putExtra("id", current.getId());

@@ -99,6 +99,7 @@
     <string name="account_search_indicator">共找到记录: </string>
     <string name="account_search_hint">搜索记账</string>
     <string name="account_search_failed">抱歉，没有找到相关内容</string>
+    <string name="account_search_recently">最近搜索</string>
     <string name="account_search_clear_history">清空历史记录</string>
     <!--serach activity -->
 
