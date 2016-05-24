@@ -391,4 +391,5 @@ public class Account extends Model implements Parcelable {
     {
     	return new Select().from(Account.class).where("AccountId == ? ", id).executeSingle();
     }
+
 }

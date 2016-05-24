@@ -94,14 +94,14 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
 
     private void mShowSearchHistoryList()
     {
-        mSearchHistoryLayout.setVisibility(View.VISIBLE);
-
         mSearchHistoryDataSource = (ArrayList<SearchHistory>) SearchHistory.GetHistoryItems();
 
         Log.i(Constants.TAG, "------mSearchHistoryDataSource.size()--------"+mSearchHistoryDataSource.size());
 
         if(mSearchHistoryDataSource.size() > 0)
         {
+            mSearchHistoryLayout.setVisibility(View.VISIBLE);
+
             List<HashMap<String,Object>> data = new ArrayList<HashMap<String,Object>>();
             for(int index = 0 ; index < mSearchHistoryDataSource.size(); index++){
                 HashMap<String,Object>map = new HashMap<String,Object>();
@@ -110,10 +110,36 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
             }
             SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.account_search_history_list_item, new String[]{"content"}, new int[]{R.id.search_history_content});
             m_SearchHistorytList.setAdapter(adapter);
+            m_SearchHistorytList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    SearchHistory current = mSearchHistoryDataSource.get(position);
+                    mCurSearchContent = current.Content;
+                    if(mSearchView != null)
+                    {
+                        mSearchView.setQuery(mCurSearchContent, false);
+                    }
+                    new PrepareSearchTask(mCurSearchContent).execute();
+                }
+            });
+
+            TextView   clearSearchButton  = (TextView) findViewById(R.id.clear_search_history);
+
+            Log.i(Constants.TAG, "------setOnClickListener---clearSearchButton--");
+            clearSearchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(Constants.TAG, "------enter into onClick---clearSearchButton--");
+                    SearchHistory.deleteAll();
+                    Toast.makeText(mContext, getString(R.string.accout_search_clear_history_success), Toast.LENGTH_SHORT).show();
+                    mHideSearchHistoryList();
+                }
+            });
         }
         else
         {
              m_SearchHistorytList.setAdapter(null);
+            mSearchHistoryLayout.setVisibility(View.GONE);
         }
     }
 
@@ -133,6 +159,7 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
         mSearchView.setVisibility(View.VISIBLE);
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setIconified(false);
+        mSearchView.setQueryHint(getString(R.string.account_search_hint));
         if (Build.VERSION.SDK_INT >= 14) {
             // when edittest is empty, don't show cancal button
             mSearchView.onActionViewExpanded();
@@ -147,7 +174,7 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Toast.makeText(mContext, "begin search", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "onQueryTextSubmit--"+query, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -242,6 +269,7 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
             m_SearchAccountList.setOnItemClickListener(AccountSearchActivity.this);
 
             m_SearchListAdapter.updateUI();
+
         }
         else
         {
@@ -257,9 +285,14 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
         Log.i(Constants.TAG, "------start AccountDetailActivity--------");
         Intent intent = new Intent(this, AccountDetailActivity.class);
 
-        SearchHistory item = new SearchHistory();
-        item.Content = mCurSearchContent;
-        item.save();
+       if(false == SearchHistory.IsExistSearchContent(mCurSearchContent)) {
+           SearchHistory item = new SearchHistory();
+           item.Content = mCurSearchContent;
+           item.save();
+       }
+        else {
+           Log.i(Constants.TAG, "------mCurSearchContent already on DB--------"+mCurSearchContent);
+       }
 
         Account current = mSearchListDataSource.get(position);
         intent.putExtra("id", current.getId());

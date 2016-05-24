@@ -10,7 +10,7 @@
         android:iconifiedByDefault="true"
         android:inputType="textCapWords"
         android:imeOptions="actionSearch"
-        android:queryHint=""
+        android:queryHint="@string/account_search_hint"
         >
         
     </android.support.v7.widget.SearchView>
