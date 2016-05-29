@@ -335,22 +335,19 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             public void onClick(View v) {
                         //TODO if not login , show text , indictor already login
                         Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
-                m_RegisterUser("86","15062256959");
-                /*
-                if (mSharedPreferences.getBoolean(
-                        "is_login", false)) {
+                
+                if (AccountCommonUtil.IsLogin(mContext) ) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
-                    m_RegisterUser("86","15062256959");
+                    //m_RegisterUser("86","15062256959");
                 }
                 else {
                   //  m_ShowLoginPoup();
                     m_ShowSMSLoginPoup();
-                }*/
+                }
             }
         });
 
-        if (mSharedPreferences.getBoolean(
-                "is_login", false)) {
+        if (AccountCommonUtil.IsLogin(mContext)) {
             String userName = mSharedPreferences.getString("user_name", "");
             Log.i(Constants.TAG, "------login user name --------"+userName);
             TextView userNameText = (TextView) findViewById(R.id.total_value_label);
@@ -622,9 +619,6 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                             String phone = (String) phoneMap.get("phone");
                             Log.i(Constants.TAG, "------afterEvent----country----"+country+"--phone--"+phone);
 
-                            mSharedPreferences.edit().putBoolean("is_login", true)
-                                    .apply();
-
                             mSharedPreferences.edit().putString("user_name", phone)
                                     .apply();
 
@@ -657,8 +651,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
                 String token = null;
                 try {
-                    token = response.getString("message");
+                    token = response.getString("token");
                     AccountRestClient.SetClientToken(token);
+
+			AccountCommonUtil.SetToken(mContext,token);
+			mSharedPreferences.edit().putBoolean("is_login", true)
+                                    .apply();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -677,6 +675,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             @Override
             public void onFinish() {
+            	   Log.i(Constants.TAG, "---getToken--onFinish-----" );
                 super.onFinish();
             }
 

@@ -1,5 +1,6 @@
 package com.example.module;
 
+import com.example.account.AccountCommonUtil;
 import com.example.account.Constants;
 import com.example.account.R;
 import com.loopj.android.http.AsyncHttpClient;
@@ -22,12 +23,13 @@ import java.security.cert.CertificateException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
-    //private static final String BASE_URL = "https://192.168.1.105:8000/";
-	private static final String BASE_URL = "https://192.168.1.107/";
+    private static final String BASE_URL = "http://192.168.1.100:8000/";
+	//private static final String BASE_URL = "https://192.168.1.104/";
 
     private static AsyncHttpClient client = null;
 	private static String TokenPre = " Token ";
 	private static String Token = "";
+	private static Context mContext = null;
 
 	private static AccountRestClient mInstance;
 
@@ -38,6 +40,7 @@ public class AccountRestClient {
 		if (mInstance == null) {
 			mInstance = new AccountRestClient();
 			client = new AsyncHttpClient();
+			mContext = context;
 			mInstance.Init(context);
 		}
 		return mInstance;
@@ -48,6 +51,7 @@ public class AccountRestClient {
 		Log.i(Constants.TAG, "-AccountRestClient -- Init--start-");
 
 		//client = new AsyncHttpClient();
+		/*
 		KeyStore localTrustStore = null;
 		MySSLSocketFactory sslFactory = null;
 		try {
@@ -90,33 +94,40 @@ public class AccountRestClient {
 
 		Log.i(Constants.TAG, "--setSSLSocketFactory--");
 		client.setSSLSocketFactory(sslFactory);
-
+		*/
+		if(AccountCommonUtil.IsLogin(mContext))
+		{
+			String value = AccountCommonUtil.GetToken(mContext);
+			Token = TokenPre + value;
+			Log.i(Constants.TAG, "--already login in  - token --" + Token);
+		}
 	}
 
     public static void get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
-        client.setTimeout(10000);
+        client.setTimeout(5000);
     	Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
 
     	client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
 	public static void SetClientToken(String value)
-	{
+	{ 	
+    		Log.i(Constants.TAG, "--SetClientToken----" + value);
 		Token = TokenPre + value;
 	}
 
     public static void post(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
     	
-    	client.setTimeout(10000);
+    	client.setTimeout(5000);
     	
-    	Log.i(Constants.TAG, "--post getAbsoluteUrl--" + getAbsoluteUrl(url));
+    	Log.i(Constants.TAG, "--post getAbsoluteUrl----" + getAbsoluteUrl(url) +"--Token --"+Token);
     	client.addHeader("Authorization", Token);
     	client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 
 	public static void postNoToken(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
 
-		client.setTimeout(10000);
+		client.setTimeout(5000);
 
 		Log.i(Constants.TAG, "--post getAbsoluteUrl--" + getAbsoluteUrl(url));
 		//client.addHeader(HTTP.CONTENT_TYPE,
@@ -126,7 +137,7 @@ public class AccountRestClient {
 
     
     public static void delete(String url, JsonHttpResponseHandler responseHandler) {
-    	client.setTimeout(10000);
+    	client.setTimeout(5000);
     	
     	Log.i(Constants.TAG, "--delete getAbsoluteUrl--"+getAbsoluteUrl(url));
     	client.addHeader("Authorization",Token);
@@ -134,7 +145,7 @@ public class AccountRestClient {
     }
     
     public static void put(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
-    	client.setTimeout(10000);
+    	client.setTimeout(5000);
     	
     	Log.i(Constants.TAG, "--put getAbsoluteUrl--"+getAbsoluteUrl(url));
     	client.addHeader("Authorization",Token);

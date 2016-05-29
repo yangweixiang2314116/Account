@@ -52,6 +52,8 @@ public class AccountSyncTask {
 		Handler mHandler;
 		boolean mSyncUp;
 		boolean mSyncDown;
+		ArrayList<Account> mAccountSyncUpList = new ArrayList<Account>();
+		int        mCurrentSyncUpIndex;
 
 		public SyncTask(Boolean syncUp, Boolean syncDown, Handler handler) {
 			this(syncUp, syncDown);
@@ -92,14 +94,39 @@ public class AccountSyncTask {
 
 		private void syncUp() {
 			
-			Log.i(Constants.TAG, "------start to sync up---");
-			
-			
-			
+			Log.i(Constants.TAG, "------start to sync up-1234--");
+
+			mAccountSyncUpList.clear();
+			mCurrentSyncUpIndex = 0;
+			Log.i(Constants.TAG, "------start to sync up-4--");
 			List<Account> AccountList =   Account.getAllAccounts();
+			Log.i(Constants.TAG, "------start to sync AccountList ---"+AccountList.size());
 			for(int index = 0 ; index < AccountList.size(); index++)
 			{
-				m_CurrentItem = AccountList.get(index);
+				Account  item = AccountList.get(index);
+				if(item.isNeedSyncCreate() ||item.isNeedSyncUp() || item.isNeedSyncDelete() )
+				{
+					mAccountSyncUpList.add(item);
+				}
+			}
+
+			Log.i(Constants.TAG, "------start to sync mAccountSyncUpList ---"+mAccountSyncUpList.size());
+			m_ProcessSyncUpItems();
+		}
+
+		private boolean m_ProcessSyncUpItems()
+		{
+			if(mCurrentSyncUpIndex >= mAccountSyncUpList.size() )
+			{
+				Log.i(Constants.TAG, "----- sync up-had finish , done--");
+				mAccountSyncUpList.clear();
+				mCurrentSyncUpIndex = 0;
+				return true;
+			}
+
+
+				m_CurrentItem = mAccountSyncUpList.get(mCurrentSyncUpIndex++);
+				Log.i(Constants.TAG, "------start to sync up-m_CurrentItem --"+ m_CurrentItem.getId());
 				if(m_CurrentItem.isNeedSyncCreate())
 				{
 					Log.i(Constants.TAG, "------try to---Create on server -id----"+m_CurrentItem.getId());
@@ -119,6 +146,9 @@ public class AccountSyncTask {
 									 	Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response);
 									 	
 									 	new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD).execute();
+
+										//process next item 
+										m_ProcessSyncUpItems(); 
 						            }
 								 
 							        @Override
@@ -129,8 +159,9 @@ public class AccountSyncTask {
 									 	Log.i(Constants.TAG, "---postAccountItem--onFailure--statusCode---"+statusCode);
 									 	Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---"+response);
 									 	
-							            Toast.makeText(mContext, R.string.get_data_error, Toast.LENGTH_SHORT).show();
-							        }
+										//process next item 
+										m_ProcessSyncUpItems(); 
+								}
 
 					                @Override
 					                public void onFinish() {
@@ -159,6 +190,8 @@ public class AccountSyncTask {
 						                // If the response is JSONObject instead of expected JSONArray
 									 	Log.i(Constants.TAG, "---updateAccountItem--onSuccess--response---"+response);
 									 	new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP).execute();
+										//process next item 
+										m_ProcessSyncUpItems(); 
 								 }
 								 
 							        @Override
@@ -169,8 +202,9 @@ public class AccountSyncTask {
 									 	Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---"+statusCode);
 									 	Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---"+response);
 									 	
-							            Toast.makeText(mContext, R.string.get_data_error, Toast.LENGTH_SHORT).show();
-							        }
+										//process next item 
+										m_ProcessSyncUpItems(); 
+								}
 
 					                @Override
 					                public void onFinish() {
@@ -200,7 +234,22 @@ public class AccountSyncTask {
 						                // If the response is JSONObject instead of expected JSONArray
 									 	Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response);
 									 	new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE).execute();
+
+										//process next item 
+										m_ProcessSyncUpItems(); 
 								 }
+
+								 @Override
+							        
+							        public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
+							        {
+							            super.onFailure(statusCode, headers, throwable, response);
+									 	Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---"+statusCode);
+									 	Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---"+response);
+
+										//process next item 
+										m_ProcessSyncUpItems(); 
+								}
 								 
 				            });
 							
@@ -211,11 +260,11 @@ public class AccountSyncTask {
 				else
 				{
 					Log.i(Constants.TAG, "------do nothing----"+m_CurrentItem.getId());
-				}
-			}
-			
-		}
+				}	
 
+				return true;
+		}
+		
 		private void syncDown() {
 
 			mHandler.post(new Runnable() {

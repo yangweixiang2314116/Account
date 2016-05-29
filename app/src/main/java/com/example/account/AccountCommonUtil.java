@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -51,6 +53,34 @@ public class AccountCommonUtil {
 	{
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
 				dpVal, context.getResources().getDisplayMetrics());
+	}
+
+	public static boolean IsLogin(Context context)
+	{
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getBoolean(
+                "is_login", false);
+	}
+
+	public static String GetToken(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getString(
+				"token", "");
+	}
+
+	public static boolean SetToken(Context context, String token)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putString("token", token)
+				.apply();
+		return true;
 	}
 
 }
