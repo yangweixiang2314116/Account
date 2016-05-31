@@ -160,7 +160,13 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             break;
             case R.id.total_account_sync:{
                 Log.i(Constants.TAG, "------start to sync--------");
-                m_SyncTask.sync(true, true, new SyncHandler());
+                if (AccountCommonUtil.IsLogin(mContext) ) {
+                    m_SyncTask.sync(true, true, new SyncHandler());
+                }
+                else
+                {
+                    m_ShowQuestionLoginPoup();
+                }
             }
             break;
             default:
@@ -557,48 +563,29 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 .create().show();
     }
 
-
-    private void m_ShowLoginPoup() {
-
-        Log.i(Constants.TAG, "------start m_ShowLoginPoup--------");
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-        View content_view = LayoutInflater.from(AccountTotalActivity.this).inflate(R.layout.account_login_popup, null);
-        builder.setTitle(R.string.account_login)
-                .setView(content_view)
-                .setNegativeButton(R.string.give_up_cancel, null);
-
-        final AlertDialog  LoginWindow  = builder.create();
-
-        LoginWindow.show();
-
-
-        RelativeLayout registerLayout =(RelativeLayout) content_view.findViewById(R.id.account_login_register);
-        registerLayout.setOnClickListener(new OnClickListener() {
+    private void m_ShowQuestionLoginPoup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
+                .setTitle(R.string.account_login).setMessage(
+                        R.string.account_login_notice_body);
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.account_login_go_now, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.i(Constants.TAG, "------start AccountLoginRegisterActivity--------");
-                LoginWindow.dismiss();
-
-                Intent intent = new Intent(mContext, AccountLoginRegisterActivity.class);
-                startActivity(intent);
+            public void onClick(DialogInterface dialog, int which) {
+                m_ShowSMSLoginPoup();
+                dialog.dismiss();
             }
         });
 
-        RelativeLayout wxLoginLayout =(RelativeLayout) content_view.findViewById(R.id.account_login_weixin);
-        wxLoginLayout.setOnClickListener(new OnClickListener() {
+        builder.setNegativeButton(R.string.account_login_wait, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.i(Constants.TAG, "------start WXEntryActivity--------");
-                LoginWindow.dismiss();
-
-                Intent intent = new Intent(mContext, WXEntryActivity.class);
-                startActivity(intent);
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
 
+        builder.create().show();
     }
+
 
     private void m_ShowSMSLoginPoup() {
         Log.i(Constants.TAG, "------start m_ShowSMSLoginPoup--------");

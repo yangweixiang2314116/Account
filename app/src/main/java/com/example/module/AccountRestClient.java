@@ -23,7 +23,7 @@ import java.security.cert.CertificateException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
-    private static final String BASE_URL = "http://192.168.1.100:8000/";
+    private static final String BASE_URL = "http://192.168.1.104:8000/";
 	//private static final String BASE_URL = "https://192.168.1.104/";
 
     private static AsyncHttpClient client = null;

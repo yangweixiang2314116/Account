@@ -64,6 +64,15 @@ public class AccountCommonUtil {
                 "is_login", false);
 	}
 
+	public static boolean IsOnlyWifi(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getBoolean(
+				"only_wifi", true);
+	}
+
 	public static String GetToken(Context context)
 	{
 		SharedPreferences pSharedPreferences = PreferenceManager

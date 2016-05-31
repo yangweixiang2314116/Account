@@ -93,6 +93,9 @@
     <string name="account_login_success">登陆成功</string>
     <string name="account_login_failed">登陆失败</string>
     <string name="account_already_login_success">已登陆</string>
+    <string name="account_login_wait">下次再说</string>
+    <string name="account_login_go_now">马上登陆</string>
+    <string name="account_login_notice_body">亲，同步功能需要登陆后才能使用哦。登陆以后您的数据就不会丢啦。</string>
     <!--Login poup -->
 
     <!--serach activity-->
