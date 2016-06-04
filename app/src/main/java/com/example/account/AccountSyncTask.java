@@ -114,6 +114,90 @@ public class AccountSyncTask {
 			m_ProcessSyncUpItems();
 		}
 
+		private class AccountCreateJsonHttpResponseHandler extends JsonHttpResponseHandler {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				// If the response is JSONObject instead of expected JSONArray
+				Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response+ "--statusCode--"+statusCode);
+
+				new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD).execute();
+
+				//process next item
+				m_ProcessSyncUpItems();
+			}
+
+			@Override
+
+			public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
+			{
+				super.onFailure(statusCode, headers, throwable, response);
+				Log.i(Constants.TAG, "---postAccountItem--onFailure--statusCode---"+statusCode);
+				Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---"+response);
+
+				//process next item
+				m_ProcessSyncUpItems();
+			}
+
+			@Override
+			public void onFinish() {
+				super.onFinish();
+			}
+
+		}
+
+		private class AccountUpdateJsonHttpResponseHandler extends JsonHttpResponseHandler {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				// If the response is JSONObject instead of expected JSONArray
+				Log.i(Constants.TAG, "---updateAccountItem--onSuccess--response---"+response);
+				new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP).execute();
+				//process next item
+				m_ProcessSyncUpItems();
+			}
+
+			@Override
+
+			public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
+			{
+				super.onFailure(statusCode, headers, throwable, response);
+				Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---"+statusCode);
+				Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---"+response);
+
+				//process next item
+				m_ProcessSyncUpItems();
+			}
+
+			@Override
+			public void onFinish() {
+				super.onFinish();
+			}
+		}
+
+		private class AccountDeleteJsonHttpResponseHandler extends JsonHttpResponseHandler {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				// If the response is JSONObject instead of expected JSONArray
+				Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response);
+				new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE).execute();
+
+				//process next item
+				m_ProcessSyncUpItems();
+			}
+
+			@Override
+
+			public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
+			{
+				super.onFailure(statusCode, headers, throwable, response);
+				Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---"+statusCode);
+				Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---"+response);
+
+				//process next item
+				m_ProcessSyncUpItems();
+			}
+
+		}
+
 		private boolean m_ProcessSyncUpItems()
 		{
 			if(mCurrentSyncUpIndex >= mAccountSyncUpList.size() )
@@ -136,39 +220,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							
-							
-							AccountApiConnector.instance(mContext).postAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
-				            
-								 @Override
-						            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-						                // If the response is JSONObject instead of expected JSONArray
-									 	Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response);
-									 	
-									 	new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD).execute();
-
-										//process next item 
-										m_ProcessSyncUpItems(); 
-						            }
-								 
-							        @Override
-							        
-							        public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
-							        {
-							            super.onFailure(statusCode, headers, throwable, response);
-									 	Log.i(Constants.TAG, "---postAccountItem--onFailure--statusCode---"+statusCode);
-									 	Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---"+response);
-									 	
-										//process next item 
-										m_ProcessSyncUpItems(); 
-								}
-
-					                @Override
-					                public void onFinish() {
-					                    super.onFinish();
-					                }
-						            
-				            });	
+							AccountApiConnector.instance(mContext).postAccountItem(m_CurrentItem, new AccountCreateJsonHttpResponseHandler());
 						}
 						
 					});
@@ -183,36 +235,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance(mContext).updateAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
-				            
-								 @Override
-						            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-						                // If the response is JSONObject instead of expected JSONArray
-									 	Log.i(Constants.TAG, "---updateAccountItem--onSuccess--response---"+response);
-									 	new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP).execute();
-										//process next item 
-										m_ProcessSyncUpItems(); 
-								 }
-								 
-							        @Override
-							        
-							        public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
-							        {
-							            super.onFailure(statusCode, headers, throwable, response);
-									 	Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---"+statusCode);
-									 	Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---"+response);
-									 	
-										//process next item 
-										m_ProcessSyncUpItems(); 
-								}
-
-					                @Override
-					                public void onFinish() {
-					                    super.onFinish();
-					                }
-						            
-						           
-				            });
+							AccountApiConnector.instance(mContext).updateAccountItem(m_CurrentItem, new AccountUpdateJsonHttpResponseHandler());
 							
 						}
 						
@@ -227,32 +250,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance(mContext).deleteAccountItem(m_CurrentItem, new JsonHttpResponseHandler() {
-				            
-								 @Override
-						            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-						                // If the response is JSONObject instead of expected JSONArray
-									 	Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response);
-									 	new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE).execute();
-
-										//process next item 
-										m_ProcessSyncUpItems(); 
-								 }
-
-								 @Override
-							        
-							        public void  onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response)
-							        {
-							            super.onFailure(statusCode, headers, throwable, response);
-									 	Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---"+statusCode);
-									 	Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---"+response);
-
-										//process next item 
-										m_ProcessSyncUpItems(); 
-								}
-								 
-				            });
-							
+							AccountApiConnector.instance(mContext).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler() );
 						}
 						
 					});

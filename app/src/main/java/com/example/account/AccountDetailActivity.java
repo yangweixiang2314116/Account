@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
-public class AccountDetailActivity extends ActionBarActivity {
+public class AccountDetailActivity extends ActionBarActivity  {
 
 
 	private Account m_CurrentAccount = null;
@@ -132,7 +132,6 @@ public class AccountDetailActivity extends ActionBarActivity {
 		m_AccountImageList.setAdapter(m_DetailImageListAdapter);
         
 		//m_AccountImageList.setOnClickListener((OnClickListener) AccountDetailActivity.this);
-		
 		m_AccountImageList.bindLinearLayout();
 		
 		//m_DetailImageListAdapter.updateUI();
