@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.example.account.AccountImageSelectorDirPopupWindow.OnImageDirSelected;
+import com.example.module.Account;
+import com.example.module.ImageItem;
 import com.example.module.ImageSelectorFloder;
 
 import android.app.Activity;
@@ -56,9 +58,11 @@ public class AccountImageSelectorActivity extends ActionBarActivity implements O
 
 	private RelativeLayout mBottomLy;
 	private Intent  mIntent = null;
+	private Account m_CurrentAccount = null;
 
 	private TextView mChooseDir;
 	private TextView mImageCount;
+	private Boolean mbFirstEnter;
 	int totalCount = 0;
 
 	private int mScreenHeight;
@@ -89,8 +93,22 @@ public class AccountImageSelectorActivity extends ActionBarActivity implements O
 
 		mImgs = Arrays.asList(mImgDir.list());
 
+
 		mAdapter = new AccountImageSelectorAdapter(getApplicationContext(), mImgs,
 				R.layout.activity_account_image_selector_grid_item, mImgDir.getAbsolutePath());
+		if(mbFirstEnter)//Initail select image
+		{
+			ArrayList<ImageItem> ImageList = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
+			for(int index = 0 ; index < ImageList.size(); index++)
+			{
+				Log.i(Constants.TAG, "-----AccountImageSelectorActivity- ImageList.get(index).Path-------" + ImageList.get(index).Path);
+				mAdapter.mSelectedImage.add(ImageList.get(index).Path);
+			}
+
+			Log.i(Constants.TAG, "-----AccountImageSelectorActivity- mSelectedImage size -----" + mAdapter.GetSelectdImages().size());
+			mbFirstEnter = false;
+		}
+
 		mGirdView.setAdapter(mAdapter);
 		mImageCount.setText(totalCount + getText(R.string.image_number_name).toString());
 		
@@ -135,7 +153,20 @@ public class AccountImageSelectorActivity extends ActionBarActivity implements O
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		
 		mIntent = getIntent();
-		
+
+		mbFirstEnter = true;
+
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+			Long id = bundle.getLong("id");
+			Log.i(Constants.TAG, "-----AccountImageSelectorActivity- accountId-------" + id);
+			m_CurrentAccount = Account.load(Account.class, id);
+		} else {
+			Log.i(Constants.TAG, "-----AccountImageSelectorActivity- new account-------");
+			return ;
+		}
+
+
 		initView();
 		getImages();
 		initEvent();

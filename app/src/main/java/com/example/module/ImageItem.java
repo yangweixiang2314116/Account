@@ -4,6 +4,8 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import java.util.List;
+
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 @Table(name = "ImageItems")
@@ -29,6 +31,12 @@ public class ImageItem extends Model {
                 .from(ImageItem.class)
                 .where("Account   = ?",account.getId())
                 .orderBy("CreateTime desc")
+                .execute();
+    }
+
+    public static void deleteAll(Account account){
+        new Delete().from(ImageItem.class)
+                .where("Account   = ?", account.getId())
                 .execute();
     }
 }

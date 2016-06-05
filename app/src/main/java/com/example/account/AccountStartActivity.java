@@ -386,8 +386,18 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			break;
 		case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 			Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_IMAGE--");
+
+			Bundle mBundle = new Bundle();
+			if (m_CurrentAccount == null) {
+				Log.i(Constants.TAG, "--m_CurrentAccount == null--");
+			}
+			Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
+
+			mBundle.putLong("id", m_CurrentAccount.getId());
+
 			Intent intent = new Intent();
 			intent.setClass(this, AccountImageSelectorActivity.class);
+			intent.putExtras(mBundle);
 			startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
 		}
 			break;
@@ -457,52 +467,29 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			
 			case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 				if (data != null) {
+
+					ImageItem.deleteAll(m_CurrentAccount);
+					if(m_CurrentAccount.isSyncOnServer())
+					{
+						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
+					}
+					m_CurrentAccount.save();
 					ArrayList<String> imageSelectedlist = data.getStringArrayListExtra("images");
 
 					Log.i(Constants.TAG, "----imageSelectedlist-data size--" + imageSelectedlist.size());
 					ActiveAndroid.beginTransaction();
 					try {
-
-						List<ImageItem> existImagelist = m_CurrentAccount.Imageitems();
-
-						Log.i(Constants.TAG, "----existImagelist-data size--" + existImagelist.size());
-
 						for (int index = 0; index < imageSelectedlist.size(); index++) {
 							String addPath = imageSelectedlist.get(index);
-							
-							Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE--" + addPath);
-							
-							boolean bExistImage = false;
-							for(int findIndex = 0; findIndex < existImagelist.size(); findIndex++)
-							{
-								Log.i(Constants.TAG, "--existImagelist.get(findIndex).Path---" + existImagelist.get(findIndex).Path);
-								Log.i(Constants.TAG, "-----findIndex--"+ findIndex +"---addPath---" + addPath);
 
-								if(existImagelist.get(findIndex).Path.equals(addPath))
-								{
-									bExistImage = true;
-									Log.i(Constants.TAG, "----bExistImage---" + bExistImage);
-									break;
-								}
-							}
-							
-							if(!bExistImage)
-							{
-								Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
+							Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
 
 								ImageItem item = new ImageItem();
 								item.Path = addPath;
 								item.account = m_CurrentAccount;
 								item.save();
-								
-								if(m_CurrentAccount.isSyncOnServer())
-								{
-									m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-								}
-								m_CurrentAccount.save();
-							}
 
-						}
+							}
 						ActiveAndroid.setTransactionSuccessful();
 					} finally {
 						ActiveAndroid.endTransaction();

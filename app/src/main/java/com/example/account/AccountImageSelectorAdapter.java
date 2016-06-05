@@ -9,17 +9,18 @@ import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 public class AccountImageSelectorAdapter extends AccountImageSelectorCommonAdapter<String>
 {
 
-	public static ArrayList<String> mSelectedImage = new ArrayList<String>();
+	public  static ArrayList<String> mSelectedImage = new ArrayList<String>();
 
 
 	private String mDirPath;
 
-	public AccountImageSelectorAdapter(Context context, List<String> mDatas, int itemLayoutId,
+	public AccountImageSelectorAdapter(Context context, List<String> mDatas,   int itemLayoutId,
 			String dirPath)
 	{
 		super(context, mDatas, itemLayoutId);
@@ -46,23 +47,23 @@ public class AccountImageSelectorAdapter extends AccountImageSelectorCommonAdapt
 		
 		mImageView.setColorFilter(null);
 
-		mImageView.setOnClickListener(new OnClickListener()
-		{
+		mImageView.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v)
-			{
+			public void onClick(View v) {
 
-				if (mSelectedImage.contains(mDirPath + "/" + item))
-				{
+				if (mSelectedImage.contains(mDirPath + "/" + item)) {
 					mSelectedImage.remove(mDirPath + "/" + item);
 					mSelect.setImageResource(R.mipmap.picture_unselected);
 					mImageView.setColorFilter(null);
-				} else
-				{
-					mSelectedImage.add(mDirPath + "/" + item);
-					mSelect.setImageResource(R.mipmap.pictures_selected);
-					mImageView.setColorFilter(Color.parseColor("#77000000"));
+				} else {
+					if (mSelectedImage.size() >= 4) {
+						Toast.makeText(mContext, R.string.account_image_max_number, Toast.LENGTH_SHORT).show();
+					} else {
+						mSelectedImage.add(mDirPath + "/" + item);
+						mSelect.setImageResource(R.mipmap.pictures_selected);
+						mImageView.setColorFilter(Color.parseColor("#77000000"));
+					}
 				}
 
 			}

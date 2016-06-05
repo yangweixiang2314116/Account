@@ -107,5 +107,8 @@
     <string name="accout_search_clear_history_success">删除成功</string>
     <!--serach activity -->
 
+    <!--Image selector -->
+    <string name="account_image_max_number">最多只能选择4张图片</string>
+    <!--Image selector -->
 
 </resources>
