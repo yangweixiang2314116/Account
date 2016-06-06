@@ -110,6 +110,17 @@ public class AccountRestClient {
     	client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
+	public static void getWithToken(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
+		client.setTimeout(5000);
+		Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
+
+		Log.i(Constants.TAG, "--get getAbsoluteUrl----" + getAbsoluteUrl(url) + "--Token --" + Token);
+		client.addHeader("Authorization", Token);
+
+		client.get(getAbsoluteUrl(url), params, responseHandler);
+	}
+
+
 	public static void SetClientToken(String value)
 	{ 	
     		Log.i(Constants.TAG, "--SetClientToken----" + value);

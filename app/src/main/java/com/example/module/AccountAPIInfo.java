@@ -70,7 +70,9 @@ public class AccountAPIInfo
 				{
 					String ImagePath = response.getString(Label);
 					Log.i(Constants.TAG, "--AccountAPIInfo--build-ImagePath--" + ImagePath);
-					Thumbnails.add(ImagePath);
+					if(ImagePath.equals("") == false) {
+						Thumbnails.add(ImagePath);
+					}
 				}
 				else
 				{

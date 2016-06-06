@@ -366,11 +366,31 @@ public class Account extends Model implements Parcelable {
 		}
 	}
 	
-    public static Account build(AccountAPIInfo data) 
+    public static Boolean buildDownLoad(AccountAPIInfo data)
     {	
-		return new Account(data.AccountId,data.Cost,data.Category,data.Brand,data.Position,
+		Account item = new Account(data.AccountId,data.Cost,data.Category,data.Brand,data.Position,
 				data.Comments, data.CreateTime,data.UpdatedTime);
-    	
+		item.save();
+
+		ActiveAndroid.beginTransaction();
+		try {
+			for (int index = 0; index < data.Thumbnails.size(); index++) {
+				String serverPath = data.Thumbnails.get(index);
+
+				Log.i(Constants.TAG, "--sync download --add new Image--" + serverPath);
+
+				ImageItem download = new ImageItem();
+				download.Path = "";
+				download.ServerPath = serverPath;
+				download.account = item;
+				download.save();
+			}
+			ActiveAndroid.setTransactionSuccessful();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+
+		return true;
     }
     
     public boolean sync(AccountAPIInfo data) 

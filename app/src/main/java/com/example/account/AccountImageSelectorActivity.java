@@ -98,6 +98,7 @@ public class AccountImageSelectorActivity extends ActionBarActivity implements O
 				R.layout.activity_account_image_selector_grid_item, mImgDir.getAbsolutePath());
 		if(mbFirstEnter)//Initail select image
 		{
+			mAdapter.mSelectedImage.clear();
 			ArrayList<ImageItem> ImageList = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
 			for(int index = 0 ; index < ImageList.size(); index++)
 			{

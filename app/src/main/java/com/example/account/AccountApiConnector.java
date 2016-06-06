@@ -16,6 +16,7 @@ import android.util.Log;
 public class AccountApiConnector {
 
 	private static AccountApiConnector mInstance;
+	public static final int ACCOUNT_IMAGE_SELECT_MAX_COUNT = 4;
 	private static Context mcontext = null;
 	
     private AccountApiConnector() {
@@ -62,7 +63,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "-start to -get all account --");
 		
 		String url = "jz/details/";
-		AccountRestClient.instance(mcontext).get(url, null, handler);
+		AccountRestClient.instance(mcontext).getWithToken(url, null, handler);
 		
 	}
 	
@@ -202,9 +203,19 @@ public class AccountApiConnector {
 					}
 				}
 			}
+
+			//remove other old images
+			int count = DetailImageList.size();
+			for(; count < ACCOUNT_IMAGE_SELECT_MAX_COUNT ; count++)
+			{
+				int suffix = count + 1;
+				String key = "image"+ suffix;
+				params.put(key,"");
+			}
 		}
-		
-		
+
+		Log.i(Constants.TAG, "--put  request params--"+params.toString());
+
 		AccountRestClient.instance(mcontext).put(url, params, handler);
 	}
 }

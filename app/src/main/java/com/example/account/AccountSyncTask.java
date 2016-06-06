@@ -28,6 +28,8 @@ public class AccountSyncTask {
 	public static final int SYNC_END = 10;
 	public static final int SYNC_ERROR = 100;
 	public static final int SYNC_SUCCESS = 1000;
+
+
 	private Account m_CurrentItem = null;
 	
 	private Context mContext = null;
@@ -70,18 +72,14 @@ public class AccountSyncTask {
 			if (mSyncUp == false && mSyncDown == false) {
 				return null;
 			}
-			// if (mEvernoteSession.isLoggedIn() == false) {
-			// Logger.e(LogTag, "δ�Ǐ�);
-			// publishProgress(new Integer[] { SYNC_ERROR });
-			// return null;
-			// }
+
 			publishProgress(new Integer[] { SYNC_START });
 			try {
 				// makeSureNotebookExsits(NOTEBOOK_NAME);
 				if (mSyncUp)
 					syncUp();
 				if (mSyncDown)
-					//syncDown();
+					syncDown();
 				publishProgress(new Integer[] { SYNC_SUCCESS });
 			} catch (Exception e) {
 				publishProgress(new Integer[] { SYNC_ERROR });
@@ -397,21 +395,20 @@ public class AccountSyncTask {
                 	AccountAPIInfo Serveritem = m_detailList.get(index);
                 	
                 	Log.i(Constants.TAG, "----Serveritem.AccountId------"+Serveritem.AccountId);
-            		
+					Log.i(Constants.TAG, "---Serveritem.UpdatedTime------"+Serveritem.UpdatedTime);
+
                 	Account LocalItem = Account.findAccountByAccountId(Serveritem.AccountId);
-            		Log.i(Constants.TAG, "---LocalItem.UpdatedTime------"+LocalItem.UpdatedTime);
-            		Log.i(Constants.TAG, "---Serveritem.UpdatedTime------"+Serveritem.UpdatedTime);
             		
                 	if(LocalItem == null)
                 	{
                     	Log.i(Constants.TAG, "---can not find --Serveritem.AccountId------"+Serveritem.AccountId);
                 		//download and create this item
-                		Account newItem = Account.build(Serveritem);
-                		newItem.save();
+                		 Account.buildDownLoad(Serveritem);
+
                 	}
                 	else if (LocalItem.UpdatedTime != Serveritem.UpdatedTime)
                 	{
-                		
+						Log.i(Constants.TAG, "---LocalItem.UpdatedTime------"+LocalItem.UpdatedTime);
                 		//sync this item
                 		LocalItem.sync(Serveritem);
                 	}
