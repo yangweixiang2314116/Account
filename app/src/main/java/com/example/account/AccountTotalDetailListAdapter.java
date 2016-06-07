@@ -109,6 +109,8 @@ public class AccountTotalDetailListAdapter extends BaseAdapter {
 		} else {
 
 				holderText = (ViewHolderText) convertView.getTag();
+
+				Log.i(Constants.TAG, "-----------mTotalDetailList.get(position).CreateTime----" + mTotalDetailList.get(position).CreateTime);
 				holderText.date.setText(AccountCommonUtil.ConverDateToString(mTotalDetailList.get(position).CreateTime));
 				if(mTotalDetailList.get(position).Brand.isEmpty())
 				{

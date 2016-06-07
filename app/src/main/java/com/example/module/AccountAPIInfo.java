@@ -21,33 +21,35 @@ public class AccountAPIInfo
     public String Comments;
     public long CreateTime;
     public long UpdatedTime;
-    public ArrayList<String> Thumbnails;
+    public ArrayList<String> Thumbnails = new ArrayList<String>();
     
     public AccountAPIInfo()
     {
     	
     }
-    
-    public boolean build(JSONObject response) 
+
+	public static AccountAPIInfo build(JSONObject response)
 	{
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            Throwable warn = new Throwable("Please do not execute Animation.build(JSONObject object) " +
+			Log.i(Constants.TAG, "--AccountAPIInfo--Work in Main Looper !!!-" );
+            Throwable warn = new Throwable("Please do not execute Account.build(JSONObject object) " +
                     "in Main thread, it's bad performance and may block the ui thread");
             throw new RuntimeException(warn);
         }
         
 
-        AccountAPIInfo item = null;
+        AccountAPIInfo item = new AccountAPIInfo();
 		try {
-			item.LocalId = response.getLong("local_id");
-			item.AccountId = response.getLong("id");
-			item.Cost = response.getDouble("price");
-			item.Category = response.getString("tag");
-			item.Brand = response.getString("brand");
-			item.Comments = response.getString("note");
-			item.Position = response.getString("addr");	
+			item.LocalId =  response.isNull("local_id") ? 0:response.getLong("local_id");
+			item.AccountId =  response.isNull("id") ? 0:response.getLong("id");
+			item.Cost = response.isNull("price") ? 0:response.getDouble("price");
+			item.Category = response.isNull("tag") ? "":response.getString("tag");
+			item.Brand = response.isNull("brand") ? "":response.getString("brand");
+			item.Comments = response.isNull("note") ? "":response.getString("note");
+			item.Position = response.isNull("addr") ? "":response.getString("addr");
 			
 			String modify = response.getString("modified");
+			String created = response.getString("created");
 			
 			Log.i(Constants.TAG, "--AccountAPIInfo--build-local_id-" + item.LocalId);
 			Log.i(Constants.TAG, "--AccountAPIInfo--build-AccountId-" + item.AccountId);
@@ -57,9 +59,14 @@ public class AccountAPIInfo
 			Log.i(Constants.TAG, "--AccountAPIInfo--build-Comments-" + item.Comments);
 			Log.i(Constants.TAG, "--AccountAPIInfo--build-Position-" + item.Position);
 			Log.i(Constants.TAG, "--AccountAPIInfo--build-modify time-" + modify);
-			
+			Log.i(Constants.TAG, "--AccountAPIInfo--build-created time-" + created);
+
 		    item.UpdatedTime = AccountCommonUtil.ConverStringToDate(modify);
-		    
+			Log.i(Constants.TAG, "--AccountAPIInfo--build-UpdatedTime-" +  item.UpdatedTime);
+
+			item.CreateTime = AccountCommonUtil.ConverStringToDate(created);
+			Log.i(Constants.TAG, "--AccountAPIInfo--build-CreateTime-" +  item.CreateTime);
+
 		    for(int index = 1; index <= 4; index++)
 		    {
 		    	String Label = "image"+index;
@@ -71,7 +78,7 @@ public class AccountAPIInfo
 					String ImagePath = response.getString(Label);
 					Log.i(Constants.TAG, "--AccountAPIInfo--build-ImagePath--" + ImagePath);
 					if(ImagePath.equals("") == false) {
-						Thumbnails.add(ImagePath);
+						item.Thumbnails.add(ImagePath);
 					}
 				}
 				else
@@ -84,10 +91,11 @@ public class AccountAPIInfo
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			Log.i(Constants.TAG, "--AccountAPIInfo--JSONException-" );
+			return null;
 		}
 		finally {
-			return true;
+			return item;
 		}
 	}
     

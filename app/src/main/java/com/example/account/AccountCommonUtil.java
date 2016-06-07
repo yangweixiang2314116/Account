@@ -30,6 +30,7 @@ public class AccountCommonUtil {
 	
 	public static Long ConverStringToDate(String date)
 	{
+		Log.i(Constants.TAG, "-----------ConverDateToString---before convert ----" + date);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		long time = 0;
 		try {
@@ -38,7 +39,9 @@ public class AccountCommonUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		Log.i(Constants.TAG, "-----------ConverDateToString---- check Date----" + ConverDateToString(time));
+
 		return time;
 	}
 

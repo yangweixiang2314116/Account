@@ -363,7 +363,7 @@ public class AccountSyncTask {
     }
 
     private class ProcessSyncDownTask extends AsyncTask<Void, Void, Boolean> {
-        private JSONArray m_responseObject = null;
+        private JSONArray m_responseObject = new JSONArray();
         private ArrayList<AccountAPIInfo> m_detailList = null;
         
         
@@ -375,21 +375,16 @@ public class AccountSyncTask {
         @Override
         protected Boolean doInBackground(Void... voids) {
         	Boolean bResult = false;
-            Log.i(Constants.TAG, "----ProcessSyncDownTask--doInBackground----");
+            Log.i(Constants.TAG, "----ProcessSyncDownTask--doInBackground---m_responseObject-"+m_responseObject);
             try {
-            	//TODO
+				Log.i(Constants.TAG, "---m_responseObject.length()-------" +m_responseObject.length());
                 for (int index = 0; index < m_responseObject.length(); index++) {
-                	Log.i(Constants.TAG, "----------"+m_CurrentItem.getId());
-                	
                 	Log.i(Constants.TAG, "----------"+m_responseObject.getJSONObject(index));
                 	
-                	AccountAPIInfo item = new AccountAPIInfo();
-                	item.build(m_responseObject.getJSONObject(index));
+                	AccountAPIInfo item =AccountAPIInfo.build(m_responseObject.getJSONObject(index));
                 	m_detailList.add(item);
                 }
-                
-                
-                //List<Account> localList = Account.getAllAccounts();
+
                 for(int index = 0; index < m_detailList.size(); index++)
                 {
                 	AccountAPIInfo Serveritem = m_detailList.get(index);

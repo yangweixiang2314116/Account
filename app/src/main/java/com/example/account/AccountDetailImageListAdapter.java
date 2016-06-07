@@ -103,8 +103,15 @@ public class AccountDetailImageListAdapter extends BaseAdapter {
 		//} else {
 
 		//	holderImage = (ViewHolderImage) convertView.getTag();
+		String DecoderImagePath = "";
+		if(mDetailImageList.get(position).Path.equals("")  == false) {
 			String ImagePath = mDetailImageList.get(position).Path;
-			String DecoderImagePath = "file://" + ImagePath;
+			DecoderImagePath = "file://" + ImagePath;
+		}
+		else
+		{
+			DecoderImagePath = mDetailImageList.get(position).ServerPath;
+		}
 			
 			Log.i(Constants.TAG, "---position----" + position + "--DecoderImagePath---"+DecoderImagePath);
 

@@ -367,11 +367,16 @@ public class Account extends Model implements Parcelable {
 	}
 	
     public static Boolean buildDownLoad(AccountAPIInfo data)
-    {	
+    {
+		Log.i(Constants.TAG, "--buildDownLoad --data.AccountId--" + data.AccountId);
 		Account item = new Account(data.AccountId,data.Cost,data.Category,data.Brand,data.Position,
 				data.Comments, data.CreateTime,data.UpdatedTime);
+		item.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_NOTHING;
 		item.save();
 
+		Log.i(Constants.TAG, "--buildDownLoad --add .Account on DB --" + item.getId());
+
+		Log.i(Constants.TAG, "--buildDownLoad --data.Thumbnails--" + data.Thumbnails.size());
 		ActiveAndroid.beginTransaction();
 		try {
 			for (int index = 0; index < data.Thumbnails.size(); index++) {
@@ -390,6 +395,7 @@ public class Account extends Model implements Parcelable {
 			ActiveAndroid.endTransaction();
 		}
 
+		Log.i(Constants.TAG, "--buildDownLoad --data.AccountId--" + data.AccountId+ "end");
 		return true;
     }
     
