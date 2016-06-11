@@ -111,4 +111,11 @@
     <string name="account_image_max_number">最多只能选择4张图片</string>
     <!--Image selector -->
 
+    <!--Sync service  -->
+    <string name="account_sync_service_start">同步任务开始</string>
+    <string name="account_sync_service_success">同步任务完成</string>
+    <string name="account_sync_service_error">同步任务发生错误</string>
+
+
+
 </resources>

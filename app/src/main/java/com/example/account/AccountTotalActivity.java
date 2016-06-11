@@ -1,10 +1,13 @@
 package com.example.account;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
@@ -74,12 +77,14 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private TextView m_CurrentTimeText = null;
     private Double m_CurrentTotalCost = 0.0;
     private Menu m_OptionsMenu = null;
-    private AccountSyncTask m_SyncTask = null;
+    private AccountSyncService.AccountSyncServiceBinder mBinder = null;
+    private ServiceConnection mConnection =null;
     private   SlidingMenu m_Menu  = null;
     private  RelativeLayout m_LoginLayout = null;
     private Toolbar  m_ToolBar = null;
     private SharedPreferences mSharedPreferences = null;
     private BroadcastReceiver mReceiver = null;
+    private boolean m_bConnected = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
     @Override
@@ -91,8 +96,6 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         setSupportActionBar(m_ToolBar);
 
         mContext = this;
-        m_SyncTask = new AccountSyncTask(mContext);
-
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
 
@@ -116,7 +119,31 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_InitSlidingMenuContent();
 
         m_InitReceiver();
+
+        m_InitBindler();
         new PrepareTask().execute();
+
+    }
+
+    private void m_InitBindler()
+    {
+        mConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                Log.i(Constants.TAG, "onServiceConnected----namer"+name);
+                mBinder = (AccountSyncService.AccountSyncServiceBinder)service;
+                m_bConnected = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.i(Constants.TAG, "onServiceDisconnected----namer"+name);
+                m_bConnected = false;
+            }
+        };
+
+        Intent intent = new Intent(this,AccountSyncService.class);
+        bindService(intent,mConnection,BIND_AUTO_CREATE);
 
     }
 
@@ -161,6 +188,11 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         super.onDestroy();
         unregisterReceiver(mReceiver);
         mReceiver = null;
+
+        if(m_bConnected)
+        {
+            unbindService(mConnection);
+        }
     }
 
     @Override
@@ -189,9 +221,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             }
             break;
             case R.id.total_account_sync:{
-                Log.i(Constants.TAG, "------start to sync--------");
+                Log.i(Constants.TAG, "-------start to sync-------");
                 if (AccountCommonUtil.IsLogin(mContext) ) {
-                    m_SyncTask.sync(true, true, new SyncHandler());
+                    mBinder.startSync();
                 }
                 else
                 {
@@ -510,26 +542,6 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             Log.i(Constants.TAG, "------onPostExecute--------");
             super.onPostExecute(result);
             m_InitalTotalAccountList();
-        }
-    }
-
-    @SuppressLint("HandlerLeak")
-    class SyncHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-			/*
-			case AccountSyncTask.SYNC_START:
-				setRefreshActionButtonState(true);
-				break;
-			case AccountSyncTask.SYNC_END:
-				setRefreshActionButtonState(false);
-				break;
-				*/
-                default:
-                    break;
-            }
         }
     }
 

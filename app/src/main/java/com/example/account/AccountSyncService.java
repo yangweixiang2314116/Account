@@ -4,61 +4,106 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.activeandroid.annotation.Column;
-import com.example.account.R.id;
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
-import com.example.module.ImageItem;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import android.content.Context;
+import android.app.Service;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Handler;
-import android.os.Looper;
+import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
 
-public class AccountSyncTask {
+public class AccountSyncService extends Service {
 
 	public static final int SYNC_START = 1;
 	public static final int SYNC_END = 10;
 	public static final int SYNC_ERROR = 100;
 	public static final int SYNC_SUCCESS = 1000;
 
-
 	private Account m_CurrentItem = null;
-	
-	private Context mContext = null;
 
-	public AccountSyncTask(Context context) {
-		mContext = context;
-	}
-	
-	public synchronized void sync(final boolean syncUp, final boolean syncDown, Handler hanler) {
-		if (hanler != null) {
-			hanler.sendEmptyMessage(SYNC_START);
+	private Handler syncHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what){
+				case SYNC_ERROR:
+					Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+					break;
+				case SYNC_START:
+					Toast.makeText(AccountSyncService.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT).show();
+					break;
+				case SYNC_SUCCESS:
+					Toast.makeText(AccountSyncService.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT).show();
+					break;
+			}
+
 		}
-		toSync(syncUp, syncDown, hanler);
+	};
+
+	@Override
+	public void onCreate() {
+		Log.i(Constants.TAG, "--AccountSyncService----onCreate--");
+		super.onCreate();
 	}
 
-	private synchronized void toSync(final boolean syncUp, final boolean syncDown, Handler handler) {
-		new SyncTask(syncUp, syncDown, handler).execute();
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.i(Constants.TAG, "--AccountSyncService----onStartCommand--");
+		return super.onStartCommand(intent, flags, startId);
 	}
-	
+
+	@Override
+	public void onDestroy() {
+		Log.i(Constants.TAG, "--AccountSyncService----onDestroy--");
+		super.onDestroy();
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		Log.i(Constants.TAG, "--AccountSyncService----onBind--");
+		return new AccountSyncServiceBinder();
+	}
+
+	@Override
+	public boolean onUnbind(Intent intent) {
+		Log.i(Constants.TAG, "--AccountSyncService----onUnbind--");
+		return super.onUnbind(intent);
+	}
+
+	public class AccountSyncServiceBinder extends Binder {
+		public void startSync() {
+			Log.i(Constants.TAG, "--AccountSyncServiceBinder----startSync--");
+			if (syncHandler != null) {
+				syncHandler.sendEmptyMessage(SYNC_START);
+			}
+
+			new SyncTask(true,true,syncHandler).execute();
+		}
+
+	}
+
+
 	class SyncTask extends AsyncTask<Void, Integer, Void> {
 
 		Handler mHandler;
 		boolean mSyncUp;
 		boolean mSyncDown;
 		ArrayList<Account> mAccountSyncUpList = new ArrayList<Account>();
-		int        mCurrentSyncUpIndex;
+		int  mCurrentSyncUpIndex;
 
 		public SyncTask(Boolean syncUp, Boolean syncDown, Handler handler) {
 			this(syncUp, syncDown);
+			Log.i(Constants.TAG, "--SyncTask-----");
 			mHandler = handler;
 		}
 
@@ -75,7 +120,6 @@ public class AccountSyncTask {
 
 			publishProgress(new Integer[] { SYNC_START });
 			try {
-				// makeSureNotebookExsits(NOTEBOOK_NAME);
 				if (mSyncUp)
 					syncUp();
 				if (mSyncDown)
@@ -218,7 +262,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance(mContext).postAccountItem(m_CurrentItem, new AccountCreateJsonHttpResponseHandler());
+							AccountApiConnector.instance(AccountSyncService.this).postAccountItem(m_CurrentItem, new AccountCreateJsonHttpResponseHandler());
 						}
 						
 					});
@@ -233,8 +277,8 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance(mContext).updateAccountItem(m_CurrentItem, new AccountUpdateJsonHttpResponseHandler());
-							
+							AccountApiConnector.instance(AccountSyncService.this).updateAccountItem(m_CurrentItem, new AccountUpdateJsonHttpResponseHandler());
+
 						}
 						
 					});
@@ -248,7 +292,7 @@ public class AccountSyncTask {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							AccountApiConnector.instance(mContext).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler() );
+							AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler() );
 						}
 						
 					});
@@ -269,7 +313,7 @@ public class AccountSyncTask {
 				public void run() {
 					// TODO Auto-generated method stub
 					
-					AccountApiConnector.instance(mContext).getDetailList(new JsonHttpResponseHandler() {
+					AccountApiConnector.instance(AccountSyncService.this).getDetailList(new JsonHttpResponseHandler() {
 		            
 			            @Override
 			            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -415,9 +459,11 @@ public class AccountSyncTask {
                 	}
                 }
 
+				//TODO if the item had delete on server , need check every item on DB. if not exist in server list , need delete on DB
+
 				if(nSyncDownChangedItem > 0)
 				{
-					AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
+					AccountCommonUtil.sendBroadcastForAccountDataChange(AccountSyncService.this);
 				}
             	bResult = true;
             } catch (Exception e) {

@@ -89,6 +89,8 @@
             android:label="@string/account_search" >
         </activity>
 
+        <service android:name="com.example.account.AccountSyncService" android:exported="false" />
+
     </application>
 
 </manifest>
