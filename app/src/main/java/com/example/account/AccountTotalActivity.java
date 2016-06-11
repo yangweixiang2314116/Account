@@ -1,5 +1,7 @@
 package com.example.account;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -77,6 +79,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private  RelativeLayout m_LoginLayout = null;
     private Toolbar  m_ToolBar = null;
     private SharedPreferences mSharedPreferences = null;
+    private BroadcastReceiver mReceiver = null;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
     @Override
@@ -112,8 +115,28 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         m_InitSlidingMenuContent();
 
+        m_InitReceiver();
         new PrepareTask().execute();
 
+    }
+
+    private  void m_InitReceiver()
+    {
+         mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE)) {
+                    Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver");
+                    //start load all account from DB
+                    new PrepareTask().execute();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
+        registerReceiver(mReceiver, filter);
+
+        return ;
     }
 
     protected void onStart(){
@@ -124,13 +147,20 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     protected void onRestart(){
         super.onRestart();
         //start load all account from DB
-        new PrepareTask().execute();
+        //new PrepareTask().execute();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onReatart");
     }
 
     protected void onResume() {
         super.onResume();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onResume");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
+        mReceiver = null;
     }
 
     @Override
@@ -459,6 +489,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             Log.i(Constants.TAG, "------start get all account from DB--------");
 
+            mDetailListDataSource.clear();
             mDetailListDataSource = (ArrayList<Account>) Account.getNormalAccounts();
 
             Log.i(Constants.TAG, "------mDetailListDataSource--------");
@@ -468,9 +499,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             m_CurrentTotalCost = 0.0;
             for(int index = 0 ; index < mDetailListDataSource.size(); index++)
             {
-                Log.i(Constants.TAG, "------mDetailListDataSource--index-----"+index);
-
-                Log.i(Constants.TAG, "------mDetailListDataSource------"+mDetailListDataSource.get(index));
+                Log.i(Constants.TAG, "------mDetailListDataSource--index-"+index + "--Cost--"+mDetailListDataSource.get(index).Cost);
                 m_CurrentTotalCost += mDetailListDataSource.get(index).Cost;
             }
             return true;

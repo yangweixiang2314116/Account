@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -93,6 +94,11 @@ public class AccountCommonUtil {
 		pSharedPreferences.edit().putString("token", token)
 				.apply();
 		return true;
+	}
+
+	public static void sendBroadcastForAccountDataChange(Context context) {
+		Intent intent = new Intent(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
+		context.sendBroadcast(intent);
 	}
 
 }

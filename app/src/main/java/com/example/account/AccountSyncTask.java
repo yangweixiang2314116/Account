@@ -385,6 +385,7 @@ public class AccountSyncTask {
                 	m_detailList.add(item);
                 }
 
+				int nSyncDownChangedItem = 0;
                 for(int index = 0; index < m_detailList.size(); index++)
                 {
                 	AccountAPIInfo Serveritem = m_detailList.get(index);
@@ -399,20 +400,25 @@ public class AccountSyncTask {
                     	Log.i(Constants.TAG, "---can not find --Serveritem.AccountId------"+Serveritem.AccountId);
                 		//download and create this item
                 		 Account.buildDownLoad(Serveritem);
-
+						nSyncDownChangedItem++;
                 	}
                 	else if (LocalItem.UpdatedTime != Serveritem.UpdatedTime)
                 	{
 						Log.i(Constants.TAG, "---LocalItem.UpdatedTime------"+LocalItem.UpdatedTime);
                 		//sync this item
                 		LocalItem.sync(Serveritem);
+						nSyncDownChangedItem++;
                 	}
                 	else
                 	{
                 		continue;
                 	}
                 }
-                
+
+				if(nSyncDownChangedItem > 0)
+				{
+					AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
+				}
             	bResult = true;
             } catch (Exception e) {
                 e.printStackTrace();

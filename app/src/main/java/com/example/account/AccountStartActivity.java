@@ -104,6 +104,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			break;
 		case R.id.start_account_finish:
 			m_SaveAccount();
+			//notify data change
+			AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
 			finish();
 			break;
 		default:
@@ -145,14 +147,13 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				if (m_bChanged) {// ----->如果字符未改变则返回
+				if (m_bChanged) {
 					return;
 				}
 				String str = s.toString();
 
 				m_bChanged = true;
 				String cuttedStr = str;
-				/* 删除字符串中的dot */
 				for (int i = str.length() - 1; i >= 0; i--) {
 					char c = str.charAt(i);
 					if ('.' == c) {
@@ -160,7 +161,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 						break;
 					}
 				}
-				/* 删除前面多余的0 */
+
 				int NUM = cuttedStr.length();
 				int zeroIndex = -1;
 				for (int i = 0; i < NUM - 2; i++) {
@@ -176,11 +177,11 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				if (zeroIndex != -1) {
 					cuttedStr = cuttedStr.substring(zeroIndex);
 				}
-				/* 不足3位补0 */
+
 				if (cuttedStr.length() < 3) {
 					cuttedStr = "0" + cuttedStr;
 				}
-				/* 加上dot，以显示小数点后两位 */
+
 				cuttedStr = cuttedStr.substring(0, cuttedStr.length() - 2) + "."
 						+ cuttedStr.substring(cuttedStr.length() - 2);
 

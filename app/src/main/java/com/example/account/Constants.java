@@ -49,4 +49,8 @@ public class Constants {
 		 */
 		public static final int ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE = 3;
 
+		/*intent fileter
+	   */
+		public static final String INTENT_NOTIFY_ACCOUNT_CHANGE = "com.example.account.DATA_UPDATE";
+
 }
