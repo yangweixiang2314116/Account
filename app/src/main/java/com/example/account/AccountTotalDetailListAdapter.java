@@ -25,7 +25,7 @@ public class AccountTotalDetailListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater = null;
 	private Resources mResources;
 
-	protected ArrayList<Account> mTotalDetailList = new ArrayList<Account>();
+	protected ArrayList<Account> mTotalDetailList = null;
 
 	public AccountTotalDetailListAdapter(Context context, ArrayList<Account> dataSourece) {
 
@@ -108,37 +108,38 @@ public class AccountTotalDetailListAdapter extends BaseAdapter {
 
 		} else {
 
-				holderText = (ViewHolderText) convertView.getTag();
-
-				Log.i(Constants.TAG, "-----------mTotalDetailList.get(position).CreateTime----" + mTotalDetailList.get(position).CreateTime);
-				holderText.date.setText(AccountCommonUtil.ConverDateToString(mTotalDetailList.get(position).CreateTime));
-				if(mTotalDetailList.get(position).Brand.isEmpty())
-				{
-					holderText.brand.setText(mResources.getText(R.string.total_list_brand_default));
-				}
-				else
-				{
-					holderText.brand.setText(mTotalDetailList.get(position).Brand);
-				}
-				
-				if(mTotalDetailList.get(position).Category.isEmpty())
-				{
-					holderText.category.setText(mResources.getText(R.string.total_list_category_default));
-				}
-				else
-				{
-					holderText.category.setText(mTotalDetailList.get(position).Category);
-				}
-				
-				Log.i(Constants.TAG, "--Cost---" + mTotalDetailList.get(position).Cost);
-				
-				Double cost = mTotalDetailList.get(position).Cost;
-				DecimalFormat df= new DecimalFormat("#,##0.00");
-
-				String formatCost = df.format(cost);
-				
-				holderText.cost.setText(formatCost);
+			holderText = (ViewHolderText) convertView.getTag();
 		}
+
+		Log.i(Constants.TAG, "-----------mTotalDetailList.get(position).CreateTime----" + mTotalDetailList.get(position).CreateTime);
+		holderText.date.setText(AccountCommonUtil.ConverDateToString(mTotalDetailList.get(position).CreateTime));
+		if(mTotalDetailList.get(position).Brand.isEmpty())
+		{
+				holderText.brand.setText(mResources.getText(R.string.total_list_brand_default));
+		}
+		else
+		{
+				holderText.brand.setText(mTotalDetailList.get(position).Brand);
+		}
+				
+		if(mTotalDetailList.get(position).Category.isEmpty())
+		{
+			holderText.category.setText(mResources.getText(R.string.total_list_category_default));
+		}
+		else
+		{
+			holderText.category.setText(mTotalDetailList.get(position).Category);
+		}
+				
+		Log.i(Constants.TAG, "--Cost---" + mTotalDetailList.get(position).Cost);
+				
+		Double cost = mTotalDetailList.get(position).Cost;
+		DecimalFormat df= new DecimalFormat("#,##0.00");
+
+		String formatCost = df.format(cost);
+				
+		holderText.cost.setText(formatCost);
+
 
 		return convertView;
 	}

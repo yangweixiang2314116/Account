@@ -230,7 +230,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_TotalAllAccountList.setOnItemClickListener(AccountTotalActivity.this);
         m_TotalAllAccountList.setOnItemLongClickListener(AccountTotalActivity.this);
 
-        m_DetailListAdapter.updateUI();
+//        m_DetailListAdapter.updateUI();
 
         m_TotalCostText = (TextView) findViewById(R.id.total_value);
 
