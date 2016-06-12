@@ -23,34 +23,21 @@ import cz.msebera.android.httpclient.Header;
 
 public class AccountSyncService extends Service {
 
-	public static final int SYNC_START = 1;
-	public static final int SYNC_END = 10;
-	public static final int SYNC_ERROR = 100;
-	public static final int SYNC_SUCCESS = 1000;
-
 	private Account m_CurrentItem = null;
 
-	private Handler syncHandler = new Handler(){
+	private AccountTotalActivity.OnProgressListener onProgressListener;
+
+	private Handler syncHandler = new Handler();
+
+	private int mSyncStatus = Constants.ACCOUNT_SYNC_END;
+
+
+	public void setOnProgressListener(AccountTotalActivity.OnProgressListener onProgressListener) {
+		this.onProgressListener = onProgressListener;
+	}
+
+
 		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what){
-				case SYNC_ERROR:
-					Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
-					break;
-				case SYNC_START:
-					Toast.makeText(AccountSyncService.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT).show();
-					break;
-				case SYNC_SUCCESS:
-					Toast.makeText(AccountSyncService.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT).show();
-					break;
-			}
-
-		}
-	};
-
-	@Override
 	public void onCreate() {
 		Log.i(Constants.TAG, "--AccountSyncService----onCreate--");
 		super.onCreate();
@@ -83,13 +70,29 @@ public class AccountSyncService extends Service {
 	public class AccountSyncServiceBinder extends Binder {
 		public void startSync() {
 			Log.i(Constants.TAG, "--AccountSyncServiceBinder----startSync--");
-			if (syncHandler != null) {
-				syncHandler.sendEmptyMessage(SYNC_START);
+			if(mSyncStatus != Constants.ACCOUNT_SYNC_END)
+			{
+				Toast.makeText(AccountSyncService.this, R.string.account_sync_service_already_start, Toast.LENGTH_SHORT).show();
+				return ;
 			}
 
+			if (onProgressListener != null) {
+
+				onProgressListener.onProgress(Constants.ACCOUNT_SYNC_START);
+				mSyncStatus = Constants.ACCOUNT_SYNC_START;
+			}
 			new SyncTask(true,true,syncHandler).execute();
 		}
 
+		public AccountSyncService getService()
+		{
+			return AccountSyncService.this;
+		}
+
+		public int getSyncStatus()
+		{
+			return mSyncStatus;
+		}
 	}
 
 
@@ -118,18 +121,18 @@ public class AccountSyncService extends Service {
 				return null;
 			}
 
-			publishProgress(new Integer[] { SYNC_START });
+			publishProgress(new Integer[] { Constants.ACCOUNT_SYNC_START });
 			try {
 				if (mSyncUp)
 					syncUp();
 				if (mSyncDown)
 					syncDown();
-				publishProgress(new Integer[] { SYNC_SUCCESS });
+				publishProgress(new Integer[] { Constants.ACCOUNT_SYNC_SUCCESS });
 			} catch (Exception e) {
-				publishProgress(new Integer[] { SYNC_ERROR });
+				publishProgress(new Integer[] { Constants.ACCOUNT_SYNC_ERROR });
 				return null;
 			} finally {
-				publishProgress(new Integer[] { SYNC_END });
+				publishProgress(new Integer[] { Constants.ACCOUNT_SYNC_END });
 			}
 			return null;
 		}
@@ -335,18 +338,22 @@ public class AccountSyncService extends Service {
 				return;
 			}
 			switch (values[0]) {
-			case SYNC_START:
-				mHandler.sendEmptyMessage(SYNC_START);
+			case Constants.ACCOUNT_SYNC_START:
+				mSyncStatus = Constants.ACCOUNT_SYNC_START;
+				onProgressListener.onProgress(Constants.ACCOUNT_SYNC_START);
 				break;
-			case SYNC_END:
-				mHandler.sendEmptyMessage(SYNC_END);
+			case Constants.ACCOUNT_SYNC_END:
+				mSyncStatus = Constants.ACCOUNT_SYNC_END;
+				onProgressListener.onProgress(Constants.ACCOUNT_SYNC_END);
 				break;
-			case SYNC_ERROR:
-				mHandler.sendEmptyMessage(SYNC_ERROR);
+			case Constants.ACCOUNT_SYNC_ERROR:
+				mSyncStatus = Constants.ACCOUNT_SYNC_ERROR;
+				onProgressListener.onProgress(Constants.ACCOUNT_SYNC_ERROR);
 				break;
-			case SYNC_SUCCESS:
-				mHandler.sendEmptyMessage(SYNC_SUCCESS);
-				break;
+			case Constants.ACCOUNT_SYNC_SUCCESS:
+					mSyncStatus = Constants.ACCOUNT_SYNC_SUCCESS;
+					onProgressListener.onProgress(Constants.ACCOUNT_SYNC_SUCCESS);
+					break;
 			default:
 				break;
 			}

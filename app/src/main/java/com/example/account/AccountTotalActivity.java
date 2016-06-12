@@ -132,6 +132,27 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Log.i(Constants.TAG, "onServiceConnected----namer"+name);
                 mBinder = (AccountSyncService.AccountSyncServiceBinder)service;
+
+                AccountSyncService Syncservice =  mBinder.getService();
+
+                Syncservice.setOnProgressListener(new OnProgressListener() {
+                    @Override
+                    public void onProgress(int progress) {
+                        switch (progress){
+                            case Constants.ACCOUNT_SYNC_ERROR:
+                                Toast.makeText(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+                                break;
+                            case Constants.ACCOUNT_SYNC_START:
+                                Toast.makeText(AccountTotalActivity.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT).show();
+                                setRefreshActionButtonState(true);
+                                break;
+                            case Constants.ACCOUNT_SYNC_SUCCESS:
+                                Toast.makeText(AccountTotalActivity.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT).show();
+                                setRefreshActionButtonState(false);
+                                break;
+                        }
+                    }
+                });
                 m_bConnected = true;
             }
 
@@ -710,4 +731,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         });
         return true;
     }
+
+    public interface OnProgressListener {
+        void onProgress(int progress);
+    }
+
 }

@@ -53,4 +53,9 @@ public class Constants {
 	   */
 		public static final String INTENT_NOTIFY_ACCOUNT_CHANGE = "com.example.account.DATA_UPDATE";
 
+		public static final int ACCOUNT_SYNC_ERROR = 0;
+		public static final int ACCOUNT_SYNC_START = 1;
+		public static final int ACCOUNT_SYNC_END = 2;
+		public static final int ACCOUNT_SYNC_SUCCESS = 3;
+
 }
