@@ -138,15 +138,19 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 Syncservice.setOnProgressListener(new OnProgressListener() {
                     @Override
                     public void onProgress(int progress) {
+
+                        Log.i(Constants.TAG, "onProgress----progress--"+progress);
+
                         switch (progress){
                             case Constants.ACCOUNT_SYNC_ERROR:
                                 Toast.makeText(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+                                setRefreshActionButtonState(false);
                                 break;
                             case Constants.ACCOUNT_SYNC_START:
                                 Toast.makeText(AccountTotalActivity.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT).show();
                                 setRefreshActionButtonState(true);
                                 break;
-                            case Constants.ACCOUNT_SYNC_SUCCESS:
+                            case Constants.ACCOUNT_SYNC_END:
                                 Toast.makeText(AccountTotalActivity.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT).show();
                                 setRefreshActionButtonState(false);
                                 break;

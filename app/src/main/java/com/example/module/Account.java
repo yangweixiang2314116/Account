@@ -400,7 +400,8 @@ public class Account extends Model implements Parcelable {
     }
     
     public boolean sync(AccountAPIInfo data) 
-    {	
+    {
+		Log.i(Constants.TAG, "--sync data from server -" );
 		AccountId = data.AccountId;
 		Cost = data.Cost;
 		Category = data.Category;
@@ -409,6 +410,28 @@ public class Account extends Model implements Parcelable {
 		Comments = data.Comments;
 		CreateTime = data.CreateTime;
 		UpdatedTime = data.UpdatedTime;
+
+		ImageItem.deleteAll(this);
+
+		Log.i(Constants.TAG, "--buildDownLoad --data.Thumbnails--" + data.Thumbnails.size());
+		ActiveAndroid.beginTransaction();
+		try {
+			for (int index = 0; index < data.Thumbnails.size(); index++) {
+				String serverPath = data.Thumbnails.get(index);
+
+				Log.i(Constants.TAG, "--sync download --add new Image--" + serverPath);
+
+				ImageItem download = new ImageItem();
+				download.Path = "";
+				download.ServerPath = serverPath;
+				download.account = this;
+				download.save();
+			}
+			ActiveAndroid.setTransactionSuccessful();
+		} finally {
+			ActiveAndroid.endTransaction();
+		}
+
 		return true;
     	
     }

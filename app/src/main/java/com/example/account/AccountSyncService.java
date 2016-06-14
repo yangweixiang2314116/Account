@@ -2,6 +2,7 @@ package com.example.account;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -102,7 +103,6 @@ public class AccountSyncService extends Service {
 		boolean mSyncUp;
 		boolean mSyncDown;
 		ArrayList<Account> mAccountSyncUpList = new ArrayList<Account>();
-		int  mCurrentSyncUpIndex;
 
 		public SyncTask(Boolean syncUp, Boolean syncDown, Handler handler) {
 			this(syncUp, syncDown);
@@ -121,7 +121,6 @@ public class AccountSyncService extends Service {
 				return null;
 			}
 
-			publishProgress(new Integer[] { Constants.ACCOUNT_SYNC_START });
 			try {
 				if (mSyncUp)
 					syncUp();
@@ -142,7 +141,6 @@ public class AccountSyncService extends Service {
 			Log.i(Constants.TAG, "------start to sync up-1234--");
 
 			mAccountSyncUpList.clear();
-			mCurrentSyncUpIndex = 0;
 			Log.i(Constants.TAG, "------start to sync up-4--");
 			List<Account> AccountList =   Account.getAllAccounts();
 			Log.i(Constants.TAG, "------start to sync AccountList ---"+AccountList.size());
@@ -156,19 +154,31 @@ public class AccountSyncService extends Service {
 			}
 
 			Log.i(Constants.TAG, "------start to sync mAccountSyncUpList ---"+mAccountSyncUpList.size());
-			m_ProcessSyncUpItems();
+			try {
+				m_ProcessSyncUpItems();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		private class AccountCreateJsonHttpResponseHandler extends JsonHttpResponseHandler {
+
+			private  CountDownLatch mlatch = null;
+			public AccountCreateJsonHttpResponseHandler(CountDownLatch latch) {
+				mlatch = latch;
+			}
+
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				// If the response is JSONObject instead of expected JSONArray
-				Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response+ "--statusCode--"+statusCode);
+				Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---" + response + "--statusCode--" + statusCode);
 
 				new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD).execute();
 
-				//process next item
-				m_ProcessSyncUpItems();
+				if(mlatch != null) {
+					mlatch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
+				}
 			}
 
 			@Override
@@ -177,10 +187,12 @@ public class AccountSyncService extends Service {
 			{
 				super.onFailure(statusCode, headers, throwable, response);
 				Log.i(Constants.TAG, "---postAccountItem--onFailure--statusCode---"+statusCode);
-				Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---"+response);
+				Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---" + response);
 
-				//process next item
-				m_ProcessSyncUpItems();
+				if(mlatch != null) {
+					mlatch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
+				}
 			}
 
 			@Override
@@ -191,13 +203,21 @@ public class AccountSyncService extends Service {
 		}
 
 		private class AccountUpdateJsonHttpResponseHandler extends JsonHttpResponseHandler {
+
+			private  CountDownLatch mlatch = null;
+			public AccountUpdateJsonHttpResponseHandler(CountDownLatch latch) {
+				mlatch = latch;
+			}
+
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				// If the response is JSONObject instead of expected JSONArray
-				Log.i(Constants.TAG, "---updateAccountItem--onSuccess--response---"+response);
+				Log.i(Constants.TAG, "---updateAccountItem--onSuccess--response---" + response);
 				new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP).execute();
-				//process next item
-				m_ProcessSyncUpItems();
+				if(mlatch != null) {
+					mlatch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
+				}
 			}
 
 			@Override
@@ -206,10 +226,12 @@ public class AccountSyncService extends Service {
 			{
 				super.onFailure(statusCode, headers, throwable, response);
 				Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---"+statusCode);
-				Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---"+response);
+				Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---" + response);
 
-				//process next item
-				m_ProcessSyncUpItems();
+				if(mlatch != null) {
+					mlatch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
+				}
 			}
 
 			@Override
@@ -219,14 +241,21 @@ public class AccountSyncService extends Service {
 		}
 
 		private class AccountDeleteJsonHttpResponseHandler extends JsonHttpResponseHandler {
+			private  CountDownLatch mlatch = null;
+			public AccountDeleteJsonHttpResponseHandler(CountDownLatch latch) {
+				mlatch = latch;
+			}
+
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				// If the response is JSONObject instead of expected JSONArray
-				Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---"+response);
+				Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---" + response);
 				new ProcessSyncUpTask(response,Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE).execute();
 
-				//process next item
-				m_ProcessSyncUpItems();
+				if(mlatch != null) {
+					mlatch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
+				}
 			}
 
 			@Override
@@ -235,100 +264,124 @@ public class AccountSyncService extends Service {
 			{
 				super.onFailure(statusCode, headers, throwable, response);
 				Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---"+statusCode);
-				Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---"+response);
+				Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + response);
 
-				//process next item
-				m_ProcessSyncUpItems();
+				if(mlatch != null) {
+					mlatch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
+				}
 			}
 
 		}
 
-		private boolean m_ProcessSyncUpItems()
-		{
-			if(mCurrentSyncUpIndex >= mAccountSyncUpList.size() )
-			{
-				Log.i(Constants.TAG, "----- sync up-had finish , done--");
-				mAccountSyncUpList.clear();
-				mCurrentSyncUpIndex = 0;
-				return true;
+		private boolean m_ProcessSyncUpItems() throws InterruptedException {
+
+			int nTotalCount = mAccountSyncUpList.size();
+			final CountDownLatch latch = new CountDownLatch(nTotalCount);
+			Log.i(Constants.TAG, "------CountDownLatch -nTotalCount-" + latch.getCount());
+
+			for(int index = 0 ; index <  mAccountSyncUpList.size(); index++) {
+				m_CurrentItem = mAccountSyncUpList.get(index);
+				Log.i(Constants.TAG, "------start to sync up-m_CurrentItem --" + m_CurrentItem.getId());
+				if (m_CurrentItem.isNeedSyncCreate()) {
+					Log.i(Constants.TAG, "------try to---Create on server -id----" + m_CurrentItem.getId());
+
+					mHandler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							AccountApiConnector.instance(AccountSyncService.this).postAccountItem(m_CurrentItem, new AccountCreateJsonHttpResponseHandler(latch));
+						}
+
+					});
+
+				} else if (m_CurrentItem.isNeedSyncUp()) {
+					Log.i(Constants.TAG, "------try to---Sync up on server -id----" + m_CurrentItem.getId());
+
+					mHandler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							AccountApiConnector.instance(AccountSyncService.this).updateAccountItem(m_CurrentItem, new AccountUpdateJsonHttpResponseHandler(latch));
+
+						}
+
+					});
+
+				} else if (m_CurrentItem.isNeedSyncDelete()) {
+					Log.i(Constants.TAG, "------try to---Delete on server -id----" + m_CurrentItem.getId());
+					mHandler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler(latch));
+						}
+
+					});
+				} else {
+					Log.i(Constants.TAG, "------do nothing----" + m_CurrentItem.getId());
+					latch.countDown();
+					Log.i(Constants.TAG, "-----latch count ---"+latch.getCount());
+				}
 			}
+			latch.await();
 
-
-				m_CurrentItem = mAccountSyncUpList.get(mCurrentSyncUpIndex++);
-				Log.i(Constants.TAG, "------start to sync up-m_CurrentItem --"+ m_CurrentItem.getId());
-				if(m_CurrentItem.isNeedSyncCreate())
-				{
-					Log.i(Constants.TAG, "------try to---Create on server -id----"+m_CurrentItem.getId());
-					
-					mHandler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							AccountApiConnector.instance(AccountSyncService.this).postAccountItem(m_CurrentItem, new AccountCreateJsonHttpResponseHandler());
-						}
-						
-					});
-	                
-				}
-				else if (m_CurrentItem.isNeedSyncUp())
-				{
-					Log.i(Constants.TAG, "------try to---Sync up on server -id----"+m_CurrentItem.getId());
-				
-					mHandler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							AccountApiConnector.instance(AccountSyncService.this).updateAccountItem(m_CurrentItem, new AccountUpdateJsonHttpResponseHandler());
-
-						}
-						
-					});
-					
-				}
-				else if ( m_CurrentItem.isNeedSyncDelete())
-				{
-					Log.i(Constants.TAG, "------try to---Delete on server -id----"+m_CurrentItem.getId());
-					mHandler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler() );
-						}
-						
-					});
-				}
-				else
-				{
-					Log.i(Constants.TAG, "------do nothing----"+m_CurrentItem.getId());
-				}	
+			Log.i(Constants.TAG, "-----await finish---");
 
 				return true;
 		}
 		
 		private void syncDown() {
 
+			final CountDownLatch syncDownLatch = new CountDownLatch(1);
 			mHandler.post(new Runnable() {
 
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					
+
 					AccountApiConnector.instance(AccountSyncService.this).getDetailList(new JsonHttpResponseHandler() {
-		            
-			            @Override
-			            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-			               
-			            	Log.i(Constants.TAG, "---getDetailList--onSuccess--response---"+response);
-			            	new ProcessSyncDownTask(response).execute();
-			            }
-				            
-		            });
-		            }
+
+						@Override
+						public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+							Log.i(Constants.TAG, "---getDetailList--onSuccess--response---" + response);
+							new ProcessSyncDownTask(response).execute();
+
+							if (syncDownLatch != null) {
+								syncDownLatch.countDown();
+								Log.i(Constants.TAG, "-----syncDownLatch count ---" + syncDownLatch.getCount());
+							}
+
+						}
+
+						@Override
+
+						public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+							super.onFailure(statusCode, headers, throwable, response);
+							Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + response);
+
+							if (syncDownLatch != null) {
+								syncDownLatch.countDown();
+								Log.i(Constants.TAG, "-----syncDownLatch count ---" + syncDownLatch.getCount());
+							}
+						}
+
+					});
+				}
 			});
-			
+
+
+			try {
+				syncDownLatch.await();
+			} catch (InterruptedException e) {
+				Log.i(Constants.TAG, "---syncDownLatch--Exception---" + e);
+				e.printStackTrace();
+			}
+
 		}
 		
 		@Override
@@ -462,11 +515,26 @@ public class AccountSyncService extends Service {
                 	}
                 	else
                 	{
+						Log.i(Constants.TAG, "-this item did not change--need do nothing------");
                 		continue;
                 	}
                 }
 
 				//TODO if the item had delete on server , need check every item on DB. if not exist in server list , need delete on DB
+				List<Account> AccountList =   Account.getAllAccounts();
+				Log.i(Constants.TAG, "------start to sync AccountList ---"+AccountList.size());
+				for(int index = 0 ; index < AccountList.size(); index++)
+				{
+					AccountAPIInfo searchItem = new AccountAPIInfo(AccountList.get(index));
+					if(m_detailList.contains(searchItem) == false)
+					{
+						Log.i(Constants.TAG, "------this item had been delete by other device - AccountId ---"+searchItem.AccountId);
+
+						Account.deleteOne(AccountList.get(index));
+						nSyncDownChangedItem++;
+					}
+
+				}
 
 				if(nSyncDownChangedItem > 0)
 				{
@@ -484,7 +552,7 @@ public class AccountSyncService extends Service {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            Log.i(Constants.TAG, "----ProcessSyncDownTask--onPostExecute----");
+			Log.i(Constants.TAG, "----ProcessSyncDownTask--onPostExecute----");
         }
     }
 

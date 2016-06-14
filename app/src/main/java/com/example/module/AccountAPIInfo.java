@@ -28,6 +28,35 @@ public class AccountAPIInfo
     	
     }
 
+	public AccountAPIInfo(Account item)
+	{
+		 LocalId = item.getId();
+		 AccountId = item.AccountId;
+		 Cost = item.Cost;
+		Category = item.Category;
+		 Brand = item.Brand;
+		Position = item.Position;
+		 Comments =item.Comments ;
+		CreateTime = item.CreateTime;
+		UpdatedTime = item.UpdatedTime;
+
+		ArrayList<ImageItem> ImageList = (ArrayList<ImageItem>) item.Imageitems();
+		for(int index = 0 ; index < ImageList.size(); index++)
+		{
+			this.Thumbnails.add(ImageList.get(index).ServerPath);
+		}
+
+	}
+
+	public boolean equals(Object o) {
+		if (o instanceof AccountAPIInfo) {
+			AccountAPIInfo u = (AccountAPIInfo) o;
+				return AccountId == u.AccountId;
+		} else {
+			return false;
+		}
+	}
+
 	public static AccountAPIInfo build(JSONObject response)
 	{
         if (Looper.myLooper() == Looper.getMainLooper()) {
