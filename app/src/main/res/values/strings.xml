@@ -117,6 +117,7 @@
     <string name="account_sync_service_error">同步任务发生错误</string>
     <string name="account_sync_service_already_start">同步任务正在进行，稍后再尝试</string>
 
-
-
+    <string name="account_guide_chose_style">选择装修风格，记账更加智能</string>
+    <string name="account_guide_chose_budget">设置装修预算，超支提前预警</string>
+    <string name="account_guide_chose_area">选择装修面积，大数据预测费用</string>
 </resources>

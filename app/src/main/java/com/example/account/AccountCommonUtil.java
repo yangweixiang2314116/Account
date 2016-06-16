@@ -68,6 +68,27 @@ public class AccountCommonUtil {
                 "is_login", false);
 	}
 
+	public static boolean IsFirstEnter(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getBoolean(
+				"is_first", true);
+	}
+
+	public static boolean SetNotFirstEnter(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putBoolean("is_first", false)
+				.apply();
+		return true;
+	}
+
+
+
 	public static boolean IsOnlyWifi(Context context)
 	{
 		SharedPreferences pSharedPreferences = PreferenceManager

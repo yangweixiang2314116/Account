@@ -431,7 +431,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 
                 if (AccountCommonUtil.IsLogin(mContext) ) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
-                    m_RegisterUser("86","15062256959"); // To be delete
+                    //m_RegisterUser("86","15062256959"); // To be delete
                 }
                 else {
                   //  m_ShowLoginPoup();

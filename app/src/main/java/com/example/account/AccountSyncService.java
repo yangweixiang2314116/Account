@@ -522,7 +522,7 @@ public class AccountSyncService extends Service {
 
 				//TODO if the item had delete on server , need check every item on DB. if not exist in server list , need delete on DB
 				List<Account> AccountList =   Account.getAllAccounts();
-				Log.i(Constants.TAG, "------start to sync AccountList ---"+AccountList.size());
+				Log.i(Constants.TAG, "------check items in  AccountList exist on server or not---"+AccountList.size());
 				for(int index = 0 ; index < AccountList.size(); index++)
 				{
 					AccountAPIInfo searchItem = new AccountAPIInfo(AccountList.get(index));
