@@ -23,8 +23,8 @@ import java.security.cert.CertificateException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
-    private static final String BASE_URL = "http://192.168.1.104:8000/";
-	//private static final String BASE_URL = "https://192.168.1.104/";
+    //private static final String BASE_URL = "http://192.168.1.104:8000/";
+	private static final String BASE_URL = "https://192.168.1.220/";
 
     private static AsyncHttpClient client = null;
 	private static String TokenPre = " Token ";
@@ -51,7 +51,7 @@ public class AccountRestClient {
 		Log.i(Constants.TAG, "-AccountRestClient -- Init--start-");
 
 		//client = new AsyncHttpClient();
-		/*
+
 		KeyStore localTrustStore = null;
 		MySSLSocketFactory sslFactory = null;
 		try {
@@ -63,7 +63,7 @@ public class AccountRestClient {
 		InputStream input = context.getResources().openRawResource(R.raw.codeprojectssl);
 		try {
 			try {
-				localTrustStore.load(input, "311311".toCharArray());
+				localTrustStore.load(input, "123456".toCharArray());
 				sslFactory = new MySSLSocketFactory(localTrustStore);
 			} catch (IOException e) {
 				Log.i(Constants.TAG, "--IOException-" + e);
@@ -94,13 +94,15 @@ public class AccountRestClient {
 
 		Log.i(Constants.TAG, "--setSSLSocketFactory--");
 		client.setSSLSocketFactory(sslFactory);
-		*/
+
 		if(AccountCommonUtil.IsLogin(mContext))
 		{
 			String value = AccountCommonUtil.GetToken(mContext);
 			Token = TokenPre + value;
 			Log.i(Constants.TAG, "--already login in  - token --" + Token);
 		}
+
+		Log.i(Constants.TAG, "--AccountRestClient -- Init--end--");
 	}
 
     public static void get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {

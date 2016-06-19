@@ -95,7 +95,7 @@
     <string name="account_already_login_success">已登陆</string>
     <string name="account_login_wait">下次再说</string>
     <string name="account_login_go_now">马上登陆</string>
-    <string name="account_login_notice_body">亲，同步功能需要登陆后才能使用哦。登陆以后您的数据就不会丢啦。</string>
+    <string name="account_login_notice_body">亲，这个功能需要登陆后才能使用哦。</string>
     <!--Login poup -->
 
     <!--serach activity-->
@@ -120,4 +120,15 @@
     <string name="account_guide_chose_style">选择装修风格，记账更加智能</string>
     <string name="account_guide_chose_budget">设置装修预算，超支提前预警</string>
     <string name="account_guide_chose_area">选择装修面积，大数据预测费用</string>
+
+
+
+    <!--feed back -->
+    <string name="account_feedback_thanks">非常感谢您的宝贵意见</string>
+    <string name="account_feedback_empty">_(:з」∠)_</string>
+    <string name="account_feedback_failed">提交失败</string>
+    <string name="hint_suggesion">给我们提意见</string>
+    <string name="send">发送</string>
+    <!--feed back  -->
+
 </resources>

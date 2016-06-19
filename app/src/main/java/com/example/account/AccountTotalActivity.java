@@ -168,7 +168,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         };
 
         Intent intent = new Intent(this,AccountSyncService.class);
-        bindService(intent,mConnection,BIND_AUTO_CREATE);
+        bindService(intent, mConnection, BIND_AUTO_CREATE);
 
     }
 
@@ -400,6 +400,16 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     }
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SYNC:
+                    {
+                        Log.i(Constants.TAG, "-------start to sync-------");
+                        if (AccountCommonUtil.IsLogin(mContext) ) {
+                            mBinder.startSync();
+                        }
+                        else
+                        {
+                            m_ShowQuestionLoginPoup();
+                        }
+                    }
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SEARCH:
                     {
@@ -412,6 +422,21 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     }
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_COMMENT:
+                    {
+                        Log.i(Constants.TAG, "-------start to feedback-------");
+                       // if (AccountCommonUtil.IsLogin(mContext) ) {
+                            Intent intent = new Intent();
+                            intent.setClass(mContext, AccountFeedbackActivity.class);
+
+                            Log.i(Constants.TAG, "------enter into AccountFeedbackActivity--------");
+
+                            startActivity(intent);
+                    //    }
+                      //  else
+                       // {
+                     //       m_ShowQuestionLoginPoup();
+                     //   }
+                    }
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SETTING:
                         break;
@@ -431,11 +456,11 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 
                 if (AccountCommonUtil.IsLogin(mContext) ) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
-                    //m_RegisterUser("86","15062256959"); // To be delete
+                    m_RegisterUser("86", "15062256959"); // To be delete
                 }
                 else {
-                  //  m_ShowLoginPoup();
-                    m_ShowSMSLoginPoup();
+                    m_RegisterUser("86","15062256959");
+                    //m_ShowSMSLoginPoup();
                 }
             }
         });

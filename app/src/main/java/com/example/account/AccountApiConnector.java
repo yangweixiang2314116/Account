@@ -218,4 +218,18 @@ public class AccountApiConnector {
 
 		AccountRestClient.instance(mcontext).put(url, params, handler);
 	}
+
+	public void postFeedback(String feedback, JsonHttpResponseHandler handler)
+	{
+		Log.i(Constants.TAG, "-start to -postFeedback--"+feedback);
+
+		String url = "jz/feedbacks/";
+
+		RequestParams params = new RequestParams();
+
+		params.put("feedback",feedback);
+
+		AccountRestClient.instance(mcontext).post(url, params ,handler);
+	}
+
 }
