@@ -27,4 +27,12 @@
     <dimen name="shadow_width">15dp</dimen>
     <!-- Slide Menu-->
 
+    <!-- Setting-->
+    <dimen name="setting_item_height">55dp</dimen>
+    <dimen name="setting_padding">15dp</dimen>
+    <dimen name="setting_arrow">20dp</dimen>
+    <dimen name="setting_text_padding_left">8dp</dimen>
+    <dimen name="setting_item_padding">8dp</dimen>
+    <dimen name="seprate_line">1px</dimen>
+    <!-- Setting-->
 </resources>

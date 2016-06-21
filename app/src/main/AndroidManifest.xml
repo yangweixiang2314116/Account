@@ -103,6 +103,12 @@
             android:label="@string/account_comment" >
         </activity>
 
+        <activity
+            android:name="com.example.account.AccountSettingActivity"
+            android:label="@string/account_setting" >
+        </activity>
+
+
         <service android:name="com.example.account.AccountSyncService" android:exported="false" />
 
     </application>

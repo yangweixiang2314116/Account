@@ -6,7 +6,6 @@
     <color name="actionbar_background_color">#373b3e</color>
 
 
-    <color name="activity_background_color">#f0eff5</color>
     <color name="more_info_text_color">#8B949D</color>
     <color name="white_color">#ffffff</color>
     <color name="black_color">#000000</color>
@@ -25,6 +24,9 @@
     <color name="weibo_listtab_off">#8d8d8d</color>
 
     <color name="guide_back_color">#5f4956</color>
-
+    <color name="activity_background_color">#E8E8E0</color>
+    <color name="setting_item_line">#9FA19F</color>
+    <color name="backgroundColor">#E8E8E0</color>
+    <color name="backgroundColorPress">#DBDBD3</color>
 
 </resources>

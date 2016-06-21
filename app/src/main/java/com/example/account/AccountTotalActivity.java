@@ -439,6 +439,16 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     }
                         break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SETTING:
+                    {
+                        Log.i(Constants.TAG, "-------start to AccountSettingActivity-------");
+                        // if (AccountCommonUtil.IsLogin(mContext) ) {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, AccountSettingActivity.class);
+
+                        Log.i(Constants.TAG, "------enter into AccountSettingActivity--------");
+
+                        startActivity(intent);
+                    }
                         break;
                     default:
                         break;

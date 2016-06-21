@@ -16,15 +16,15 @@ public class AccountLoadActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
+        //boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
 
-        if(mFirst) {
-            mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY, 100);
-            AccountCommonUtil.SetNotFirstEnter(this);
-        }
-        else {
+       // if(mFirst) {
+       //     mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY, 100);
+       //     AccountCommonUtil.SetNotFirstEnter(this);
+        //}
+        //else {
             mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
-        }
+        //}
     }
 
 
