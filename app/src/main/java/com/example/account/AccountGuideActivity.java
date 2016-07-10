@@ -1,22 +1,26 @@
 package com.example.account;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class AccountGuideActivity extends AppCompatActivity {
+public class AccountGuideActivity extends AppCompatActivity implements AccountGuideStyleFragment.OnStyleFragmentListener {
 
     private ViewPager mViewpager = null;
     private me.relex.circleindicator.CircleIndicator mIndicator = null;
     private AccountGuidePagerAdapter mPagerAdapter = null;
+    private SharedPreferences mSharedPreferences = null;
     protected ArrayList<Fragment> mFragmentListDataSource = new ArrayList<Fragment>();
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +37,20 @@ public class AccountGuideActivity extends AppCompatActivity {
         mViewpager.setAdapter(mPagerAdapter);
         mIndicator.setViewPager(mViewpager);
         mPagerAdapter.registerDataSetObserver(mIndicator.getDataSetObserver());
+
+        mSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
     }
 
+    @Override
+    public void onFragmentAction(String style) {
+
+        Log.i(Constants.TAG, "-------onFragmentAction----style--------" + style);
+
+        mSharedPreferences.edit().putString("style", style)
+                .apply();
+
+        //move to next page
+        mViewpager.setCurrentItem(1);
+    }
 }

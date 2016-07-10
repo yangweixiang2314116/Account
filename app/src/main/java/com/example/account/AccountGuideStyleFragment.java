@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.example.module.Account;
 
@@ -23,7 +26,7 @@ import java.util.Map;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class AccountGuideStyleFragment extends Fragment {
+public class AccountGuideStyleFragment extends Fragment  implements AdapterView.OnItemClickListener{
 
     private Resources mResources = null;
     private GridView gview = null;
@@ -48,6 +51,7 @@ public class AccountGuideStyleFragment extends Fragment {
         int [] to = {R.id.guide_style_text};
         sim_adapter = new SimpleAdapter(mParent, data_list, R.layout.guide_gridview_item, from, to);
         gview.setAdapter(sim_adapter);
+        gview.setOnItemClickListener((AdapterView.OnItemClickListener) this);
 
         return view;
     }
@@ -66,4 +70,36 @@ public class AccountGuideStyleFragment extends Fragment {
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        String style  = ((TextView) view.findViewById(R.id.guide_style_text)).getText().toString();
+
+        Log.i(Constants.TAG, "-------onItemClick----style--------"+style);
+
+        mListener.onFragmentAction(style);
+    }
+
+
+    private OnStyleFragmentListener mListener;
+
+    @Override
+
+    public void onAttach(Activity activity) {
+
+        super.onAttach(activity);
+        Log.i(Constants.TAG, "-------AccountGuideStyleFragment----onAttach--------");
+        try {
+            mListener = (OnStyleFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentListener");
+        }
+
+    }
+
+    public interface OnStyleFragmentListener {
+
+        public void onFragmentAction(String style);
+
+    }
 }

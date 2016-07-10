@@ -7,29 +7,50 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Arrays;
 
 
 public class AccountLoadActivity extends Activity {
+
+    private Runnable runnable = new Runnable( ) {
+
+        public void run ( ) {
+            m_CheckFirst();
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
+        Log.i(Constants.TAG, "The AccountLoadActivity---->onCreate");
 
-       // if(mFirst) {
-       //     mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY, 100);
-       //     AccountCommonUtil.SetNotFirstEnter(this);
-        //}
-        //else {
-            mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
-        //}
+        setContentView(R.layout.activity_account_load);
+
+        mHandler.postDelayed(runnable, 1000);
     }
 
+    private void m_CheckFirst()
+    {
+        Log.i(Constants.TAG, "The AccountLoadActivity---->m_CheckFirst");
+
+        boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
+
+        if(mFirst) {
+             mHandler.sendEmptyMessageDelayed(SWITCH_GUIDECTIVITY, 100);
+            AccountCommonUtil.SetNotFirstEnter(this);
+        }
+        else {
+          mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
+        }
+    }
 
     private final static int SWITCH_MAINACTIVITY = 1000;
-    private final static int SWITCH_GUIDACTIVITY = 1001;
+    private final static int SWITCH_GUIDECTIVITY = 1001;
     public Handler mHandler = new Handler(){
         public void handleMessage(Message msg) {
             switch(msg.what){
@@ -39,7 +60,7 @@ public class AccountLoadActivity extends Activity {
                     startActivity(mIntent);
                     finish();
                     break;
-                case SWITCH_GUIDACTIVITY:
+                case SWITCH_GUIDECTIVITY:
                     mIntent = new Intent();
                     mIntent.setClass(AccountLoadActivity.this, AccountGuideActivity.class);
                     startActivity(mIntent);
@@ -49,4 +70,13 @@ public class AccountLoadActivity extends Activity {
             super.handleMessage(msg);
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.i(Constants.TAG, "The AccountLoadActivity---->onDestroy");
+
+        mHandler.removeCallbacks(runnable);
+    }
 }

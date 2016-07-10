@@ -1,7 +1,8 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/guide_back_color">
 
     <TextView
@@ -12,6 +13,26 @@
         android:text="@string/account_guide_chose_budget"
         android:textColor="@android:color/white"
         android:layout_marginTop="80dp"
+        android:layout_marginBottom="20dp"
         android:textSize="20sp" />
 
-</FrameLayout>
+    <com.example.account.WheelView
+        android:id="@+id/wheel_view_wv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/start_use_acccount"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/account_guide_start_use"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_green_light"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp" />
+
+</LinearLayout>
