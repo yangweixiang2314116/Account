@@ -51,6 +51,6 @@ public class AccountGuideActivity extends AppCompatActivity implements AccountGu
                 .apply();
 
         //move to next page
-        mViewpager.setCurrentItem(1);
+        //mViewpager.setCurrentItem(1);
     }
 }

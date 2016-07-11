@@ -3,6 +3,8 @@ package com.example.account;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,7 +54,7 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
         sim_adapter = new SimpleAdapter(mParent, data_list, R.layout.guide_gridview_item, from, to);
         gview.setAdapter(sim_adapter);
         gview.setOnItemClickListener((AdapterView.OnItemClickListener) this);
-
+        gview.setSelector(new ColorDrawable(Color.TRANSPARENT));
         return view;
     }
 
@@ -73,6 +75,7 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        //gview.getAdapter().getItem(position)
         String style  = ((TextView) view.findViewById(R.id.guide_style_text)).getText().toString();
 
         Log.i(Constants.TAG, "-------onItemClick----style--------"+style);
