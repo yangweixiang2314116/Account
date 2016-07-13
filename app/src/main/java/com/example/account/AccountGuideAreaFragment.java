@@ -1,5 +1,6 @@
 package com.example.account;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class AccountGuideAreaFragment extends Fragment {
 
     private WheelView wheelArea = null;
     private Resources mResources = null;
+    private Activity mParent = null;
     private ArrayList<String> mWheelListDataSource = new ArrayList<String>();
 
     @Nullable
@@ -33,6 +35,7 @@ public class AccountGuideAreaFragment extends Fragment {
         Log.d(Constants.TAG, "onCreateView:  load area wheel view !!!");
 
         mResources = this.getResources();
+        mParent =  getActivity();
         TypedArray areaItems = mResources.obtainTypedArray(R.array.guide_chose_area_text);
 
         mWheelListDataSource.clear();
@@ -55,6 +58,7 @@ public class AccountGuideAreaFragment extends Fragment {
             @Override
             public void onSelected(int selectedIndex, String item) {
                 Log.d(Constants.TAG, "selectedIndex: " + selectedIndex + ", item: " + item);
+                AccountCommonUtil.SetGudieArea(mParent, item);
             }
         });
 

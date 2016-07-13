@@ -31,7 +31,7 @@
         android:gravity="center"
         android:text="@string/account_guide_start_use"
         android:textColor="@android:color/white"
-        android:background="@android:color/holo_green_light"
+        android:background="@drawable/start_account_btn_selector_bg"
         android:layout_marginTop="50dp"
         android:textSize="20sp" />
 

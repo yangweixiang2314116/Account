@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="10dp"
+    android:background="@drawable/guide_grid_view_item_bg_selector"
     >
 
     <TextView
@@ -14,7 +15,6 @@
         android:layout_height="40dp"
         android:gravity="center"
         android:textColor="@color/guide_grid_view_text_selector"
-        android:background="@drawable/guide_text_item_background"
         android:text="文字"
         />
 </LinearLayout>

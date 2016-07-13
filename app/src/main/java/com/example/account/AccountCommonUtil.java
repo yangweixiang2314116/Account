@@ -117,6 +117,63 @@ public class AccountCommonUtil {
 		return true;
 	}
 
+	public static String GetGudieStyle(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getString(
+				"guide_style", "");
+	}
+
+	public static boolean SetGudieStyle(Context context, String style)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putString("guide_style", style)
+				.apply();
+		return true;
+	}
+
+	public static String GetGudieBudget(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getString(
+				"guide_budget", "");
+	}
+
+	public static boolean SetGudieBudget(Context context, String budget)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putString("guide_budget", budget)
+				.apply();
+		return true;
+	}
+
+	public static String GetGudieArea(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getString(
+				"guide_area", "");
+	}
+
+	public static boolean SetGudieArea(Context context, String area)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putString("guide_area", area)
+				.apply();
+		return true;
+	}
+
 	public static void sendBroadcastForAccountDataChange(Context context) {
 		Intent intent = new Intent(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
 		context.sendBroadcast(intent);

@@ -75,12 +75,15 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        //gview.getAdapter().getItem(position)
-        String style  = ((TextView) view.findViewById(R.id.guide_style_text)).getText().toString();
+        view.setSelected(true);
+        TextView styleText =  ((TextView) view.findViewById(R.id.guide_style_text));
+        styleText.setSelected(true);
+        String sStyle  = styleText.getText().toString();
 
-        Log.i(Constants.TAG, "-------onItemClick----style--------"+style);
+        Log.i(Constants.TAG, "-------onItemClick----style--------"+sStyle);
 
-        mListener.onFragmentAction(style);
+        AccountCommonUtil.SetGudieStyle(mParent,sStyle);
+    //    mListener.onFragmentAction(sStyle);
     }
 
 

@@ -120,6 +120,9 @@
     <string name="account_guide_chose_style">选择装修风格，记账更加智能</string>
     <string name="account_guide_chose_budget">设置装修预算，超支提前预警</string>
     <string name="account_guide_chose_area">选择装修面积，大数据预测费用</string>
+    <string name="account_guide_not_chose_style">装修风格未选择</string>
+    <string name="account_guide_not_chose_budget">装修预算未选择</string>
+    <string name="account_guide_not_chose_area">装修面积未选择</string>
     <string name="account_guide_start_use">"开始记账"</string>
 
 

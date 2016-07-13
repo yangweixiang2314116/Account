@@ -6,7 +6,8 @@
     <!-- 边框 -->
     <stroke
         android:width="0.5dp"
-        android:color="@android:color/white" />
+        android:color="@android:color/holo_blue_light" />
+
     <!-- 边距 -->
     <padding
         android:bottom="10dp"
