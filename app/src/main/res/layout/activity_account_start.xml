@@ -39,6 +39,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:background="@null"
+            android:gravity="center_horizontal"
             android:cursorVisible="false"
             android:hint="@string/default_total_cost"
             android:inputType="number"

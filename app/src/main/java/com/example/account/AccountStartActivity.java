@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AccountStartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
@@ -35,9 +36,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private EditText m_InputEditText = null;
 	private ListView m_MoreInfoList = null;
 	private Resources mResources = null;
-	private Button m_ButtonPreview = null;
-	private Button m_ButtonFinish = null;
 	private Account m_CurrentAccount = null;
+	private TextView m_CurrentTimeText = null;
 	private Long m_CurrentAccountId;
 	private Boolean m_bCreateNewAccount = false;
 	private Context mContext = null;
@@ -66,22 +66,30 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			Log.i(Constants.TAG, "-----AccountStartActivity- accountId-------" + id);
 			m_CurrentAccount = Account.load(Account.class, id);
 			m_bCreateNewAccount = false;
+			getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN );
 		} else {
 			Log.i(Constants.TAG, "-----AccountStartActivity- new account-------");
 			m_CurrentAccount = new Account();
 			m_bCreateNewAccount = true;
+			getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );
+
 		}
 	
 		m_CurrentAccount.save();
 		m_CurrentAccountId = m_CurrentAccount.getId();
-		
-		m_InitEditText();
-		//m_InitBottomButton();// preview/finish
-		
-		//getWindow().setSoftInputMode(
-		//		WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+		m_InitDateText();
+		m_InitEditText();
 		m_InitMoreInfoList();
+	}
+
+	private boolean m_InitDateText() {
+		m_CurrentTimeText = (TextView) findViewById(R.id.start_date_title);
+		String sCurrentDate = AccountCommonUtil.ConverDateToString(m_CurrentAccount.CreateTime);
+		m_CurrentTimeText.setText(sCurrentDate);
+		return true;
 	}
 
 	@Override
@@ -120,7 +128,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		
 		if(false == m_bCreateNewAccount)
 		{
-			DecimalFormat df = new DecimalFormat("###,###,###");
+			DecimalFormat df = new DecimalFormat("###,###");
 
 			String afterFormat = df.format(m_CurrentAccount.Cost);
 
@@ -150,6 +158,13 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				if (m_bChanged) {
 					return;
 				}
+
+				if( s.toString().length() == 0)
+				{
+					Log.i(Constants.TAG, "--afterTextChanged---length == 0" );
+					return ;
+				}
+
 				String cuttedStr = s.toString();
 
 				Log.i(Constants.TAG, "--before replace---" + cuttedStr);
