@@ -7,7 +7,9 @@ import java.util.List;
 import com.activeandroid.ActiveAndroid;
 import com.example.module.Account;
 import com.example.module.ImageItem;
+import com.example.module.ImageLoader;
 import com.example.module.MoreInfoItem;
+import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +30,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +47,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private Long m_CurrentAccountId;
 	private Boolean m_bCreateNewAccount = false;
 	private Context mContext = null;
+	private LinearLayout m_ImageContents = null;
 	private AddView m_AddButton = null;
+	private LayoutInflater mLayoutInflater = null;
 	protected ArrayList<MoreInfoItem> mMoreInfoListDataSource = new ArrayList<MoreInfoItem>();
 	protected AccountMoreInfoListAdapter m_MoreInfoAdapter = null;
 
@@ -61,6 +68,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 		mResources = this.getResources();
 		mContext = this;
+		mLayoutInflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -94,14 +103,11 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		m_CommentsText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if(hasFocus)
-				{
+				if (hasFocus) {
 					m_CommentsText.setCursorVisible(true);
 					getWindow().setSoftInputMode(
-							WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST );
-				}
-				else
-				{
+							WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
+				} else {
 					m_CommentsText.setCursorVisible(false);
 				}
 			}
@@ -213,10 +219,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					return;
 				}
 
-				if( s.toString().length() == 0)
-				{
-					Log.i(Constants.TAG, "--afterTextChanged---length == 0" );
-					return ;
+				if (s.toString().length() == 0) {
+					Log.i(Constants.TAG, "--afterTextChanged---length == 0");
+					return;
 				}
 
 				String cuttedStr = s.toString();
@@ -245,8 +250,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 						"--m_CurrentAccount.Cost--" + m_CurrentAccount.Cost + "---currentValue--------" + currentValue);
 
 				m_CurrentAccount.Cost = currentValue;
-				if(m_CurrentAccount.isSyncOnServer())
-				{
+				if (m_CurrentAccount.isSyncOnServer()) {
 					m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
 				}
 				m_CurrentAccount.save();
@@ -511,7 +515,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				}
 			}
 			break;
-			/*
+
 			case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 				if (data != null) {
 
@@ -541,12 +545,14 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					} finally {
 						ActiveAndroid.endTransaction();
 					}
+
+					m_UpdateImageList(imageSelectedlist);
 				} else {
 					Log.i(Constants.TAG, "----ACCOUNT_MORE_INFO_IMAGE-data == null-");
 				}
 			}
 				break;
-				*/
+
 			default:
 				break;
 			}
@@ -554,6 +560,36 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_MoreInfoAdapter.replaceDataSrc(mMoreInfoListDataSource);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private Boolean m_UpdateImageList(ArrayList<String> result)
+	{
+		m_ImageContents = (LinearLayout)findViewById(R.id.image_contents);
+		m_ImageContents.removeAllViews();
+
+		for (int index = 0; index < result.size(); index++) {
+			String addPath = result.get(index);
+
+			Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
+
+			View commentItem = mLayoutInflater.inflate(
+					R.layout.activity_account_more_info_item_image, null);
+			ImageView ImageItem = (ImageView) commentItem
+					.findViewById(R.id.more_info_item_image);
+
+			//String DecoderImagePath = "file://" + addPath;
+
+			//Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --DecoderImagePath--" + DecoderImagePath);
+
+			//Picasso.with(mContext)
+			//		.load(DecoderImagePath)
+			//		.into(ImageItem);
+
+			ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(addPath, ImageItem);
+
+			m_ImageContents.addView(commentItem);
+		}
+		return true;
 	}
 
 	private Boolean m_SaveAccount() {

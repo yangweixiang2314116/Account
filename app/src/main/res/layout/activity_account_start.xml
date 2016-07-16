@@ -49,20 +49,42 @@
             android:textSize="60sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/account_image_add_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@id/account_start_top">
+
+        <LinearLayout
+            android:id="@+id/image_contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#ff0000">
+
+        </LinearLayout>
+
+
     <com.example.account.AddView
         android:id="@+id/account_add_picture"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_below="@id/account_start_top"
-        android:layout_margin="10dp"
-        android:background="@drawable/account_add_image_button_bg"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/image_contents"
+        android:background="#0000ff"
         />
 
+
+    </RelativeLayout>
+
     <View
-        android:layout_below="@id/account_add_picture"
+        android:layout_below="@id/account_image_add_part"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
+        android:background="?android:attr/listDivider"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
     <LinearLayout
         android:id="@+id/add_comment_part"
@@ -70,9 +92,9 @@
         android:layout_height="100dip"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_below="@id/account_add_picture"
-        android:paddingLeft="@dimen/edit_padding_left"
-        android:paddingRight="@dimen/edit_padding_right" >
+        android:layout_below="@id/account_image_add_part"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -90,8 +112,8 @@
         android:paddingTop="@dimen/edit_padding_top"
         android:hint="@string/add_comments_hint"
         android:minHeight="100dp"
+        android:cursorVisible="false"
         android:textSize="16sp"
-        android:layout_margin="10dp"
         android:background="@null"
         android:textCursorDrawable="@drawable/color_cursor"
         android:textColor="@color/content_text_color" />
@@ -102,6 +124,8 @@
         android:layout_below="@id/add_comment_part"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="?android:attr/listDivider" />
 
     <ListView

@@ -1,47 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="140dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp" >
-
-    <ImageView
-        android:id="@+id/more_info_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="1dp"
-        android:src="@mipmap/checkbox_normal" />
-
-    <TextView
-        android:id="@+id/more_info_item_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/more_info_check"
-        android:textColor="@color/more_info_text_color"
-        android:textSize="16sp" />
+    android:layout_height="wrap_content"
+    android:background="#00ff00"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp">
 
     <ImageView
         android:id="@+id/more_info_item_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentRight="true"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerVertical="true"
-        android:background="@mipmap/pictures_items"
-        android:paddingBottom="17dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="9dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/info_item_image" />
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="?android:attr/listDivider" />
+        android:scaleType="fitXY" />
 
 </RelativeLayout>

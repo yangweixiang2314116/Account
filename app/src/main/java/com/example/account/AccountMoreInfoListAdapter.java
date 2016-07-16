@@ -151,7 +151,9 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 		} else {
 			//switch (nItemType) {
 			//case Constants.ACCOUNT_MORE_INFO_TYPE_TEXT:
-				holderText = (ViewHolderText) convertView.getTag();
+			holderText = (ViewHolderText) convertView.getTag();
+		}
+
 				holderText.leftLabel.setText(mMoreInfoItemList.get(position).itemLable);
 				holderText.rightValue.setText(mMoreInfoItemList.get(position).itemValue);
 				Log.i(Constants.TAG, "-----position--" + position + "----holderText--------" + holderText);
@@ -209,7 +211,7 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 				break;
 			}
 			*/
-		}
+		//}
 
 		return convertView;
 	}
