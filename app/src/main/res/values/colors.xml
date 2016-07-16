@@ -3,6 +3,8 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorBorderGray">#d6d6d6</color>
+    <color name="colorBorderAdd">#d9d9d9</color>
     <color name="actionbar_background_color">#373b3e</color>
 
 

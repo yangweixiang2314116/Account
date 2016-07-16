@@ -34,11 +34,13 @@
     <string name="total_list_category_default">默认分类</string>
 
     <string name="add_comments_app_name">添加备注</string>
+    <string name="add_comments_hint">添加备注(最多100字)</string>
     <string name="image_selector_app_name">选择图片</string>
     <string name="image_number_name">张</string>
     <string name="image_scan_no_name">哈哈，这里空空如也</string>
     <string name="image_scan_loading">正在加载</string>
     <string name="image_scan_no_external_device">暂无外部存储</string>
+    <string name="account_image_add_text">+</string>
 
     <string name="delete_title">提示</string>
     <string name="give_up_edit">确定要删除这条记录吗？</string>

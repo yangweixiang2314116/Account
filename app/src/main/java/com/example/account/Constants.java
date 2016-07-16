@@ -12,7 +12,7 @@ public class Constants {
 	  public static final int ACCOUNT_MORE_INFO_CATEGORY = 0;
 	  public static final int ACCOUNT_MORE_INFO_BRAND = 1;
 	  public static final int ACCOUNT_MORE_INFO_POSITION = 2;
-	  public static final int ACCOUNT_MORE_INFO_TEXT = 3;
+	  //public static final int ACCOUNT_MORE_INFO_TEXT = 3;
 	  public static final int ACCOUNT_MORE_INFO_IMAGE = 4;
 
 	public static final int ACCOUNT_SLIDEING_MENU_ASCEND= 0;

@@ -29,8 +29,8 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 
 	protected ArrayList<MoreInfoItem> mMoreInfoItemList = new ArrayList<MoreInfoItem>();
 
-	public static final int ACCOUNT_MORE_INFO_TYPE_COUNT = 2;
-	
+	//public static final int ACCOUNT_MORE_INFO_TYPE_COUNT = 2;
+
 	private Context mContext = null;
 
 	public AccountMoreInfoListAdapter(Context context, ArrayList<MoreInfoItem> dataSourece) {
@@ -94,6 +94,7 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	/*
 	@Override
 	public int getViewTypeCount() {
 		return ACCOUNT_MORE_INFO_TYPE_COUNT;
@@ -108,6 +109,7 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 		}
 		return 0;
 	}
+	*/
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -115,13 +117,13 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 		Log.i(Constants.TAG, "-----------getView----position----" + position);
 
 		ViewHolderText holderText = null;
-		ViewHolderImage holderImage = null;
+		//ViewHolderImage holderImage = null;
 
-		int nItemType = getItemViewType(position);
+		//int nItemType = getItemViewType(position);
 
 		if (convertView == null) {
-			switch (nItemType) {
-			case Constants.ACCOUNT_MORE_INFO_TYPE_TEXT:
+			//switch (nItemType) {
+			//case Constants.ACCOUNT_MORE_INFO_TYPE_TEXT:
 				holderText = new ViewHolderText();
 
 				convertView = mInflater.inflate(R.layout.activity_account_more_info_item_text, null);
@@ -130,7 +132,8 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 				holderText.rightValue = (TextView) convertView.findViewById(R.id.more_info_item_value);
 				holderText.check = (ImageView) convertView.findViewById(R.id.more_info_check);
 				convertView.setTag(holderText);
-				break;
+			//	break;
+			/*
 			case Constants.ACCOUNT_MORE_INFO_TYPE_IMAGE:
 				holderImage = new ViewHolderImage();
 
@@ -141,12 +144,13 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 				holderImage.check = (ImageView) convertView.findViewById(R.id.more_info_check);
 				convertView.setTag(holderImage);
 				break;
-			default:
-				break;
-			}
+				*/
+			//default:
+			//	break;
+			//}
 		} else {
-			switch (nItemType) {
-			case Constants.ACCOUNT_MORE_INFO_TYPE_TEXT:
+			//switch (nItemType) {
+			//case Constants.ACCOUNT_MORE_INFO_TYPE_TEXT:
 				holderText = (ViewHolderText) convertView.getTag();
 				holderText.leftLabel.setText(mMoreInfoItemList.get(position).itemLable);
 				holderText.rightValue.setText(mMoreInfoItemList.get(position).itemValue);
@@ -161,7 +165,8 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 				{
 					holderText.check.setImageResource(R.mipmap.checkbox_checked);
 				}
-				break;
+				//break;
+			/*
 			case Constants.ACCOUNT_MORE_INFO_TYPE_IMAGE:
 				holderImage = (ViewHolderImage) convertView.getTag();
 				holderImage.leftLabel.setText(mMoreInfoItemList.get(position).itemLable);
@@ -178,14 +183,15 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 					Log.i(Constants.TAG, "-----------get(position).itemValue--------"+mMoreInfoItemList.get(position).itemValue);
 					holderImage.check.setImageResource(R.mipmap.checkbox_checked);
 				}
-
+				*/
 
 				
 				//if(ImagePath.isEmpty() == false)
 				//{
 				//	ImageLoader.getInstance(3,Type.LIFO).loadImage(ImagePath, holderImage.rightImage);
 				//}
-				
+
+			/*
 				if(ImagePath.isEmpty() == false)
 				{
 					String DecoderImagePath = "file://" + ImagePath;
@@ -202,6 +208,7 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 			default:
 				break;
 			}
+			*/
 		}
 
 		return convertView;
@@ -213,10 +220,11 @@ public class AccountMoreInfoListAdapter extends BaseAdapter {
 		private ImageView check;
 	}
 
+	/*
 	class ViewHolderImage {
 		private TextView leftLabel;
 		private ImageView rightImage;
 		private ImageView check;
 	}
-
+	*/
 }

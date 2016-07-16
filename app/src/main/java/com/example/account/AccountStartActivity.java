@@ -38,9 +38,11 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private Resources mResources = null;
 	private Account m_CurrentAccount = null;
 	private TextView m_CurrentTimeText = null;
+	private EditText m_CommentsText = null;
 	private Long m_CurrentAccountId;
 	private Boolean m_bCreateNewAccount = false;
 	private Context mContext = null;
+	private AddView m_AddButton = null;
 	protected ArrayList<MoreInfoItem> mMoreInfoListDataSource = new ArrayList<MoreInfoItem>();
 	protected AccountMoreInfoListAdapter m_MoreInfoAdapter = null;
 
@@ -81,14 +83,66 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		m_CurrentAccountId = m_CurrentAccount.getId();
 
 		m_InitDateText();
+		m_InitAddButton();
 		m_InitEditText();
 		m_InitMoreInfoList();
+		m_InitCommentsText();
+	}
+
+	private boolean m_InitCommentsText() {
+		m_CommentsText = (EditText) findViewById(R.id.account_add_comments);
+		m_CommentsText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(hasFocus)
+				{
+					m_CommentsText.setCursorVisible(true);
+					getWindow().setSoftInputMode(
+							WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST );
+				}
+				else
+				{
+					m_CommentsText.setCursorVisible(false);
+				}
+			}
+		});
+
+		return true;
 	}
 
 	private boolean m_InitDateText() {
 		m_CurrentTimeText = (TextView) findViewById(R.id.start_date_title);
 		String sCurrentDate = AccountCommonUtil.ConverDateToString(m_CurrentAccount.CreateTime);
 		m_CurrentTimeText.setText(sCurrentDate);
+		return true;
+	}
+
+	private boolean m_InitAddButton() {
+
+		m_AddButton = (AddView)findViewById(R.id.account_add_picture);
+		m_AddButton.setPadding(20);
+		m_AddButton.setPaintColor(R.color.colorBorderAdd);
+		m_AddButton.setPaintWidth(4);
+		m_AddButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_IMAGE--");
+
+				Bundle mBundle = new Bundle();
+				if (m_CurrentAccount == null) {
+					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
+				}
+				Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
+
+				mBundle.putLong("id", m_CurrentAccount.getId());
+
+				Intent intent = new Intent();
+				intent.setClass(mContext, AccountImageSelectorActivity.class);
+				intent.putExtras(mBundle);
+				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
+			}
+		});
+
 		return true;
 	}
 
@@ -212,6 +266,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			for (int index = 0; index < infoItems.length(); index++) {
 				MoreInfoItem item = null;
 				switch (index) {
+					/*
 				case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 					
 					String firstImage = "";
@@ -227,36 +282,39 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					item = new MoreInfoItem(infoItems.getString(index), firstImage, Constants.ACCOUNT_MORE_INFO_TYPE_IMAGE);
 				}
 					break;
+					*/
 				case Constants.ACCOUNT_MORE_INFO_CATEGORY: {
 					
 					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Category,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
+					mMoreInfoListDataSource.add(item);
 				}
 					break;
 				case Constants.ACCOUNT_MORE_INFO_BRAND: {
 					
 					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Brand,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
+					mMoreInfoListDataSource.add(item);
 				}
 					break;
 				case Constants.ACCOUNT_MORE_INFO_POSITION: {
 					
 					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Position,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
+					mMoreInfoListDataSource.add(item);
 				}
 					break;
+				/*
 				case Constants.ACCOUNT_MORE_INFO_TEXT: {
 					Log.i(Constants.TAG, "--m_CurrentAccount.Comments --" + m_CurrentAccount.Comments);
 					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Comments,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 				}
 					break;
+					*/
 				default:
 					break;
 				}
-	
-				// TODO initial the value
-				mMoreInfoListDataSource.add(item);
 			}
 			infoItems.recycle();
 		
@@ -354,6 +412,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_POSITION);
 			}
 			break;
+		/*
 		case Constants.ACCOUNT_MORE_INFO_TEXT: {
 			Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_TEXT--");
 			Intent intent = new Intent();
@@ -386,6 +445,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
 		}
 			break;
+		*/
 		default:
 			break;
 		}
@@ -396,6 +456,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		Log.i(Constants.TAG, "onActivityResult" + "requestCode" + requestCode + "\n resultCode=" + resultCode);
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
+				/*
 			case Constants.ACCOUNT_MORE_INFO_TEXT:{
 				if (data != null) {
 					String Comments = data.getStringExtra("content");
@@ -409,6 +470,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				}
 			}
 			break;
+			*/
 			case Constants.ACCOUNT_MORE_INFO_CATEGORY:{
 				if (data != null) {
 					String Category = data.getStringExtra("category");
@@ -449,7 +511,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				}
 			}
 			break;
-			
+			/*
 			case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 				if (data != null) {
 
@@ -484,6 +546,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				}
 			}
 				break;
+				*/
 			default:
 				break;
 			}
