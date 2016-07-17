@@ -12,7 +12,9 @@ import com.example.module.MoreInfoItem;
 import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -96,6 +98,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		m_InitEditText();
 		m_InitMoreInfoList();
 		m_InitCommentsText();
+		m_InitImageList();
 	}
 
 	private boolean m_InitCommentsText() {
@@ -113,6 +116,10 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			}
 		});
 
+		if(!m_bCreateNewAccount)
+		{
+			m_CommentsText.setText(m_CurrentAccount.Comments);
+		}
 		return true;
 	}
 
@@ -168,7 +175,19 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		Log.i(Constants.TAG, "-----AccountStartActivity- onOptionsItemSelected-------");
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setMessage(R.string.give_up_edit)
+					.setPositiveButton(R.string.give_up_sure,
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+													int which) {
+									finish();
+								}
+							}).setNegativeButton(R.string.give_up_cancel, null)
+					.create().show();
+
 			break;
 		case R.id.start_account_finish:
 			m_SaveAccount();
@@ -562,6 +581,28 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	private Boolean m_InitImageList()
+	{
+			if(!m_bCreateNewAccount)
+			{
+				ArrayList<ImageItem> dataList = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
+
+				if(dataList.size() <= 0)
+				{
+					return false;
+				}
+
+				ArrayList<String> result = new ArrayList<String>();
+				for(int index = 0 ; index < dataList.size(); index++)
+				{
+					result.add(dataList.get(index).Path);
+				}
+
+				m_UpdateImageList(result);
+			}
+		return  true;
+	}
+
 	private Boolean m_UpdateImageList(ArrayList<String> result)
 	{
 		m_ImageContents = (LinearLayout)findViewById(R.id.image_contents);
@@ -595,6 +636,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private Boolean m_SaveAccount() {
 		if (m_CurrentAccount != null) {
 			Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
+
+			//save comments
+			m_CurrentAccount.Comments = m_CommentsText.getText().toString();
 
 			m_CurrentAccount.save();
 

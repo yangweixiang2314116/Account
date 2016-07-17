@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -79,6 +80,21 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	}
 	
 	public void init() {
+
+		AccountApiConnector.instance(this).getHotBrandList(mCategory, new TextHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+				Log.i(Constants.TAG, "---getHotBrandList--onSuccess--response---" + responseString);
+
+			}
+
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+				Log.i(Constants.TAG, "---getHotBrandList--onSuccess--response---" + responseString);
+			}
+		});
+		/*
 		AccountApiConnector.instance(this).getHotBrandList(mCategory, new JsonHttpResponseHandler() {
             
 			 @Override
@@ -111,8 +127,9 @@ public class AccountAddBrandActivity extends ActionBarActivity {
                public void onFinish() {
                    super.onFinish();
                }
+
 	            
-       });	
+       });	*/
 	}
 	
 	public void addTextView(String tvName) {
@@ -234,7 +251,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	        @Override
 	        protected Boolean doInBackground(Void... voids) {
 	        	Boolean bResult = false;
-	            Log.i(Constants.TAG, "----ProcessBrandTask--doInBackground----");
+				Log.i(Constants.TAG, "----ProcessBrandTask--doInBackground----");
 	            try {
 	            	//TODO
 	                for (int index = 0; index < m_responseObject.length(); index++) {

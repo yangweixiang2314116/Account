@@ -79,7 +79,8 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	}
 	
 	public void init() {
-		AccountApiConnector.instance(this).getHotTagList(mCost, new JsonHttpResponseHandler() {
+	/*
+			AccountApiConnector.instance(this).getHotTagList(mCost, new JsonHttpResponseHandler() {
             
 			 @Override
 	            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -105,9 +106,11 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
                    super.onFinish();
                }
 	            
-       });	
+       });
+       	*/
 	}
-	
+
+	/*
 	public void addTextView(String tvName) {
 		//����TextView���������ƣ�����������
 		TextView categoryTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
@@ -132,6 +135,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 		//��TextView������ʽ����
 		mHotFlowLayout.addView(categoryTag);
 	}
+	*/
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,6 +152,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 			break;
 		case R.id.add_category_new:
 			{
+				/*
 				LayoutInflater inflater = getLayoutInflater();
 				final View edit_layout = inflater.inflate(R.layout.add_popup_edit_text,
 						(ViewGroup) findViewById(R.id.edit_add_view));
@@ -174,6 +179,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 				
 				
 				builder.create().show();
+				*/
 				//finish();
 			}
 			break;
@@ -182,7 +188,8 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
+	/*
 	private class TagInfo
 	{
 		public long tag_id;
@@ -209,7 +216,9 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	        return true;
 		}
 	}
-	
+	*/
+
+	/*
 	   private class ProcessCategoryTask extends AsyncTask<Void, Void, Boolean> {
 	        private JSONArray m_responseObject = null;
 	        private ArrayList<TagInfo> m_TagList = null;
@@ -254,4 +263,5 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	    		
 	        }
 	    }
+	    */
 }

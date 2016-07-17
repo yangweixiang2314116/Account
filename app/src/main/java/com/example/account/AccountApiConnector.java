@@ -9,6 +9,7 @@ import com.example.module.AccountRestClient;
 import com.example.module.ImageItem;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import android.content.Context;
 import android.util.Log;
@@ -75,12 +76,18 @@ public class AccountApiConnector {
 		
 	}
 	
-	public void getHotBrandList(String category, JsonHttpResponseHandler handler) {
+	public void getHotBrandList(String category, TextHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all hot brand --");
-		
+
+		//String url = "https://kyfw.12306.cn/otn/leftTicket/init";
+		String url = "https://192.168.1.220/jz/tags/";
+		AccountRestClient.instance(mcontext).get(url, null, handler);
+
+		/*
 		String city = "�Ͼ�";
 		String url = "jz/brands/hot/?tag="+category+"&city="+city;
 		AccountRestClient.instance(mcontext).get(url, null, handler);
+		*/
 		
 	}
 	

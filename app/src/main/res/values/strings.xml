@@ -43,7 +43,8 @@
     <string name="account_image_add_text">+</string>
 
     <string name="delete_title">提示</string>
-    <string name="give_up_edit">确定要删除这条记录吗？</string>
+    <string name="confirm_to_delete">确定要删除这条记录吗？</string>
+    <string name="give_up_edit">退出此次编辑？</string>
     <string name="give_up_sure">确定</string>
     <string name="give_up_cancel">取消</string>
     <string name="give_up_title">提示</string>
@@ -52,7 +53,7 @@
 
     <!--ADD Category -->
     <string name="add_category_app_name">添加分类</string>
-    <string name="hot_category_label_text">热门分类</string>
+    <string name="recent_category_label_text">最近使用</string>
     <string name="menu_add">添加</string>
     <string name="add_new_category">新建分类</string>
     <string name="add_new_category_hint">输入新的分类，如地板</string>

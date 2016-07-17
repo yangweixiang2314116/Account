@@ -1,31 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@color/tag_activity_background_color">
 
-     <TextView
-            android:id="@+id/hot_category_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/hot_category_label_text"
-            android:textColor="@color/more_info_text_color"
-            android:textSize="20sp" />
-            
-         <View
-             android:id="@+id/hot_category_divider_line"
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:background="?android:attr/listDivider" />
-         
-    <com.example.account.FlowLayout
-        android:id="@+id/hot_category_content"
+    <RelativeLayout
+        android:id="@+id/account_add_category_part"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="10dp" >
-    </com.example.account.FlowLayout>
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:layout_marginTop="20dp">
 
+    <EditText
+        android:id="@+id/account_add_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="top|left"
+        android:singleLine="true"
+        android:hint="@string/add_new_category_hint"
+        android:padding = "5dp"
+        android:textSize="16sp"
+        android:background="@null"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textColor="@color/content_text_color" />
 
-
-</LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

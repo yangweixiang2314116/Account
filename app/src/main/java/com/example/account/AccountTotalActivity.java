@@ -639,7 +639,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Log.i(Constants.TAG, "------onItemLongClick--------" + current.getId());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage(R.string.give_up_edit)
+        builder.setMessage(R.string.confirm_to_delete)
                 .setTitle(R.string.give_up_title)
                 .setPositiveButton(R.string.give_up_sure,
                         new DialogInterface.OnClickListener() {

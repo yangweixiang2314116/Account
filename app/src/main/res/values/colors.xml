@@ -7,7 +7,7 @@
     <color name="colorBorderAdd">#d9d9d9</color>
     <color name="actionbar_background_color">#373b3e</color>
 
-
+    <color name="tag_activity_background_color">#f0eff5</color>
     <color name="more_info_text_color">#8B949D</color>
     <color name="white_color">#ffffff</color>
     <color name="black_color">#000000</color>

@@ -54,10 +54,6 @@
             android:label="@string/cost_detail_title" >
         </activity>
         <activity
-            android:name="com.example.account.AccountAddCommentActivity"
-            android:label="@string/add_comments_app_name" >
-        </activity>
-        <activity
             android:name="com.example.account.AccountAddCategoryActivity"
             android:label="@string/add_category_app_name" >
         </activity>

@@ -7,6 +7,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import android.content.Context;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class AccountRestClient {
 	private static Context mContext = null;
 
 	private static AccountRestClient mInstance;
+	private static final String KEY_PASS = "pw12306";
 
 	private AccountRestClient() {
 	};
@@ -60,10 +62,10 @@ public class AccountRestClient {
 			Log.i(Constants.TAG, "--KeyStoreException-" + e);
 			e.printStackTrace();
 		}
-		InputStream input = context.getResources().openRawResource(R.raw.codeprojectssl);
+		InputStream input = context.getResources().openRawResource(R.raw.cert12306);
 		try {
 			try {
-				localTrustStore.load(input, "123456".toCharArray());
+				localTrustStore.load(input, KEY_PASS.toCharArray());
 				sslFactory = new MySSLSocketFactory(localTrustStore);
 			} catch (IOException e) {
 				Log.i(Constants.TAG, "--IOException-" + e);
@@ -107,10 +109,20 @@ public class AccountRestClient {
 
     public static void get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
         client.setTimeout(5000);
-    	Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
-
-    	client.get(getAbsoluteUrl(url), params, responseHandler);
+    	//Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
+		Log.i(Constants.TAG, "--get url--" + url);
+    	//client.get(getAbsoluteUrl(url), params, responseHandler);
+		client.get(url, params, responseHandler);
     }
+
+	public static void get(String url, RequestParams params, TextHttpResponseHandler responseHandler) {
+		client.setTimeout(5000);
+		//Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
+		Log.i(Constants.TAG, "--get url--" + url);
+		//client.get(getAbsoluteUrl(url), params, responseHandler);
+		client.get(url, params, responseHandler);
+	}
+
 
 	public static void getWithToken(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
 		client.setTimeout(5000);
