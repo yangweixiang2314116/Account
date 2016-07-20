@@ -54,7 +54,7 @@ public class AccountAddPositionActivity extends ActionBarActivity {
 		
 		setContentView(R.layout.activity_account_add_category);
 		
-		mHotFlowLayout = (FlowLayout) findViewById(R.id.hot_category_content);
+		//mHotFlowLayout = (FlowLayout) findViewById(R.id.hot_category_content);
 		
 		mIntent = getIntent();
 				

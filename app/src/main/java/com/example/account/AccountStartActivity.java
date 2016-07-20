@@ -38,6 +38,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+
 public class AccountStartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
 	private EditText m_InputEditText = null;
@@ -141,6 +143,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			public void onClick(View v) {
 				Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_IMAGE--");
 
+				/*
 				Bundle mBundle = new Bundle();
 				if (m_CurrentAccount == null) {
 					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
@@ -152,6 +155,28 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				Intent intent = new Intent();
 				intent.setClass(mContext, AccountImageSelectorActivity.class);
 				intent.putExtras(mBundle);
+				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
+				*/
+				Intent intent = new Intent(mContext, MultiImageSelectorActivity.class);
+				// whether show camera
+				intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+				// max select image amount
+				intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 4);
+				// select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
+				intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+				// default select images (support array list)
+
+				ArrayList<ImageItem> dataList = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
+
+				if (dataList.size() > 0) {
+					ArrayList<String> selected = new ArrayList<String>();
+					for (int index = 0; index < dataList.size(); index++) {
+						selected.add(dataList.get(index).Path);
+						Log.i(Constants.TAG, "--index-"+index+ "--Path--"+dataList.get(index).Path);
+					}
+
+					intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, selected);
+				}
 				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
 			}
 		});
@@ -195,8 +220,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
 			finish();
 			break;
-		default:
-			break;
+			default:
+				break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -204,9 +229,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 	private boolean m_InitEditText() {
 		m_InputEditText = (EditText) findViewById(R.id.start_input_value);
-		
-		if(false == m_bCreateNewAccount)
-		{
+
+		if (false == m_bCreateNewAccount) {
 			DecimalFormat df = new DecimalFormat("###,###");
 
 			String afterFormat = df.format(m_CurrentAccount.Cost);
@@ -544,7 +568,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
 					}
 					m_CurrentAccount.save();
-					ArrayList<String> imageSelectedlist = data.getStringArrayListExtra("images");
+
+					ArrayList<String> imageSelectedlist = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+					//ArrayList<String> imageSelectedlist = data.getStringArrayListExtra("images");
 
 					Log.i(Constants.TAG, "----imageSelectedlist-data size--" + imageSelectedlist.size());
 					ActiveAndroid.beginTransaction();

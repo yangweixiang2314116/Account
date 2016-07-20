@@ -6,9 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -69,11 +69,6 @@
         </activity>
 
         <activity
-        android:name="com.example.account.AccountImageSelectorActivity"
-        android:label="@string/image_selector_app_name" >
-    </activity>
-
-        <activity
             android:name="com.example.account.AccountLoginRegisterActivity"
             android:label="@string/account_login_register_text" >
         </activity>
@@ -104,6 +99,10 @@
             android:label="@string/account_setting" >
         </activity>
 
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:label="@string/image_selector_app_name"/>
 
         <service android:name="com.example.account.AccountSyncService" android:exported="false" />
 
