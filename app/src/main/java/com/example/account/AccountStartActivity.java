@@ -46,7 +46,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private Account m_CurrentAccount = null;
 	private TextView m_CurrentTimeText = null;
 	private EditText m_CommentsText = null;
-	private Long m_CurrentAccountId;
 	private Boolean m_bCreateNewAccount = false;
 	private Context mContext = null;
 	private LinearLayout m_ImageContents = null;
@@ -111,9 +110,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_LatestCreateTime = System.currentTimeMillis();
 
 		}
-	
-		//m_CurrentAccount.save();
-		//m_CurrentAccountId = m_CurrentAccount.getId();
 
 		m_InitDateText();
 		m_InitAddButton();
@@ -334,23 +330,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			for (int index = 0; index < infoItems.length(); index++) {
 				MoreInfoItem item = null;
 				switch (index) {
-					/*
-				case Constants.ACCOUNT_MORE_INFO_IMAGE: {
-					
-					String firstImage = "";
-
-						List<ImageItem> images = ImageItem.GetImageItems(m_CurrentAccount);
-						Log.i(Constants.TAG, "---GetImageItems ---images.size-" + images.size());
-						if (images.size() > 0) {
-							Log.i(Constants.TAG, "----images.get(0).Path-" + images.get(0).Path);
-		
-							firstImage = images.get(0).Path;
-						}
-	
-					item = new MoreInfoItem(infoItems.getString(index), firstImage, Constants.ACCOUNT_MORE_INFO_TYPE_IMAGE);
-				}
-					break;
-					*/
 				case Constants.ACCOUNT_MORE_INFO_CATEGORY: {
 					
 					item = new MoreInfoItem(infoItems.getString(index), m_LatestCategory,
@@ -372,14 +351,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					mMoreInfoListDataSource.add(item);
 				}
 					break;
-				/*
-				case Constants.ACCOUNT_MORE_INFO_TEXT: {
-					Log.i(Constants.TAG, "--m_CurrentAccount.Comments --" + m_CurrentAccount.Comments);
-					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Comments,
-							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
-				}
-					break;
-					*/
 				default:
 					break;
 				}
@@ -402,36 +373,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		return true;
 	}
 
-	/*
-	private boolean m_InitBottomButton() {
-		m_ButtonPreview = (Button) findViewById(R.id.account_preview);
-		m_ButtonPreview.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, AccountDetailActivity.class);
-				
-				intent.putExtra("id", m_CurrentAccount.getId());
-				startActivity(intent);
-			}
-
-		});
-		m_ButtonFinish = (Button) findViewById(R.id.account_finish);
-		m_ButtonFinish.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				m_SaveAccount();
-				finish();
-			}
-
-		});
-		return true;
-	}
-	*/
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// TODO Auto-generated method stub
@@ -440,11 +381,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_CATEGORY--");
 			Intent intent = new Intent();
 			intent.setClass(this, AccountAddCategoryActivity.class);
-			
 			Bundle mBundle = new Bundle();
-			mBundle.putDouble("value", m_LatestCost);
+			mBundle.putString("category", m_LatestCategory);
 			intent.putExtras(mBundle);
-			
 			startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_CATEGORY);
 		}
 			break;

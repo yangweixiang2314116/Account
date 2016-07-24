@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
+import com.example.module.CategoryHistory;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.annotation.SuppressLint;
@@ -19,7 +20,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,54 +34,119 @@ import android.view.WindowManager;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
 
 public class AccountAddCategoryActivity extends ActionBarActivity {
 
-	private FlowLayout mHotFlowLayout;
+	private FlowLayout mHotFlowLayout = null;
 	
 	private Intent  mIntent = null;
     private Context mContext = null;
-    private Double  mCost = 0.0;
+
+	protected ArrayList<CategoryHistory> mCategoryHistoryDataSource = new ArrayList<CategoryHistory>();
+	private RelativeLayout mCategoryHistoryLayout = null;
+	private Button mSubmitButton = null;
+	private EditText mCategoryEditText = null;
+	private String mCategory  = "";
+    //private Double  mCost = 0.0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayUseLogoEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
-		getSupportActionBar().setTitle(getString(R.string.add_category_app_name));
-		
+
+		setTheme(R.style.MIS_NO_ACTIONBAR);
+
 		setContentView(R.layout.activity_account_add_category);
-		
-		//mHotFlowLayout = (FlowLayout) findViewById(R.id.hot_category_content);
-		
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.category_toolbar);
+		if(toolbar != null){
+			setSupportActionBar(toolbar);
+		}
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayUseLogoEnabled(false);
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+			getSupportActionBar().setTitle(getString(R.string.add_category_app_name));
+		}
+
+		mHotFlowLayout = (FlowLayout) findViewById(R.id.category_history_content);
+
+		mCategoryHistoryLayout = (RelativeLayout)findViewById(R.id.account_recently_category_part);
+
+		mCategoryEditText = (EditText)findViewById(R.id.account_add_category);
+
 		mIntent = getIntent();
-		
+
+		mSubmitButton = (Button) findViewById(R.id.commit);
+		mSubmitButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String current = mCategoryEditText.getText().toString();
+				if(current.isEmpty() == false) {
+
+					Log.i(Constants.TAG, "----Category--" + current);
+					mIntent.putExtra("category", current);
+
+					if (false == CategoryHistory.IsExistCategoryContent(current)) {
+						CategoryHistory item = new CategoryHistory();
+						item.Content = current;
+						item.save();
+					} else {
+						Log.i(Constants.TAG, "------mCurSearchContent already on DB--------" + current);
+						CategoryHistory item = CategoryHistory.GetCategoryItemByContent(current);
+						item.LastUseTime = System.currentTimeMillis();
+						item.save();
+					}
+					setResult(Activity.RESULT_OK, mIntent);
+				}
+				finish();
+			}
+		});
+
 		Bundle bundle = getIntent().getExtras();
-		
+
 		if (bundle != null ) {
-			mCost = bundle.getDouble("value");
-			
-			Log.i(Constants.TAG, "------AccountAddCategoryActivity----onCreate -mCost---"+mCost);
-			
+			mCategory = bundle.getString("category");
+
+			Log.i(Constants.TAG, "------AccountAddCategoryActivity----onCreate -mCost---"+mCategory);
+
 		}
 		else
 		{
 			Log.i(Constants.TAG, "------AccountAddCategoryActivity----onCreate -bundle==null----");
 			return ;
 		}
-		
+
+		mCategoryEditText.setText(mCategory);
+		mCategoryEditText.setSelection(mCategory.length());
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 		mContext = this;
 		init();
-		
 	}
 	
 	public void init() {
+
+		mCategoryHistoryDataSource = (ArrayList<CategoryHistory>) CategoryHistory.GetHistoryItems();
+
+		Log.i(Constants.TAG, "------mSearchHistoryDataSource.size()--------" + mCategoryHistoryDataSource.size());
+
+		if(mCategoryHistoryDataSource.size() > 0) {
+			mCategoryHistoryLayout.setVisibility(View.VISIBLE);
+			for (int index = 0; index < mCategoryHistoryDataSource.size(); index++ ) {
+				addTextView(mCategoryHistoryDataSource.get(index).Content);
+			}
+		}
+		else
+		{
+			mCategoryHistoryLayout.setVisibility(View.INVISIBLE);
+		}
 	/*
 			AccountApiConnector.instance(this).getHotTagList(mCost, new JsonHttpResponseHandler() {
             
@@ -110,9 +178,8 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
        	*/
 	}
 
-	/*
 	public void addTextView(String tvName) {
-		//����TextView���������ƣ�����������
+
 		TextView categoryTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
 		categoryTag.setText(tvName);
 		categoryTag.setOnClickListener(new OnClickListener(){
@@ -123,70 +190,14 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 				TextView tag = (TextView)v;
 				
 				String CategoryValue = tag.getText().toString();
-				
 				Log.i(Constants.TAG, "----Category--" + CategoryValue);
-				mIntent.putExtra("category", CategoryValue);
-				setResult(Activity.RESULT_OK, mIntent); 
-				finish();
-				
+				mCategoryEditText.setText(CategoryValue);
+				mCategoryEditText.setSelection(CategoryValue.length());
 			}
 			
 		});
-		//��TextView������ʽ����
+
 		mHotFlowLayout.addView(categoryTag);
-	}
-	*/
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.account_add_category, menu);
-		return true;
-	}
-
-	@SuppressLint("NewApi")
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			break;
-		case R.id.add_category_new:
-			{
-				/*
-				LayoutInflater inflater = getLayoutInflater();
-				final View edit_layout = inflater.inflate(R.layout.add_popup_edit_text,
-						(ViewGroup) findViewById(R.id.edit_add_view));
-			   
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-				.setTitle(R.string.add_new_category)
-				.setView(edit_layout)
-				.setNegativeButton(R.string.btn_name_cancel, null)
-				.setPositiveButton(R.string.btn_name_ok,  new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-
-						EditText  input = (EditText) edit_layout.findViewById(R.id.edit_add_content);
-						
-						Log.i(Constants.TAG, "--user--input--" + input.getText().toString());
-					
-						addTextView(input.getText().toString());
-					}	
-					
-				});
-				
-				
-				builder.create().show();
-				*/
-				//finish();
-			}
-			break;
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	/*
@@ -264,4 +275,17 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	        }
 	    }
 	    */
+
+	@SuppressLint("NewApi")
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				break;
+			default:
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

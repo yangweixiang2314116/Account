@@ -1,14 +1,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/tag_activity_background_color">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/action_bar_layout"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/category_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/actionbar_background_color"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <Button
+                android:id="@+id/commit"
+                android:background="@drawable/tool_bar_action_btn"
+                android:minHeight="1dp"
+                android:minWidth="1dp"
+                android:layout_marginRight="16dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/tool_btn_default_text_color"
+                android:textSize="14sp"
+                android:layout_gravity="right"
+                android:text="@string/menu_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+         </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
 
     <RelativeLayout
         android:id="@+id/account_add_category_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/action_bar_layout"
         android:background="@android:color/white"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
     <EditText
         android:id="@+id/account_add_category"
@@ -18,11 +55,40 @@
         android:gravity="top|left"
         android:singleLine="true"
         android:hint="@string/add_new_category_hint"
-        android:padding = "5dp"
+        android:padding = "10dp"
         android:textSize="16sp"
         android:background="@null"
         android:textCursorDrawable="@drawable/color_cursor"
         android:textColor="@color/content_text_color" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/account_recently_category_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:layout_below="@id/account_add_category_part"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/category_history_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/recent_category_label_text"
+            android:textColor="@color/more_info_text_color"
+            android:textSize="16sp" />
+
+        <com.example.account.FlowLayout
+            android:id="@+id/category_history_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/category_history_label"
+            android:layout_marginBottom="10dp"
+            />
+
+    </RelativeLayout>
+
 </RelativeLayout>
