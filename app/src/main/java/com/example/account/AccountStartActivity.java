@@ -2,7 +2,6 @@ package com.example.account;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.activeandroid.ActiveAndroid;
 import com.example.module.Account;
@@ -23,6 +22,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,13 +30,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -57,11 +55,23 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	protected ArrayList<MoreInfoItem> mMoreInfoListDataSource = new ArrayList<MoreInfoItem>();
 	protected AccountMoreInfoListAdapter m_MoreInfoAdapter = null;
 
+
+	private long m_LatestCreateTime;
+	private String m_LatestComments = "";
+	private String m_LatestCategory = "";
+	private String m_LatestBrand = "";
+	private String m_LatestPosition = "";
+	private Double m_LatestCost ;
+	private ArrayList<String> m_LatestImageList = new ArrayList<String>();
+	private boolean  m_bImageListChange = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Log.i(Constants.TAG, "------ AccountStartActivity---onCreate-----");
+
+		overridePendingTransition(R.anim.push_up, R.anim.push_down);
 
 		setContentView(R.layout.activity_account_start);
 
@@ -83,6 +93,14 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_bCreateNewAccount = false;
 			getWindow().setSoftInputMode(
 					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN );
+
+			m_LatestCreateTime = m_CurrentAccount.CreateTime;
+			m_LatestComments = m_CurrentAccount.Comments;
+			m_LatestCost = m_CurrentAccount.Cost;
+			m_LatestCategory = m_CurrentAccount.Category;
+			m_LatestBrand = m_CurrentAccount.Brand;
+			m_LatestPosition = m_CurrentAccount.Position;
+
 		} else {
 			Log.i(Constants.TAG, "-----AccountStartActivity- new account-------");
 			m_CurrentAccount = new Account();
@@ -90,10 +108,12 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			getWindow().setSoftInputMode(
 					WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );
 
+			m_LatestCreateTime = System.currentTimeMillis();
+
 		}
 	
-		m_CurrentAccount.save();
-		m_CurrentAccountId = m_CurrentAccount.getId();
+		//m_CurrentAccount.save();
+		//m_CurrentAccountId = m_CurrentAccount.getId();
 
 		m_InitDateText();
 		m_InitAddButton();
@@ -120,14 +140,14 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 		if(!m_bCreateNewAccount)
 		{
-			m_CommentsText.setText(m_CurrentAccount.Comments);
+			m_CommentsText.setText(m_LatestComments);
 		}
 		return true;
 	}
 
 	private boolean m_InitDateText() {
 		m_CurrentTimeText = (TextView) findViewById(R.id.start_date_title);
-		String sCurrentDate = AccountCommonUtil.ConverDateToString(m_CurrentAccount.CreateTime);
+		String sCurrentDate = AccountCommonUtil.ConverDateToString(m_LatestCreateTime);
 		m_CurrentTimeText.setText(sCurrentDate);
 		return true;
 	}
@@ -143,20 +163,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			public void onClick(View v) {
 				Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_IMAGE--");
 
-				/*
-				Bundle mBundle = new Bundle();
-				if (m_CurrentAccount == null) {
-					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-				}
-				Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
-
-				mBundle.putLong("id", m_CurrentAccount.getId());
-
-				Intent intent = new Intent();
-				intent.setClass(mContext, AccountImageSelectorActivity.class);
-				intent.putExtras(mBundle);
-				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
-				*/
 				Intent intent = new Intent(mContext, MultiImageSelectorActivity.class);
 				// whether show camera
 				intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
@@ -166,16 +172,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
 				// default select images (support array list)
 
-				ArrayList<ImageItem> dataList = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
-
-				if (dataList.size() > 0) {
-					ArrayList<String> selected = new ArrayList<String>();
-					for (int index = 0; index < dataList.size(); index++) {
-						selected.add(dataList.get(index).Path);
-						Log.i(Constants.TAG, "--index-"+index+ "--Path--"+dataList.get(index).Path);
-					}
-
-					intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, selected);
+				if (m_LatestImageList.size() > 0) {
+					intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, m_LatestImageList);
 				}
 				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
 			}
@@ -200,25 +198,17 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		Log.i(Constants.TAG, "-----AccountStartActivity- onOptionsItemSelected-------");
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			builder.setMessage(R.string.give_up_edit)
-					.setPositiveButton(R.string.give_up_sure,
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-													int which) {
-									finish();
-								}
-							}).setNegativeButton(R.string.give_up_cancel, null)
-					.create().show();
-
+			m_ShowQuitMessageBox();
 			break;
-		case R.id.start_account_finish:
+		case R.id.start_account_finish: {
 			m_SaveAccount();
 			//notify data change
 			AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
+			getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			finish();
+			overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
+		}
 			break;
 			default:
 				break;
@@ -227,15 +217,50 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		return super.onOptionsItemSelected(item);
 	}
 
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_BACK:
+				{
+					m_ShowQuitMessageBox();
+				}
+				return true;
+			default:
+				break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private boolean m_ShowQuitMessageBox()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setMessage(R.string.give_up_edit)
+				.setPositiveButton(R.string.give_up_sure,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+												int which) {
+								getWindow().setSoftInputMode(
+										WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+								finish();
+								overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
+							}
+						}).setNegativeButton(R.string.give_up_cancel, null)
+				.create().show();
+		return true;
+	}
+
 	private boolean m_InitEditText() {
 		m_InputEditText = (EditText) findViewById(R.id.start_input_value);
 
 		if (false == m_bCreateNewAccount) {
 			DecimalFormat df = new DecimalFormat("###,###");
 
-			String afterFormat = df.format(m_CurrentAccount.Cost);
+			String afterFormat = df.format(m_LatestCost);
 
-			Log.i(Constants.TAG, "--before format" + m_CurrentAccount.Cost + "---afterFormat--------" + afterFormat);
+			Log.i(Constants.TAG, "--before format" + m_LatestCost + "---afterFormat--------" + afterFormat);
 
 			m_InputEditText.setText(afterFormat);
 
@@ -290,13 +315,9 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				m_InputEditText.setSelection(m_InputEditText.length());
 
 				Log.i(Constants.TAG,
-						"--m_CurrentAccount.Cost--" + m_CurrentAccount.Cost + "---currentValue--------" + currentValue);
+						"--m_LatestCost.Cost--" + m_LatestCost+ "---currentValue--------" + currentValue);
 
-				m_CurrentAccount.Cost = currentValue;
-				if (m_CurrentAccount.isSyncOnServer()) {
-					m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-				}
-				m_CurrentAccount.save();
+				m_LatestCost = currentValue;
 				m_bChanged = false;
 			}
 
@@ -307,7 +328,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private boolean m_LoadMoreInfoDataSrc() {
 		TypedArray infoItems = mResources.obtainTypedArray(R.array.more_info_list_text);
 
-			m_CurrentAccount = Account.load(Account.class, m_CurrentAccountId);
+			//m_CurrentAccount = Account.load(Account.class, m_CurrentAccountId);
 			
 			mMoreInfoListDataSource.clear();
 			for (int index = 0; index < infoItems.length(); index++) {
@@ -332,21 +353,21 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					*/
 				case Constants.ACCOUNT_MORE_INFO_CATEGORY: {
 					
-					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Category,
+					item = new MoreInfoItem(infoItems.getString(index), m_LatestCategory,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 					mMoreInfoListDataSource.add(item);
 				}
 					break;
 				case Constants.ACCOUNT_MORE_INFO_BRAND: {
 					
-					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Brand,
+					item = new MoreInfoItem(infoItems.getString(index), m_LatestBrand,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 					mMoreInfoListDataSource.add(item);
 				}
 					break;
 				case Constants.ACCOUNT_MORE_INFO_POSITION: {
 					
-					item = new MoreInfoItem(infoItems.getString(index), m_CurrentAccount.Position,
+					item = new MoreInfoItem(infoItems.getString(index), m_LatestPosition,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 					mMoreInfoListDataSource.add(item);
 				}
@@ -421,12 +442,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			intent.setClass(this, AccountAddCategoryActivity.class);
 			
 			Bundle mBundle = new Bundle();
-			if (m_CurrentAccount == null) {
-				Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-			}
-			Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
-
-			mBundle.putDouble("value", m_CurrentAccount.Cost);
+			mBundle.putDouble("value", m_LatestCost);
 			intent.putExtras(mBundle);
 			
 			startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_CATEGORY);
@@ -439,12 +455,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				intent.setClass(this, AccountAddBrandActivity.class);
 				
 				Bundle mBundle = new Bundle();
-				if (m_CurrentAccount == null) {
-					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-				}
-				Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
-
-				mBundle.putString("category", m_CurrentAccount.Category);
+				mBundle.putString("category", m_LatestBrand);
 				intent.putExtras(mBundle);
 				
 				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_BRAND);
@@ -459,40 +470,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_POSITION);
 			}
 			break;
-		/*
-		case Constants.ACCOUNT_MORE_INFO_TEXT: {
-			Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_TEXT--");
-			Intent intent = new Intent();
-			intent.setClass(this, AccountAddCommentActivity.class);
-			Bundle mBundle = new Bundle();
-			if (m_CurrentAccount == null) {
-				Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-			}
-			Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
-
-			mBundle.putString("content", m_CurrentAccount.Comments);
-			intent.putExtras(mBundle);
-			startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_TEXT);
-		}
-			break;
-		case Constants.ACCOUNT_MORE_INFO_IMAGE: {
-			Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_IMAGE--");
-
-			Bundle mBundle = new Bundle();
-			if (m_CurrentAccount == null) {
-				Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-			}
-			Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
-
-			mBundle.putLong("id", m_CurrentAccount.getId());
-
-			Intent intent = new Intent();
-			intent.setClass(this, AccountImageSelectorActivity.class);
-			intent.putExtras(mBundle);
-			startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_IMAGE);
-		}
-			break;
-		*/
 		default:
 			break;
 		}
@@ -503,31 +480,11 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		Log.i(Constants.TAG, "onActivityResult" + "requestCode" + requestCode + "\n resultCode=" + resultCode);
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
-				/*
-			case Constants.ACCOUNT_MORE_INFO_TEXT:{
-				if (data != null) {
-					String Comments = data.getStringExtra("content");
-					Log.i(Constants.TAG, "----Comments--" + Comments);
-					m_CurrentAccount.Comments = Comments;
-					if(m_CurrentAccount.isSyncOnServer())
-					{
-						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-					}
-					m_CurrentAccount.save();
-				}
-			}
-			break;
-			*/
 			case Constants.ACCOUNT_MORE_INFO_CATEGORY:{
 				if (data != null) {
 					String Category = data.getStringExtra("category");
 					Log.i(Constants.TAG, "----Category--" + Category);
-					m_CurrentAccount.Category = Category;
-					if(m_CurrentAccount.isSyncOnServer())
-					{
-						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-					}
-					m_CurrentAccount.save();
+					m_LatestCategory = Category;
 				}
 			}
 			break;
@@ -535,12 +492,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				if (data != null) {
 					String brand = data.getStringExtra("brand");
 					Log.i(Constants.TAG, "----brand--" + brand);
-					m_CurrentAccount.Brand = brand;
-					if(m_CurrentAccount.isSyncOnServer())
-					{
-						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-					}
-					m_CurrentAccount.save();
+					m_LatestBrand = brand;
 				}
 			}
 			break;
@@ -549,12 +501,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				if (data != null) {
 					String position = data.getStringExtra("position");
 					Log.i(Constants.TAG, "----position--" + position);
-					m_CurrentAccount.Position = position;
-					if(m_CurrentAccount.isSyncOnServer())
-					{
-						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-					}
-					m_CurrentAccount.save();
+					m_LatestPosition = position;
 				}
 			}
 			break;
@@ -562,36 +509,13 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			case Constants.ACCOUNT_MORE_INFO_IMAGE: {
 				if (data != null) {
 
-					ImageItem.deleteAll(m_CurrentAccount);
-					if(m_CurrentAccount.isSyncOnServer())
-					{
-						m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
-					}
-					m_CurrentAccount.save();
+					m_bImageListChange = true;
 
-					ArrayList<String> imageSelectedlist = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-					//ArrayList<String> imageSelectedlist = data.getStringArrayListExtra("images");
+					m_LatestImageList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
 
-					Log.i(Constants.TAG, "----imageSelectedlist-data size--" + imageSelectedlist.size());
-					ActiveAndroid.beginTransaction();
-					try {
-						for (int index = 0; index < imageSelectedlist.size(); index++) {
-							String addPath = imageSelectedlist.get(index);
+					Log.i(Constants.TAG, "----imageSelectedlist-data size--" + m_LatestImageList.size());
 
-							Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
-
-								ImageItem item = new ImageItem();
-								item.Path = addPath;
-								item.account = m_CurrentAccount;
-								item.save();
-
-							}
-						ActiveAndroid.setTransactionSuccessful();
-					} finally {
-						ActiveAndroid.endTransaction();
-					}
-
-					m_UpdateImageList(imageSelectedlist);
+					m_UpdateImageList(m_LatestImageList);
 				} else {
 					Log.i(Constants.TAG, "----ACCOUNT_MORE_INFO_IMAGE-data == null-");
 				}
@@ -618,13 +542,12 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					return false;
 				}
 
-				ArrayList<String> result = new ArrayList<String>();
 				for(int index = 0 ; index < dataList.size(); index++)
 				{
-					result.add(dataList.get(index).Path);
+					m_LatestImageList.add(dataList.get(index).Path);
 				}
 
-				m_UpdateImageList(result);
+				m_UpdateImageList(m_LatestImageList);
 			}
 		return  true;
 	}
@@ -661,15 +584,52 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 	private Boolean m_SaveAccount() {
 		if (m_CurrentAccount != null) {
-			Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
 
 			//save comments
 			m_CurrentAccount.Comments = m_CommentsText.getText().toString();
 
+			m_CurrentAccount.CreateTime = m_LatestCreateTime;
+
+			m_CurrentAccount.Brand = m_LatestBrand;
+
+			m_CurrentAccount.Position = m_LatestPosition;
+
+			m_CurrentAccount.Category = m_LatestCategory;
+
+			m_CurrentAccount.Cost = m_LatestCost;
+
+			if (m_CurrentAccount.isSyncOnServer()) {
+				m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
+			}
+
 			m_CurrentAccount.save();
 
-			Log.i(Constants.TAG, "--m_CurrentAccount cost---" + m_CurrentAccount.Cost);
+			Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
+			if(m_bImageListChange) {
 
+				if(!m_bCreateNewAccount) {
+					ImageItem.deleteAll(m_CurrentAccount);
+				}
+
+				Log.i(Constants.TAG, "----imageSelectedlist-data size--" + m_LatestImageList.size());
+				ActiveAndroid.beginTransaction();
+				try {
+					for (int index = 0; index < m_LatestImageList.size(); index++) {
+						String addPath = m_LatestImageList.get(index);
+
+						Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
+
+						ImageItem item = new ImageItem();
+						item.Path = addPath;
+						item.account = m_CurrentAccount;
+						item.save();
+
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+			}
 		}
 		return true;
 	}
