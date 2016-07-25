@@ -10,6 +10,7 @@ import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -282,4 +283,14 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	    		
 	        }
 	    }
+
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

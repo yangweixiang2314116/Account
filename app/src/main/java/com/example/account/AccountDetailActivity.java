@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.example.module.Account;
 import com.example.module.ImageItem;
+import com.umeng.analytics.MobclickAgent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -139,5 +140,13 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		return true;
 	}
 
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

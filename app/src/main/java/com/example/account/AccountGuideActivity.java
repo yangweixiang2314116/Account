@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -52,5 +54,15 @@ public class AccountGuideActivity extends AppCompatActivity implements AccountGu
 
         //move to next page
         //mViewpager.setCurrentItem(1);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

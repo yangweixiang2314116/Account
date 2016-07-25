@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.module.Account;
 import com.example.module.SearchHistory;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -327,4 +328,13 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
         }
     }
 
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }

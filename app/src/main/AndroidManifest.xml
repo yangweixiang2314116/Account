@@ -25,6 +25,15 @@
             android:name="AA_DB_VERSION"
             android:value="2" />
 
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5796188567e58ebf200004ef" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Wandoujia" />
+
+
         <activity
             android:name=".AccountLoadActivity"
             android:label="@string/app_name"

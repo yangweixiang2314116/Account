@@ -20,6 +20,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * Created by Administrator on 2016/6/21.
  */
@@ -71,17 +73,6 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         mSwitchQuickAdd.setChecked(mSharedPreferences.getBoolean("quick_add", true));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //MobclickAgent.onResume(mContext);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //MobclickAgent.onPause(mContext);
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -137,5 +128,15 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

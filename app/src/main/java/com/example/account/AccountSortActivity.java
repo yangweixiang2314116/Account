@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.example.module.Account;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -142,5 +143,15 @@ public class AccountSortActivity  extends ActionBarActivity  implements AdapterV
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

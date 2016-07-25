@@ -29,6 +29,7 @@ import com.example.module.AccountRestClient;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
+import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -206,7 +207,14 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     protected void onResume() {
         super.onResume();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onResume");
+        MobclickAgent.onResume(this);
     }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -317,7 +325,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         // TODO Auto-generated method stub
         Log.i(Constants.TAG, "------start AccountDetailActivity--------");
         Intent intent = new Intent(this, AccountDetailActivity.class);
-
+        MobclickAgent.onEvent(mContext, "browser_account");
         Account current = mDetailListDataSource.get(position);
         intent.putExtra("id", current.getId());
         this.startActivity(intent);
@@ -351,8 +359,10 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             public void onClick(View v) {
                 if (m_Menu.isMenuShowing()) {
                     m_Menu.showContent();
+                    MobclickAgent.onEvent(mContext, "slidemenu_close");
                 } else {
                     m_Menu.showMenu();
+                    MobclickAgent.onEvent(mContext, "slidemenu_open");
                 }
 
             }
@@ -393,6 +403,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
                         Log.i(Constants.TAG, "------enter into AccountSortActivity--------");
 
+                        MobclickAgent.onEvent(mContext, "slidemenu_enter_sort");
                         Bundle mBundle = new Bundle();
                         mBundle.putInt("value", position);
                         intent.putExtras(mBundle);
@@ -403,10 +414,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     {
                         Log.i(Constants.TAG, "-------start to sync-------");
                         if (AccountCommonUtil.IsLogin(mContext) ) {
+                            MobclickAgent.onEvent(mContext, "slidemenu_enter_sync");
                             mBinder.startSync();
                         }
                         else
                         {
+                            MobclickAgent.onEvent(mContext, "slidemenu_enter_login");
                             m_ShowQuestionLoginPoup();
                         }
                     }
@@ -417,7 +430,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         intent.setClass(mContext, AccountSearchActivity.class);
 
                         Log.i(Constants.TAG, "------enter into AccountSearchActivity--------");
-
+                        MobclickAgent.onEvent(mContext, "slidemenu_enter_search");
                         startActivity(intent);
                     }
                         break;
@@ -425,6 +438,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     {
                         Log.i(Constants.TAG, "-------start to feedback-------");
                        // if (AccountCommonUtil.IsLogin(mContext) ) {
+                        MobclickAgent.onEvent(mContext, "slidemenu_enter_feedback");
                             Intent intent = new Intent();
                             intent.setClass(mContext, AccountFeedbackActivity.class);
 
@@ -442,6 +456,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     {
                         Log.i(Constants.TAG, "-------start to AccountSettingActivity-------");
                         // if (AccountCommonUtil.IsLogin(mContext) ) {
+                        MobclickAgent.onEvent(mContext, "slidemenu_enter_setting");
                         Intent intent = new Intent();
                         intent.setClass(mContext, AccountSettingActivity.class);
 
@@ -495,6 +510,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Log.i(Constants.TAG, "------start AccountStartActivity--------");
+                MobclickAgent.onEvent(mContext, "create_account");
                 Intent intent = new Intent(mContext, AccountStartActivity.class);
                 startActivity(intent);
             }
@@ -625,6 +641,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         }
         Log.i(Constants.TAG, "-m_CurrentAccount-id--" + current.getId());
 
+        MobclickAgent.onEvent(mContext, "edit_account");
+
         mBundle.putLong("id", current.getId());
 
         Intent intent = new Intent(this, AccountStartActivity.class);
@@ -648,6 +666,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                             public void onClick(DialogInterface dialog,
                                                 int which) {
 
+                                MobclickAgent.onEvent(mContext, "delete_account");
                                 m_DetailListAdapter.removeItem(current);
                                 m_DetailListAdapter.updateUI();
                                 current.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE;

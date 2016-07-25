@@ -11,6 +11,7 @@ import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
 import com.example.module.AccountRestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,6 +90,14 @@ public class AccountFeedbackActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
 
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }
 

@@ -10,6 +10,8 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.Arrays;
 
 
@@ -30,7 +32,7 @@ public class AccountLoadActivity extends Activity {
         Log.i(Constants.TAG, "The AccountLoadActivity---->onCreate");
 
         setContentView(R.layout.activity_account_load);
-
+        MobclickAgent.setDebugMode( true );
         mHandler.postDelayed(runnable, 1000);
     }
 
@@ -78,5 +80,15 @@ public class AccountLoadActivity extends Activity {
         Log.i(Constants.TAG, "The AccountLoadActivity---->onDestroy");
 
         mHandler.removeCallbacks(runnable);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

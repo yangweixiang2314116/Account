@@ -9,6 +9,7 @@ import com.example.module.ImageItem;
 import com.example.module.ImageLoader;
 import com.example.module.MoreInfoItem;
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -572,5 +573,14 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		}
 		return true;
 	}
-		
+
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }
