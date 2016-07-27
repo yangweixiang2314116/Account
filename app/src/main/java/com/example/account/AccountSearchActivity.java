@@ -89,6 +89,9 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
 
         mShowSearchHistoryList();
         mHideSearchResultContent();
+
+        MobclickAgent.onEvent(mContext, "enter_search");
+
         Log.i(Constants.TAG, "------enter into AccountSearchActivity----onCreate--end--");
 
     }

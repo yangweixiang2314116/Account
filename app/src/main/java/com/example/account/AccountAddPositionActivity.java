@@ -61,7 +61,8 @@ public class AccountAddPositionActivity extends ActionBarActivity {
 				
 		mContext = this;
 		init();
-		
+
+		MobclickAgent.onEvent(mContext, "enter_position");
 	}
 	
 	public void init() {

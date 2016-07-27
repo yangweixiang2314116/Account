@@ -1,5 +1,6 @@
 package com.example.account;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
@@ -29,7 +30,8 @@ public class AccountDetailActivity extends ActionBarActivity  {
     private LinearLayoutForListView m_AccountImageList = null;
     private  ArrayList<ImageItem> mImageListDataSource = null;
     private AccountDetailImageListAdapter m_DetailImageListAdapter = null;
-	
+	private Context mContext;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,11 +52,16 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		}
 		else
 		{
-			Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -bundle==null----");
+			Log.i(Constants.TAG, "------AccountDetailActivity----onCreate -bundle==null----");
 			return ;
 		}
-		
+
+		mContext = this;
+
 		m_InitAccountDetail();
+
+		MobclickAgent.onEvent(mContext, "enter_detail");
+
 		Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
 	}
 

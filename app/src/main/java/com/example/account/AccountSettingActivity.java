@@ -71,6 +71,8 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         mSwitchOnlyWifi.setChecked(mSharedPreferences.getBoolean("only_wifi",
                 true));
         mSwitchQuickAdd.setChecked(mSharedPreferences.getBoolean("quick_add", true));
+
+        MobclickAgent.onEvent(mContext, "enter_setting");
     }
 
 

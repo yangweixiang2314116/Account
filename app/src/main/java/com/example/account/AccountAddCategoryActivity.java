@@ -52,7 +52,6 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	private Button mSubmitButton = null;
 	private EditText mCategoryEditText = null;
 	private String mCategory  = "";
-    //private Double  mCost = 0.0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +104,10 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 					}
 					setResult(Activity.RESULT_OK, mIntent);
 				}
+
+				getWindow().setSoftInputMode(
+						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 				finish();
 			}
 		});
@@ -130,6 +133,7 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 
 		mContext = this;
 		init();
+		MobclickAgent.onEvent(mContext, "enter_category");
 	}
 	
 	public void init() {

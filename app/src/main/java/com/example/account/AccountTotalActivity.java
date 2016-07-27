@@ -102,6 +102,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
 
+        MobclickAgent.onEvent(mContext, "enter_total");
+
         SMSSDK.initSDK(this, Constants.ACCOUNT_LOGIN_SMS_APP_KEY, Constants.ACCOUNT_LOGIN_SMS_APP_SECRET);
 
         ActiveAndroid.setLoggingEnabled(false);

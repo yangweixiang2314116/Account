@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
+import com.example.module.BrandHistory;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
@@ -21,7 +22,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +36,7 @@ import android.view.WindowManager;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
@@ -43,20 +47,68 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	
 	private Intent  mIntent = null;
     private Context mContext = null;
-    private String  mCategory = "";
+    private String  mBrand = "";
+	protected ArrayList<BrandHistory> mBrandHistoryDataSource = new ArrayList<BrandHistory>();
+	private RelativeLayout mBrandHistoryLayout = null;
+	private Button mSubmitButton = null;
+	private EditText mBrandEditText = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayUseLogoEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
-		getSupportActionBar().setTitle(getString(R.string.add_brand_app_name));
-		
-		setContentView(R.layout.activity_account_add_category);
-		
+
+		setTheme(R.style.MIS_NO_ACTIONBAR);
+		setContentView(R.layout.activity_account_add_brand);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.brand_toolbar);
+		if(toolbar != null){
+			setSupportActionBar(toolbar);
+		}
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayUseLogoEnabled(false);
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+			getSupportActionBar().setTitle(getString(R.string.add_brand_app_name));
+		}
+
+		mHotFlowLayout = (FlowLayout) findViewById(R.id.brand_history_content);
+
+		mBrandHistoryLayout = (RelativeLayout)findViewById(R.id.account_recently_brand_part);
+
+		mBrandEditText = (EditText)findViewById(R.id.account_add_brand);
+
+		mSubmitButton = (Button) findViewById(R.id.commit);
+		mSubmitButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String current = mBrandEditText.getText().toString();
+				if(current.isEmpty() == false) {
+
+					Log.i(Constants.TAG, "----brand--" + current);
+					mIntent.putExtra("brand", current);
+
+					if (false == BrandHistory.IsExistBrandContent(current)) {
+						BrandHistory item = new BrandHistory();
+						item.Content = current;
+						item.save();
+					} else {
+						Log.i(Constants.TAG, "------mCurSearchContent already on DB--------" + current);
+						BrandHistory item = BrandHistory.GetBrandItemByContent(current);
+						item.LastUseTime = System.currentTimeMillis();
+						item.save();
+					}
+					setResult(Activity.RESULT_OK, mIntent);
+				}
+
+				getWindow().setSoftInputMode(
+						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+				finish();
+			}
+		});
+
 		//mHotFlowLayout = (FlowLayout) findViewById(R.id.hot_category_content);
 		
 		mIntent = getIntent();
@@ -64,9 +116,9 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 		Bundle bundle = getIntent().getExtras();
 		
 		if (bundle != null ) {
-			mCategory = bundle.getString("category");
+			mBrand = bundle.getString("brand");
 			
-			Log.i(Constants.TAG, "------AccountAddBrandActivity----onCreate -mCost---"+mCategory);
+			Log.i(Constants.TAG, "------AccountAddBrandActivity----onCreate -mCost---"+mBrand);
 			
 		}
 		else
@@ -77,25 +129,26 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 		
 		mContext = this;
 		init();
-		
+		MobclickAgent.onEvent(mContext, "enter_brand");
 	}
-	
+
 	public void init() {
 
-		AccountApiConnector.instance(this).getHotBrandList(mCategory, new TextHttpResponseHandler() {
+		mBrandHistoryDataSource = (ArrayList<BrandHistory>) BrandHistory.GetHistoryItems();
 
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String responseString) {
+		Log.i(Constants.TAG, "------mSearchHistoryDataSource.size()--------" + mBrandHistoryDataSource.size());
 
-				Log.i(Constants.TAG, "---getHotBrandList--onSuccess--response---" + responseString);
-
+		if (mBrandHistoryDataSource.size() > 0) {
+			mBrandHistoryLayout.setVisibility(View.VISIBLE);
+			for (int index = 0; index < mBrandHistoryDataSource.size(); index++) {
+				addTextView(mBrandHistoryDataSource.get(index).Content);
 			}
-
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				Log.i(Constants.TAG, "---getHotBrandList--onSuccess--response---" + responseString);
-			}
-		});
-		/*
+		} else {
+			mBrandHistoryLayout.setVisibility(View.INVISIBLE);
+		}
+	}
+	/*
+	public void init() {
 		AccountApiConnector.instance(this).getHotBrandList(mCategory, new JsonHttpResponseHandler() {
             
 			 @Override
@@ -130,11 +183,12 @@ public class AccountAddBrandActivity extends ActionBarActivity {
                }
 
 	            
-       });	*/
+       });
 	}
-	
+	*/
+
 	public void addTextView(String tvName) {
-		//����TextView���������ƣ�����������
+
 		TextView brandTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
 		brandTag.setText(tvName);
 		brandTag.setOnClickListener(new OnClickListener(){
@@ -154,14 +208,8 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 			}
 			
 		});
-		//��TextView������ʽ����
+
 		mHotFlowLayout.addView(brandTag);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.account_add_category, menu);
-		return true;
 	}
 
 	@SuppressLint("NewApi")
@@ -171,43 +219,13 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 		case android.R.id.home:
 			finish();
 			break;
-		case R.id.add_category_new:
-			{
-				LayoutInflater inflater = getLayoutInflater();
-				final View edit_layout = inflater.inflate(R.layout.add_popup_edit_text,
-						(ViewGroup) findViewById(R.id.edit_add_view));
-			   
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-				.setTitle(R.string.add_new_brand)
-				.setView(edit_layout)
-				.setNegativeButton(R.string.btn_name_cancel, null)
-				.setPositiveButton(R.string.btn_name_ok,  new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-
-						EditText  input = (EditText) edit_layout.findViewById(R.id.edit_add_content);
-						
-						Log.i(Constants.TAG, "--user--input--" + input.getText().toString());
-					
-						addTextView(input.getText().toString());
-					}	
-					
-				});
-				
-				
-				builder.create().show();
-				//finish();
-			}
-			break;
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
+	/*
 	private class BrandInfo
 	{
 		public long brand_id;
@@ -283,7 +301,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	    		
 	        }
 	    }
-
+*/
 	protected void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);

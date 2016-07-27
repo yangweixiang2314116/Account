@@ -23,21 +23,25 @@
 
     <TextView
         android:id="@+id/total_list_item_brand"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/total_list_item_indicator"
         android:text="@string/total_list_brand_default"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/more_info_text_color"
         android:textSize="14sp" />
 
     <TextView
         android:id="@+id/total_list_item_category"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/total_list_item_date"
         android:text="@string/total_list_category_default"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@color/black_color"
         android:textSize="16sp" />
 

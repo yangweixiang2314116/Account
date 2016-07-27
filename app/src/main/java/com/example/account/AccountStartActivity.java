@@ -118,6 +118,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		m_InitMoreInfoList();
 		m_InitCommentsText();
 		m_InitImageList();
+
+		MobclickAgent.onEvent(mContext, "enter_start");
 	}
 
 	private boolean m_InitCommentsText() {
@@ -380,6 +382,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		switch (position) {
 		case Constants.ACCOUNT_MORE_INFO_CATEGORY: {
 			Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_CATEGORY--");
+			MobclickAgent.onEvent(mContext, "add_category");
 			Intent intent = new Intent();
 			intent.setClass(this, AccountAddCategoryActivity.class);
 			Bundle mBundle = new Bundle();
@@ -391,11 +394,12 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		case Constants.ACCOUNT_MORE_INFO_BRAND:
 		 {
 				Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_BRABD--");
+			 	MobclickAgent.onEvent(mContext, "add_brand");
 				Intent intent = new Intent();
 				intent.setClass(this, AccountAddBrandActivity.class);
 				
 				Bundle mBundle = new Bundle();
-				mBundle.putString("category", m_LatestBrand);
+				mBundle.putString("brand", m_LatestBrand);
 				intent.putExtras(mBundle);
 				
 				startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_BRAND);
@@ -404,6 +408,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		case Constants.ACCOUNT_MORE_INFO_POSITION:
 		 {
 				Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_POSITION--");
+			 	MobclickAgent.onEvent(mContext, "add_position");
 				Intent intent = new Intent();
 				intent.setClass(this, AccountAddPositionActivity.class);
 				
@@ -525,6 +530,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private Boolean m_SaveAccount() {
 		if (m_CurrentAccount != null) {
 
+			MobclickAgent.onEvent(mContext, "save_account");
+
 			//save comments
 			m_CurrentAccount.Comments = m_CommentsText.getText().toString();
 
@@ -550,6 +557,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				if(!m_bCreateNewAccount) {
 					ImageItem.deleteAll(m_CurrentAccount);
 				}
+
+				MobclickAgent.onEvent(mContext, "add_images");
 
 				Log.i(Constants.TAG, "----imageSelectedlist-data size--" + m_LatestImageList.size());
 				ActiveAndroid.beginTransaction();

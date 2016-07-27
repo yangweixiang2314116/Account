@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/category_toolbar"
+            android:id="@+id/brand_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/actionbar_background_color"
@@ -34,45 +34,45 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-         </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
 
     <RelativeLayout
-        android:id="@+id/account_add_category_part"
+        android:id="@+id/account_add_brand_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/action_bar_layout"
         android:background="@android:color/white"
         android:layout_marginTop="10dp">
 
-    <EditText
-        android:id="@+id/account_add_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="top|left"
-        android:singleLine="true"
-        android:hint="@string/add_new_category_hint"
-        android:padding = "10dp"
-        android:textSize="16sp"
-        android:background="@null"
-        android:textCursorDrawable="@drawable/color_cursor"
-        android:textColor="@color/content_text_color" />
+        <EditText
+            android:id="@+id/account_add_brand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="top|left"
+            android:singleLine="true"
+            android:hint="@string/add_new_brand_hint"
+            android:padding = "10dp"
+            android:textSize="16sp"
+            android:background="@null"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textColor="@color/content_text_color" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/account_recently_category_part"
+        android:id="@+id/account_recently_brand_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:layout_below="@id/account_add_category_part"
+        android:layout_below="@id/account_add_brand_part"
         android:layout_marginTop="10dp">
 
         <TextView
-            android:id="@+id/category_history_label"
+            android:id="@+id/brand_history_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -82,10 +82,10 @@
             android:textSize="16sp" />
 
         <com.example.account.FlowLayout
-            android:id="@+id/category_history_content"
+            android:id="@+id/brand_history_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/category_history_label"
+            android:layout_below="@id/brand_history_label"
             android:layout_marginBottom="10dp"
             />
 

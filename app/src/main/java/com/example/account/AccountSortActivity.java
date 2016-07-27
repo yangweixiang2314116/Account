@@ -44,6 +44,7 @@ public class AccountSortActivity  extends ActionBarActivity  implements AdapterV
         mContext = this;
         mIntent = getIntent();
 
+        MobclickAgent.onEvent(mContext, "enter_sort");
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null ) {

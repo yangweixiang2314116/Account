@@ -35,6 +35,8 @@ public class AccountFeedbackActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        MobclickAgent.onEvent(mContext, "enter_feedback");
     }
 
     @Override
