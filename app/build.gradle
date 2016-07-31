@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     compileOptions {
-        encoding "GBK"
+        encoding "UTF-8"
     }
 
     defaultConfig {
@@ -15,6 +15,13 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,6 +33,10 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
 
 dependencies {
