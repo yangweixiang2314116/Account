@@ -166,14 +166,31 @@ package com.example.account;
 	*/
 //}
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -200,11 +217,14 @@ import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
 public class AccountAddPositionActivity extends AppCompatActivity implements BDLocationListener, OnGetGeoCoderResultListener, BaiduMap.OnMapStatusChangeListener, TextWatcher {
 
+	private SearchView  mSearchView  = null;
+	private String mCurSearchContent = "";
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	private ListView poisLL;
@@ -245,6 +265,9 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	 */
 	private ListView searchPois;
 
+	private Intent mIntent = null;
+	private Context mContext = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -252,8 +275,17 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		//注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setTheme(R.style.MIS_NO_ACTIONBAR);
 		setContentView(R.layout.activity_account_add_position);
 		initView();
+
+		mIntent = getIntent();
+
+		mContext = this;
+
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 	}
 
 	private void initView() {
@@ -261,6 +293,27 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		mBaiduMap = mMapView.getMap();
 
 		poisLL = (ListView) findViewById(R.id.main_pois);
+
+		poisLL.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				PoiAdapter adapter = (PoiAdapter) poisLL.getAdapter();
+					if(adapter != null)
+					{
+						PoiInfo poi = (PoiInfo)adapter.getItem(position);
+						Bundle data = new Bundle();
+						data.putParcelable("poi", poi);
+						mIntent.putExtras(data);
+
+						setResult(Activity.RESULT_OK, mIntent);
+
+						getWindow().setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+						finish();
+					}
+			}
+		});
 
 		topRL = (RelativeLayout) findViewById(R.id.main_top_RL);
 
@@ -332,6 +385,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		//开始定位
 		mLocClient.start();
 
+		MobclickAgent.onEvent(mContext, "enter_position");
 	}
 
 	/**
@@ -399,9 +453,17 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	//反地理编码查询结果回调函数
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
+		Log.i(Constants.TAG, "------AccountAddPositionActivity---- onGetReverseGeoCodeResult-----");
+
 		List<PoiInfo> poiInfos = reverseGeoCodeResult.getPoiList();
 		PoiAdapter poiAdapter = new PoiAdapter(AccountAddPositionActivity.this, poiInfos);
 		poisLL.setAdapter(poiAdapter);
+
+		if(mLocClient.isStarted()) {
+			Log.i(Constants.TAG, "------AccountAddPositionActivity---- stop-----");
+			mLocClient.stop();
+		}
 	}
 
 
@@ -431,6 +493,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	@Override
 	public void onMapStatusChangeFinish(MapStatus mapStatus) {
 		//地图操作的中心点
+		Log.i(Constants.TAG, "------AccountAddPositionActivity---- onMapStatusChangeFinish-----");
 		LatLng cenpt = mapStatus.target;
 		geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(cenpt));
 	}
@@ -466,7 +529,13 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	 */
 	@Override
 	public void afterTextChanged(Editable s) {
-		if (s.length() == 0 || "".equals(s.toString())) {
+		m_RequestSearchData(s.toString());
+	}
+
+
+	private  void m_RequestSearchData(String value)
+	{
+		if (value.length() == 0 || "".equals(value)) {
 			searchPois.setVisibility(View.GONE);
 		} else {
 			//创建PoiSearch实例
@@ -474,7 +543,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 			//城市内检索
 			PoiCitySearchOption poiCitySearchOption = new PoiCitySearchOption();
 			//关键字
-			poiCitySearchOption.keyword(s.toString());
+			poiCitySearchOption.keyword(value);
 			//城市
 			poiCitySearchOption.city(city);
 			//设置每页容量，默认为每页10条
@@ -505,8 +574,6 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 			});
 		}
 	}
-
-
 	//回退键
 	@Override
 	public void onBackPressed() {
@@ -518,6 +585,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		super.onResume();
 		// activity 恢复时同时恢复地图控件
 		mMapView.onResume();
+		MobclickAgent.onResume(this);
 	}
 
 	@Override
@@ -525,6 +593,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		super.onPause();
 		// activity 暂停时同时暂停地图控件
 		mMapView.onPause();
+		MobclickAgent.onPause(this);
 	}
 
 	@Override
@@ -545,6 +614,92 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		}
 
 		mMapView = null;
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				break;
+			default:
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void m_InitSearchView()
+	{
+		LayoutInflater inflater = ( LayoutInflater ) getSystemService ( Context . LAYOUT_INFLATER_SERVICE ) ;
+
+		View customActionBarView = inflater . inflate ( R . layout . search_view_title , null ) ;
+
+		mSearchView = (SearchView) customActionBarView . findViewById ( R .id.search_view ) ;
+
+		mSearchView.setVisibility(View.VISIBLE);
+		mSearchView.setIconifiedByDefault(true);
+		mSearchView.setIconified(false);
+		mSearchView.setQueryHint(getString(R.string.account_search_hint));
+		if (Build.VERSION.SDK_INT >= 14) {
+			// when edittest is empty, don't show cancal button
+			mSearchView.onActionViewExpanded();
+		}
+
+		mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+			@Override
+			public boolean onClose() {
+				return false;
+			}
+		});
+		mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				Toast.makeText(mContext, "onQueryTextSubmit--" + query, Toast.LENGTH_SHORT).show();
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				//Toast.makeText(mContext, "text change", Toast.LENGTH_SHORT).show();
+
+				if (newText != null && newText.length() > 0) {
+					//show search result
+					mCurSearchContent = newText;
+					m_RequestSearchData(mCurSearchContent);
+					///new PrepareSearchTask(newText).execute();
+				} else {
+					// show search history
+					//mHideSearchResultContent();
+					//mShowSearchHistoryList();
+				}
+				return false;
+			}
+		});
+
+		ActionBar.LayoutParams params = new ActionBar.LayoutParams( ActionBar.LayoutParams. WRAP_CONTENT ,
+				ActionBar.LayoutParams. WRAP_CONTENT , Gravity. CENTER_VERTICAL
+				| Gravity. RIGHT ) ;
+
+		getSupportActionBar(). setCustomView(customActionBarView, params) ;
+
+		m_ChangeSearchViewDefaultStyle();
+	}
+
+	private void m_ChangeSearchViewDefaultStyle()
+	{
+		//mEdit = (SearchView.SearchAutoComplete) mSearchView.findViewById(R.id.search_src_text);
+		//mEdit.setTextColor(getResources().getColor(R.color.white_color));
+		//mEdit.setHintTextColor(getResources().getColor(R.color.list_line_color));
+
+		LinearLayout inputLine   = (LinearLayout) mSearchView.findViewById(R.id.search_plate);
+		inputLine.setBackgroundColor(Color.WHITE);
+
+		//ImageView icTip = (ImageView) mSearchView.findViewById(R.id.search_button);
+		//icTip.setImageResource(R.mipmap.ic_search);
+
+		//ImageView  CloseButton  = (ImageView) mSearchView.findViewById(R.id.search_close_btn);
+		//CloseButton.setImageResource(R.mipmap.abc_ic_clear_mtrl_alpha);
 	}
 
 }

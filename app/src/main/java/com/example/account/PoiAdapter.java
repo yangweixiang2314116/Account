@@ -64,17 +64,18 @@ public class PoiAdapter extends BaseAdapter {
         }
         PoiInfo poiInfo = pois.get(position);
         holder.locationpoi_name.setText(poiInfo.name);
-        holder.locationpoi_address.setText(poiInfo.address);
+        //holder.locationpoi_address.setText(poiInfo.address);
+
         return convertView;
     }
 
     class ViewHolder {
         TextView locationpoi_name;
-        TextView locationpoi_address;
+        //TextView locationpoi_address;
 
         ViewHolder(View view) {
             locationpoi_name = (TextView) view.findViewById(R.id.locationpois_name);
-            locationpoi_address = (TextView) view.findViewById(R.id.locationpois_address);
+           // locationpoi_address = (TextView) view.findViewById(R.id.locationpois_address);
         }
     }
 }

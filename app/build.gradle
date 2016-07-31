@@ -1,13 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'yangweixiang'
+            keyPassword 'abcd311311'
+            storeFile file('C:/Users/Administrator/Desktop/APPRelease/accountKeyStore.jks')
+            storePassword 'abcd311311'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     compileOptions {
         encoding "UTF-8"
     }
-
     defaultConfig {
         applicationId "com.example.account"
         minSdkVersion 15
@@ -15,13 +21,11 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -40,7 +44,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile files('libs/libammsdk.jar')
     compile 'com.android.support:appcompat-v7:23.3.0'
@@ -52,35 +56,25 @@ dependencies {
     compile project(':sliding_menu')
     compile(name: 'SMSSDK-2.0.2', ext: 'aar')
     compile(name: 'SMSSDKGUI-2.0.2', ext: 'aar')
-
-
-    
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
-
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
-
     repositories {
         mavenCentral()
     }
-
     dependencies {
         compile 'com.loopj.android:android-async-http:1.4.9'
     }
-
     dependencies {
         compile 'com.umeng.analytics:analytics:latest.integration'
     }
-
     repositories {
         maven { url "https://jitpack.io" }
     }
-
     dependencies {
         compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
     }
-
 }
 

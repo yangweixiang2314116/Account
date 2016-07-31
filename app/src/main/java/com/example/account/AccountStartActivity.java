@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.activeandroid.ActiveAndroid;
+import com.baidu.mapapi.search.core.PoiInfo;
 import com.example.module.Account;
 import com.example.module.ImageItem;
 import com.example.module.ImageLoader;
@@ -61,6 +62,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private String m_LatestCategory = "";
 	private String m_LatestBrand = "";
 	private String m_LatestPosition = "";
+	private PoiInfo m_LatestPoi ;
 	private Double m_LatestCost ;
 	private ArrayList<String> m_LatestImageList = new ArrayList<String>();
 	private boolean  m_bImageListChange = false;
@@ -444,9 +446,11 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			
 			case Constants.ACCOUNT_MORE_INFO_POSITION:{
 				if (data != null) {
-					String position = data.getStringExtra("position");
-					Log.i(Constants.TAG, "----position--" + position);
-					m_LatestPosition = position;
+					Bundle bundle = data.getExtras();
+					PoiInfo poi = bundle.getParcelable("poi");
+					Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + poi);
+					m_LatestPoi = poi;
+					m_LatestPosition = poi.name;
 				}
 			}
 			break;

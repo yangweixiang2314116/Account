@@ -55,19 +55,19 @@ public class PoiSearchAdapter extends BaseAdapter {
         }
         PoiInfo poiInfo = poiInfos.get(position);
         holder.poisearch_name.setText(poiInfo.name);
-        holder.poisearch_address.setText(poiInfo.address);
+        //holder.poisearch_address.setText(poiInfo.address);
         holder.poisearch_distance.setText((int)DistanceUtil.getDistance(locationLatLng, poiInfo.location)+"米");
         return convertView;
     }
 
     class ViewHolder {
         TextView poisearch_name;
-        TextView poisearch_address;
+        //TextView poisearch_address;
         TextView poisearch_distance;
 
         public ViewHolder(View view) {
             poisearch_name = (TextView) view.findViewById(R.id.poisearch_name);
-            poisearch_address = (TextView) view.findViewById(R.id.poisearch_address);
+           // poisearch_address = (TextView) view.findViewById(R.id.poisearch_address);
             poisearch_distance = (TextView) view.findViewById(R.id.poisearch_distance);
         }
     }
