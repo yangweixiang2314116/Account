@@ -321,6 +321,27 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 
 		searchPois = (ListView) findViewById(R.id.main_search_pois);
 
+		searchPois.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				PoiSearchAdapter adapter = (PoiSearchAdapter) searchPois.getAdapter();
+				if(adapter != null)
+				{
+					PoiInfo poi = (PoiInfo)adapter.getItem(position);
+					Bundle data = new Bundle();
+					data.putParcelable("poi", poi);
+					mIntent.putExtras(data);
+
+					setResult(Activity.RESULT_OK, mIntent);
+
+					getWindow().setSoftInputMode(
+							WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+					finish();
+				}
+			}
+		});
+
 		//定义地图状态
 		MapStatus mMapStatus = new MapStatus.Builder().zoom(18).build();
 		MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
@@ -557,9 +578,15 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 				@Override
 				public void onGetPoiResult(PoiResult poiResult) {
 					List<PoiInfo> poiInfos = poiResult.getAllPoi();
-					PoiSearchAdapter poiSearchAdapter = new PoiSearchAdapter(AccountAddPositionActivity.this, poiInfos, locationLatLng);
-					searchPois.setVisibility(View.VISIBLE);
-					searchPois.setAdapter(poiSearchAdapter);
+					if(poiInfos.size() > 0) {
+						PoiSearchAdapter poiSearchAdapter = new PoiSearchAdapter(AccountAddPositionActivity.this, poiInfos, locationLatLng);
+						searchPois.setVisibility(View.VISIBLE);
+						searchPois.setAdapter(poiSearchAdapter);
+					}
+					else
+					{
+						Log.i(Constants.TAG, "------AccountAddPositionActivity---- getAllPoi no data !!!!-----");
+					}
 				}
 
 				//poi 详情查询结果回调
