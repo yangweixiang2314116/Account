@@ -1,13 +1,17 @@
 package com.example.account;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.example.module.Account;
+import com.example.module.CategoryHistory;
 import com.example.module.ImageItem;
 import com.umeng.analytics.MobclickAgent;
 
@@ -17,7 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,17 +36,31 @@ public class AccountDetailActivity extends ActionBarActivity  {
     private LinearLayoutForListView m_AccountImageList = null;
     private  ArrayList<ImageItem> mImageListDataSource = null;
     private AccountDetailImageListAdapter m_DetailImageListAdapter = null;
+	private Button mEditButton = null;
 	private Context mContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		setTheme(R.style.MIS_NO_ACTIONBAR);
+
 		setContentView(R.layout.activity_account_detail);
-		
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayUseLogoEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+		if(toolbar != null){
+			setSupportActionBar(toolbar);
+			Log.i(Constants.TAG, "------AccountDetailActivity----setSupportActionBar---" );
+		}
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayUseLogoEnabled(false);
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+			getSupportActionBar().setTitle(getString(R.string.cost_detail_title));
+			Log.i(Constants.TAG, "------AccountDetailActivity----ActionBar Setting---");
+		}
 		
 		Bundle bundle = getIntent().getExtras();
 		if (getIntent() != null ) {
@@ -60,11 +80,30 @@ public class AccountDetailActivity extends ActionBarActivity  {
 
 		m_InitAccountDetail();
 
+		mEditButton = (Button) findViewById(R.id.account_edit);
+		mEditButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Bundle mBundle = new Bundle();
+				if (m_CurrentAccount == null) {
+					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
+				}
+				Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
+
+				mBundle.putLong("id", m_CurrentAccount.getId());
+
+				Intent intent = new Intent(mContext, AccountStartActivity.class);
+				intent.putExtras(mBundle);
+				startActivity(intent);
+				finish();
+			}
+		});
 		MobclickAgent.onEvent(mContext, "enter_detail");
 
 		Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
 	}
 
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -72,6 +111,7 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		Log.i(Constants.TAG, "------onCreateOptionsMenu--------");
 		return true;
 	}
+	*/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,6 +123,7 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		case android.R.id.home:
 			finish();
 			break;
+		/*
 		case R.id.menu_detail_edit:
 			{
 				Bundle mBundle = new Bundle();
@@ -99,6 +140,7 @@ public class AccountDetailActivity extends ActionBarActivity  {
 				finish();
 			}
 			break;
+			*/
 		default:
 			break;
 		}

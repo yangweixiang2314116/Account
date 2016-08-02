@@ -20,7 +20,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,7 +58,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private LayoutInflater mLayoutInflater = null;
 	protected ArrayList<MoreInfoItem> mMoreInfoListDataSource = new ArrayList<MoreInfoItem>();
 	protected AccountMoreInfoListAdapter m_MoreInfoAdapter = null;
-
+	private Button mFinishButton = null;
 
 	private long m_LatestCreateTime;
 	private String m_LatestComments = "";
@@ -75,17 +78,42 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 		overridePendingTransition(R.anim.push_up, R.anim.push_down);
 
+		setTheme(R.style.MIS_NO_ACTIONBAR);
+
 		setContentView(R.layout.activity_account_start);
 
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayUseLogoEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.start_toolbar);
+		if(toolbar != null){
+			setSupportActionBar(toolbar);
+			Log.i(Constants.TAG, "------AccountDetailActivity----setSupportActionBar---" );
+		}
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayUseLogoEnabled(false);
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+			Log.i(Constants.TAG, "------AccountDetailActivity----ActionBar Setting---");
+		}
 
 		mResources = this.getResources();
 		mContext = this;
 		mLayoutInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		mFinishButton = (Button) findViewById(R.id.account_finish);
+		mFinishButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				m_SaveAccount();
+				//notify data change
+				AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
+				getWindow().setSoftInputMode(
+						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				finish();
+				overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
+			}
+		});
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -183,13 +211,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		return true;
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.account_start, menu);
-		Log.i(Constants.TAG, "-----AccountStartActivity- onCreateOptionsMenu-------");
-		return true;
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -200,16 +221,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			m_ShowQuitMessageBox();
-			break;
-		case R.id.start_account_finish: {
-			m_SaveAccount();
-			//notify data change
-			AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
-			getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-			finish();
-			overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
-		}
 			break;
 			default:
 				break;

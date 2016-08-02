@@ -1,15 +1,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_background_color"
-    android:orientation="vertical" >
+    android:background="@color/tag_activity_background_color">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/action_bar_layout"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/actionbar_background_color"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <Button
+                android:id="@+id/account_edit"
+                android:minHeight="1dp"
+                android:minWidth="1dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/actionbar_background_color"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="right"
+                android:text="@string/menu_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
 
     <ScrollView
         android:id="@+id/myScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
+        android:layout_below="@id/action_bar_layout"
         android:layout_marginBottom="10dp" >
 
         <RelativeLayout
@@ -44,7 +80,7 @@
                     android:layout_marginLeft="@dimen/detail_cost_value_left"
                     android:layout_toRightOf="@id/detail_total_value_lable"
                     android:text="123.00"
-                    android:textColor="@color/black_color"
+                    android:textColor="@color/account_top_background_color"
                     android:textSize="32sp" />
 
                 <TextView
@@ -56,7 +92,7 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/detail_total_date"
                     android:textColor="@color/detail_label_color"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_total_date"
@@ -66,8 +102,8 @@
                     android:layout_marginLeft="@dimen/detail_others_value_left"
                     android:layout_toRightOf="@id/detail_total_date_lable"
                     android:text="2016年3月6日"
-                    android:textColor="@color/black_color"
-                    android:textSize="20sp" />
+                    android:textColor="@color/detail_value_color"
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="wrap_content"
@@ -91,7 +127,7 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/detail_category_label"
                     android:textColor="@color/detail_label_color"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_category_value"
@@ -103,8 +139,8 @@
                     android:text="地板"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:textColor="@color/black_color"
-                    android:textSize="20sp" />
+                    android:textColor="@color/detail_value_color"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_brand_lable"
@@ -115,7 +151,7 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/detail_brand_label"
                     android:textColor="@color/detail_label_color"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_brand_value"
@@ -128,8 +164,8 @@
                     android:text="大自然"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:textColor="@color/black_color"
-                    android:textSize="20sp" />
+                    android:textColor="@color/detail_value_color"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_postion_lable"
@@ -140,7 +176,7 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/detail_position_label"
                     android:textColor="@color/detail_label_color"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_position_value"
@@ -152,8 +188,8 @@
                     android:text="卡子门红星美凯龙"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:textColor="@color/black_color"
-                    android:textSize="20sp" />
+                    android:textColor="@color/detail_value_color"
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="wrap_content"
@@ -177,7 +213,7 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/detail_comments_label"
                     android:textColor="@color/detail_label_color"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_comments_value"
@@ -186,8 +222,8 @@
                     android:layout_below="@id/detail_comments_lable"
                     android:layout_marginBottom="10dp"
                     android:text="房间看看,检查一下水电，有没有不规范的地方"
-                    android:textColor="@color/detail_comments_color"
-                    android:textSize="20sp" />
+                    android:textColor="@color/detail_value_color"
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="wrap_content"

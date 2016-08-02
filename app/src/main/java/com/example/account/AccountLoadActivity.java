@@ -32,7 +32,9 @@ public class AccountLoadActivity extends Activity {
         Log.i(Constants.TAG, "The AccountLoadActivity---->onCreate");
 
         setContentView(R.layout.activity_account_load);
-        MobclickAgent.setDebugMode( true );
+        MobclickAgent.setDebugMode(true);
+
+        AccountCommonUtil.setSupportSync(this, false);
         mHandler.postDelayed(runnable, 1000);
     }
 
@@ -43,8 +45,13 @@ public class AccountLoadActivity extends Activity {
         boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
 
         if(mFirst) {
-             mHandler.sendEmptyMessageDelayed(SWITCH_GUIDECTIVITY, 100);
-            AccountCommonUtil.SetNotFirstEnter(this);
+            if(AccountCommonUtil.IsSupportSync(this)) {
+                mHandler.sendEmptyMessageDelayed(SWITCH_GUIDECTIVITY, 100);
+                AccountCommonUtil.SetNotFirstEnter(this);
+            }
+            else{
+                mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
+            }
         }
         else {
           mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);

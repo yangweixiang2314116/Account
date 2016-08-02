@@ -1,13 +1,49 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/action_bar_layout"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/start_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/actionbar_background_color"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <Button
+                android:id="@+id/account_finish"
+                android:minHeight="1dp"
+                android:minWidth="1dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/actionbar_background_color"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="right"
+                android:text="@string/menu_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/account_start_top"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/action_bar_layout"
         android:background="@color/account_top_background_color" >
 
         <TextView

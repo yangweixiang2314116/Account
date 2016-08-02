@@ -87,6 +87,23 @@ public class AccountCommonUtil {
 		return true;
 	}
 
+	public static boolean IsSupportSync(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getBoolean(
+				"is_support_sync", false);
+	}
+
+	public static void setSupportSync(Context context, boolean support)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putBoolean("is_support_sync", support)
+				.apply();
+	}
 
 
 	public static boolean IsOnlyWifi(Context context)

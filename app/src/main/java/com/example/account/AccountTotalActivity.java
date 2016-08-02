@@ -127,6 +127,26 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     }
 
+    private void m_InitActionBar()
+    {
+        if (m_OptionsMenu == null) {
+            Log.i(Constants.TAG, "------AccountTotalActivity----m_InitActionBar -----");
+            return;
+        }
+
+        if(AccountCommonUtil.IsSupportSync(this)) {
+            //MenuItem plusItem = m_OptionsMenu.findItem(R.id.total_account_add);
+            //plusItem.setVisible(false);
+            //Log.i(Constants.TAG, "The AccountLoadActivity---->invisible plusItem");
+        }
+        else
+        {
+            MenuItem refreshItem = m_OptionsMenu.findItem(R.id.total_account_sync);
+            refreshItem.setVisible(false);
+            Log.i(Constants.TAG, "The AccountLoadActivity---->invisible refreshItem");
+        }
+    }
+
     private void m_InitBindler()
     {
         mConnection = new ServiceConnection() {
@@ -235,6 +255,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_OptionsMenu = menu;
         getMenuInflater().inflate(R.menu.account_total, menu);
         Log.i(Constants.TAG, "------onCreateOptionsMenu--------");
+
+        m_InitActionBar();
         return true;
     }
 
@@ -265,6 +287,15 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 }
             }
             break;
+            /*
+            case R.id.total_account_add:{
+                Log.i(Constants.TAG, "-------start to add-------");
+                MobclickAgent.onEvent(mContext, "create_account");
+                Intent intent = new Intent(mContext, AccountStartActivity.class);
+                startActivity(intent);
+            }
+            break;
+            */
             default:
                 break;
         }
@@ -278,6 +309,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         }
 
         final MenuItem refreshItem = m_OptionsMenu.findItem(R.id.total_account_sync);
+
         if (refreshItem != null) {
             if (refreshing) {
                 MenuItemCompat.setActionView(refreshItem, R.layout.actionbar_indeterminate_progress);
@@ -373,18 +405,32 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private void m_InitSlidingMenuContent()
     {
         Log.i(Constants.TAG, "------start m_InitSlidingMenuContent--------");
-         int[] icons = { R.mipmap.ic_ascending,  R.mipmap.ic_descending, R.mipmap.ic_refresh,
-                R.mipmap.ic_search,R.mipmap.ic_comment_icon,R.mipmap.ic_drawer_settings};
-        int[] titles = {R.string.account_sort_asc,R.string.account_sort_desc,R.string.account_sort_sync,
-                R.string.account_search,R.string.account_comment,R.string.account_setting};
-
         List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < icons.length; i++) {
-            Map<String, Object> listem = new HashMap<String, Object>();
-            listem.put("icon", icons[i]);
-            listem.put("title", getString(titles[i]));
-            listems.add(listem);
+        if(AccountCommonUtil.IsSupportSync(this)) {
+            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_refresh,
+                    R.mipmap.ic_search, R.mipmap.ic_comment_icon, R.mipmap.ic_drawer_settings};
+            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_sort_sync,
+                    R.string.account_search, R.string.account_comment, R.string.account_setting};
+
+            for (int i = 0; i < icons.length; i++) {
+                Map<String, Object> listem = new HashMap<String, Object>();
+                listem.put("icon", icons[i]);
+                listem.put("title", getString(titles[i]));
+                listems.add(listem);
+            }
         }
+        else{
+            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_search};
+            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_search};
+
+            for (int i = 0; i < icons.length; i++) {
+                Map<String, Object> listem = new HashMap<String, Object>();
+                listem.put("icon", icons[i]);
+                listem.put("title", getString(titles[i]));
+                listems.add(listem);
+            }
+        }
+
         SimpleAdapter adapter = new SimpleAdapter(this, listems,
                 R.layout.slide_menu_list_item, new String[] { "icon", "title"},
                 new int[] { R.id.slidemenu_list_icon, R.id.slidemenu_list_title});
@@ -477,15 +523,14 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             @Override
             public void onClick(View v) {
-                        //TODO if not login , show text , indictor already login
-                        Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
-                
-                if (AccountCommonUtil.IsLogin(mContext) ) {
+                //TODO if not login , show text , indictor already login
+                Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
+
+                if (AccountCommonUtil.IsLogin(mContext)) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
                     m_RegisterUser("86", "15062256959"); // To be delete
-                }
-                else {
-                    m_RegisterUser("86","15062256959");
+                } else {
+                    m_RegisterUser("86", "15062256959");
                     //m_ShowSMSLoginPoup();
                 }
             }
