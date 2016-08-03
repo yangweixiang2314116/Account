@@ -20,6 +20,7 @@
     <string name="menu_finish">完成</string>
     <string name="menu_preview">预览</string>
     <string name="menu_delete">删除</string>
+    <string name="confirm_to_delete_image">确定要删除这张图片吗？</string>
     <string name="menu_edit">编辑</string>
     <string name="menu_list">换行</string>
     <string name="detail_total_value">总额</string>
@@ -52,12 +53,9 @@
     <string name="get_data_error">获取数据失败</string>
 
     <!--ADD Category -->
-    <string name="add_category_app_name">添加分类</string>
+    <string name="add_category_app_name">添加标签</string>
     <string name="recent_label_text">最近使用</string>
-    <string name="menu_add">添加</string>
-    <string name="add_new_category">新建分类</string>
-    <string name="add_new_category_hint">输入新的分类，如地板</string>
-    <string name="no_data_brand">没有对应的热门标签，自己添加一个吧</string>
+    <string name="add_new_category_hint">输入新的标签，如地板</string>
     <!--ADD Category -->
 
     <!--ADD Brand -->
@@ -127,7 +125,6 @@
     <string name="account_guide_not_chose_budget">装修预算未选择</string>
     <string name="account_guide_not_chose_area">装修面积未选择</string>
     <string name="account_guide_start_use">"开始记账"</string>
-
 
     <!--feed back -->
     <string name="account_feedback_thanks">非常感谢您的宝贵意见</string>

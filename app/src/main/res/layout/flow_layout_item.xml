@@ -3,8 +3,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@drawable/guide_grid_view_item_bg_selector"
-    android:textColor="@color/guide_grid_view_text_selector"
+    android:padding="10dp"
+    android:background="@color/tag_activity_background_color"
+    android:textColor="@color/content_text_color"
     android:textSize="14sp" >
 
 </TextView>

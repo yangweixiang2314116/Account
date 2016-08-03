@@ -126,8 +126,27 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 			Log.i(Constants.TAG, "------AccountAddBrandActivity----onCreate -bundle==null----");
 			return ;
 		}
-		
+
+		mBrandEditText.setText(mBrand);
+		mBrandEditText.setSelection(mBrand.length());
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 		mContext = this;
+
+		TextView   clearBrandButton  = (TextView) findViewById(R.id.clear_brand_history);
+
+		Log.i(Constants.TAG, "------setOnClickListener---clear_brand_history--");
+		clearBrandButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.i(Constants.TAG, "------enter into onClick---clearCategoryButton--");
+				BrandHistory.deleteAll();
+				Toast.makeText(mContext, getString(R.string.accout_search_clear_history_success), Toast.LENGTH_SHORT).show();
+				mBrandHistoryLayout.setVisibility(View.INVISIBLE);
+			}
+		});
+
 		init();
 		MobclickAgent.onEvent(mContext, "enter_brand");
 	}

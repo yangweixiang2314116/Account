@@ -567,8 +567,8 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 			poiCitySearchOption.keyword(value);
 			//城市
 			poiCitySearchOption.city(city);
-			//设置每页容量，默认为每页10条
-			poiCitySearchOption.pageCapacity(10);
+			//设置每页容量，默认为每页14条
+			poiCitySearchOption.pageCapacity(14);
 			//分页编号
 			poiCitySearchOption.pageNum(1);
 			poiSearch.searchInCity(poiCitySearchOption);
@@ -577,8 +577,15 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 				//poi 查询结果回调
 				@Override
 				public void onGetPoiResult(PoiResult poiResult) {
+					if(poiResult == null)
+					{
+						Log.i(Constants.TAG, "------onGetPoiResult no data !!!!-----");
+						Toast.makeText(mContext, R.string.account_search_failed, Toast.LENGTH_SHORT).show();
+						return ;
+					}
+
 					List<PoiInfo> poiInfos = poiResult.getAllPoi();
-					if(poiInfos.size() > 0) {
+					if(poiInfos != null &&poiInfos.size() > 0) {
 						PoiSearchAdapter poiSearchAdapter = new PoiSearchAdapter(AccountAddPositionActivity.this, poiInfos, locationLatLng);
 						searchPois.setVisibility(View.VISIBLE);
 						searchPois.setAdapter(poiSearchAdapter);
@@ -586,6 +593,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 					else
 					{
 						Log.i(Constants.TAG, "------AccountAddPositionActivity---- getAllPoi no data !!!!-----");
+						Toast.makeText(mContext, R.string.account_search_failed, Toast.LENGTH_SHORT).show();
 					}
 				}
 

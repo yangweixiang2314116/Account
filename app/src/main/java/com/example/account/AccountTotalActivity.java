@@ -69,6 +69,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     private SwipeMenuListView m_TotalAllAccountList = null;
     private ListView m_SlideMenuList = null;
+    private LayoutInflater mLayoutInflater = null;
 
     private FloatingActionButton m_AddNewAccountButton = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
@@ -96,6 +97,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         setSupportActionBar(m_ToolBar);
 
         mContext = this;
+        mLayoutInflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
 
@@ -703,36 +706,46 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Log.i(Constants.TAG, "------onItemLongClick--------" + current.getId());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage(R.string.confirm_to_delete)
-                .setTitle(R.string.give_up_title)
-                .setPositiveButton(R.string.give_up_sure,
-                        new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
+         View messageContent = mLayoutInflater.inflate(R.layout.dialog_content_info, null);
+        builder.setView(messageContent);
 
-                                MobclickAgent.onEvent(mContext, "delete_account");
-                                m_DetailListAdapter.removeItem(current);
-                                m_DetailListAdapter.updateUI();
-                                current.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE;
-                                current.save();
+        TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+        content.setText(getString(R.string.confirm_to_delete));
+        builder.setPositiveButton(R.string.give_up_sure,
+                new DialogInterface.OnClickListener() {
 
-                                //update total cost
-                                m_CurrentTotalCost -= current.Cost;
-                                m_UpdateTotalCost();
-                                Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
-                                        .show();
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
 
-                            }
-                        }).setNegativeButton(R.string.give_up_cancel, null)
+                        MobclickAgent.onEvent(mContext, "delete_account");
+                        m_DetailListAdapter.removeItem(current);
+                        m_DetailListAdapter.updateUI();
+                        current.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE;
+                        current.save();
+
+                        //update total cost
+                        m_CurrentTotalCost -= current.Cost;
+                        m_UpdateTotalCost();
+                        Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
+                                .show();
+
+                    }
+                }).setNegativeButton(R.string.give_up_cancel, null)
                 .create().show();
     }
 
     private void m_ShowQuestionLoginPoup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-                .setTitle(R.string.account_login).setMessage(
-                        R.string.account_login_notice_body);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        View messageContent = mLayoutInflater.inflate(
+                R.layout.dialog_content_info, null);
+        builder.setView(messageContent);
+
+        TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+        content.setText(getString(R.string.account_login_notice_body));
+
         builder.setCancelable(false);
         builder.setPositiveButton(R.string.account_login_go_now, new DialogInterface.OnClickListener() {
             @Override

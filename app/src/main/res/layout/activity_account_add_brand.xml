@@ -69,6 +69,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:layout_below="@id/account_add_brand_part"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_marginTop="10dp">
 
         <TextView
@@ -88,6 +90,17 @@
             android:layout_below="@id/brand_history_label"
             android:layout_marginBottom="10dp"
             />
+
+        <TextView
+            android:id="@+id/clear_brand_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:layout_below="@id/brand_history_content"
+            android:text="@string/account_search_clear_history"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

@@ -131,6 +131,19 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
+		TextView   clearCategoryButton  = (TextView) findViewById(R.id.clear_label_history);
+
+		Log.i(Constants.TAG, "------setOnClickListener---clearSearchButton--");
+		clearCategoryButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.i(Constants.TAG, "------enter into onClick---clearSearchButton--");
+				CategoryHistory.deleteAll();
+				Toast.makeText(mContext, getString(R.string.accout_search_clear_history_success), Toast.LENGTH_SHORT).show();
+				mCategoryHistoryLayout.setVisibility(View.INVISIBLE);
+			}
+		});
+
 		mContext = this;
 		init();
 		MobclickAgent.onEvent(mContext, "enter_category");

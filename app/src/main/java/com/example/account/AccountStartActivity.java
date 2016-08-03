@@ -247,19 +247,26 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private boolean m_ShowQuitMessageBox()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setMessage(R.string.give_up_edit)
-				.setPositiveButton(R.string.give_up_sure,
-						new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface dialog,
-												int which) {
-								getWindow().setSoftInputMode(
-										WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-								finish();
-								overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
-							}
-						}).setNegativeButton(R.string.give_up_cancel, null)
+		View messageContent = mLayoutInflater.inflate(
+				R.layout.dialog_content_info, null);
+		builder.setView(messageContent);
+
+		TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+		content.setText(getString(R.string.give_up_edit));
+
+		builder.setPositiveButton(R.string.give_up_sure,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog,
+										int which) {
+						getWindow().setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+						finish();
+						overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
+					}
+				}).setNegativeButton(R.string.give_up_cancel, null)
 				.create().show();
 		return true;
 	}
@@ -522,7 +529,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 			Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --add new Image--" + addPath);
 
-			View commentItem = mLayoutInflater.inflate(
+			final int nCurrentIndex = index;
+			final View commentItem = mLayoutInflater.inflate(
 					R.layout.activity_account_more_info_item_image, null);
 			ImageView ImageItem = (ImageView) commentItem
 					.findViewById(R.id.more_info_item_image);
@@ -537,6 +545,33 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 			ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(addPath, ImageItem);
 
+			commentItem.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+					View messageContent = mLayoutInflater.inflate(
+							R.layout.dialog_content_info, null);
+					builder.setView(messageContent);
+
+					TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+					content.setText(getString(R.string.confirm_to_delete_image));
+
+					builder.setPositiveButton(R.string.give_up_sure,
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(DialogInterface dialog,
+															int which) {
+											m_ImageContents.removeView(commentItem);
+											m_LatestImageList.remove(nCurrentIndex);
+										}
+									}).setNegativeButton(R.string.give_up_cancel, null)
+							.create().show();
+					return false;
+				}
+			});
 			m_ImageContents.addView(commentItem);
 		}
 		return true;
