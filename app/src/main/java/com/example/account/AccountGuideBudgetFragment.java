@@ -53,6 +53,8 @@ public class AccountGuideBudgetFragment extends Fragment {
             mWheelListDataSource.add( infoItems.getString(i));
         }
 
+        infoItems.recycle();
+
         wheel.setOffset(2);
         wheel.setSeletion(8);
         wheel.setItems(mWheelListDataSource);

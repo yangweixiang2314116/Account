@@ -24,7 +24,7 @@ public class CategoryHistory extends Model {
     {
         return new Select()
                 .from(CategoryHistory.class)
-                .limit(5)
+                .limit(20)
                 .orderBy("LastUseTime desc")
                 .execute();
     }

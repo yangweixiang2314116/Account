@@ -403,6 +403,13 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             }
         });
+
+        boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
+        if(mFirst)
+        {
+            m_Menu.showMenu();
+            AccountCommonUtil.SetNotFirstEnter(mContext);
+        }
     }
 
     private void m_InitSlidingMenuContent()
@@ -410,8 +417,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Log.i(Constants.TAG, "------start m_InitSlidingMenuContent--------");
         List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
         if(AccountCommonUtil.IsSupportSync(this)) {
-            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_refresh,
-                    R.mipmap.ic_search, R.mipmap.ic_comment_icon, R.mipmap.ic_drawer_settings};
+            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_search,
+                    R.mipmap.ic_refresh, R.mipmap.ic_comment_icon, R.mipmap.ic_drawer_settings};
             int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_sort_sync,
                     R.string.account_search, R.string.account_comment, R.string.account_setting};
 
@@ -531,10 +538,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
                 if (AccountCommonUtil.IsLogin(mContext)) {
                     Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
-                    m_RegisterUser("86", "15062256959"); // To be delete
                 } else {
-                    m_RegisterUser("86", "15062256959");
-                    //m_ShowSMSLoginPoup();
+                    //m_RegisterUser("86", "15062256959");
+                    m_ShowSMSLoginPoup();
                 }
             }
         });
@@ -793,7 +799,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                             userNameText.setText(phone);
 
                             // 提交用户信息到服务端获取TOKEN
-                            m_RegisterUser(country, phone);
+                            if(AccountCommonUtil.IsSupportSync(mContext)) {
+                                m_RegisterUser(country, phone);
+                            }
                         }
                             break;
                         default:

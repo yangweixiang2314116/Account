@@ -24,7 +24,7 @@ public class BrandHistory extends Model {
     {
         return new Select()
                 .from(BrandHistory.class)
-                .limit(5)
+                .limit(20)
                 .orderBy("LastUseTime desc")
                 .execute();
     }
