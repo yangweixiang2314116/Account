@@ -70,6 +70,7 @@
     <string name="hot_position_label_text">热门位置</string>
     <string name="add_new_position">新建位置</string>
     <string name="add_new_position_hint">输入位置开始搜索，如红星美凯龙</string>
+    <string name="end">已经是最后一页啦</string>
     <!--ADD Position -->
 
     <!--Slide Menu-->

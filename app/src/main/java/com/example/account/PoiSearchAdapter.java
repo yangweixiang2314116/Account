@@ -28,6 +28,13 @@ public class PoiSearchAdapter extends BaseAdapter {
         this.locationLatLng = locationLatLng;
     }
 
+    public boolean AddNewPOI(List<PoiInfo> newData)
+    {
+        poiInfos.addAll(newData);
+        notifyDataSetChanged();
+        return true;
+    }
+
     @Override
     public int getCount() {
         return poiInfos.size();

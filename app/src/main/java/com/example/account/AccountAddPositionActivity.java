@@ -177,6 +177,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -189,7 +191,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -221,13 +225,14 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
-public class AccountAddPositionActivity extends AppCompatActivity implements BDLocationListener, OnGetGeoCoderResultListener, BaiduMap.OnMapStatusChangeListener, TextWatcher {
+public class AccountAddPositionActivity extends AppCompatActivity implements BDLocationListener, OnGetGeoCoderResultListener, BaiduMap.OnMapStatusChangeListener, TextWatcher, OnScrollListener  {
 
 	private SearchView  mSearchView  = null;
 	private String mCurSearchContent = "";
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	private ListView poisLL;
+
 	/**
 	 * 定位模式
 	 */
@@ -264,6 +269,15 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	 * 搜索输入框对应的ListView
 	 */
 	private ListView searchPois;
+	private LayoutInflater mLayoutInflater;
+	private View mFooterView;
+	private TextView mLoadText;
+	private ProgressBar mLoadProgress;
+	private String mKeyWords = "";
+	private Integer mCurrentPageNumber = 0;
+	private Boolean mUpdating = false;
+	private boolean mIsEnd = false;
+	private PoiSearchAdapter mSearchAdapter = null;
 
 	private Intent mIntent = null;
 	private Context mContext = null;
@@ -277,6 +291,8 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setTheme(R.style.MIS_NO_ACTIONBAR);
 		setContentView(R.layout.activity_account_add_position);
+		mLayoutInflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		initView();
 
 		mIntent = getIntent();
@@ -324,10 +340,10 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		searchPois.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				PoiSearchAdapter adapter = (PoiSearchAdapter) searchPois.getAdapter();
-				if(adapter != null)
+
+				if(mSearchAdapter != null)
 				{
-					PoiInfo poi = (PoiInfo)adapter.getItem(position);
+					PoiInfo poi = (PoiInfo)mSearchAdapter.getItem(position);
 					Bundle data = new Bundle();
 					data.putParcelable("poi", poi);
 					mIntent.putExtras(data);
@@ -341,6 +357,11 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 				}
 			}
 		});
+
+		mFooterView = mLayoutInflater.inflate(R.layout.load_item, null);
+		mLoadProgress = (ProgressBar) mFooterView.findViewById(R.id.poi_loading);
+		mLoadText = (TextView) mFooterView.findViewById(R.id.load_text);
+		searchPois.addFooterView(mFooterView);
 
 		//定义地图状态
 		MapStatus mMapStatus = new MapStatus.Builder().zoom(18).build();
@@ -554,59 +575,98 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	}
 
 
+	private void  m_TriggerSearchData()
+	{
+		Log.i(Constants.TAG, "------m_TriggerSearchData mKeyWords-----"+mKeyWords+ "--mCurrentPageNumber--"+mCurrentPageNumber);
+
+		//创建PoiSearch实例
+		PoiSearch poiSearch = PoiSearch.newInstance();
+		//城市内检索
+		PoiCitySearchOption poiCitySearchOption = new PoiCitySearchOption();
+		//关键字
+		poiCitySearchOption.keyword(mKeyWords);
+		//城市
+		poiCitySearchOption.city(city);
+		//设置每页容量，默认为每页14条
+		poiCitySearchOption.pageCapacity(14);
+		//分页编号
+		poiCitySearchOption.pageNum(mCurrentPageNumber++);
+		poiSearch.searchInCity(poiCitySearchOption);
+
+		mUpdating = true;
+		//设置poi检索监听者
+		poiSearch.setOnGetPoiSearchResultListener(new OnGetPoiSearchResultListener() {
+			//poi 查询结果回调
+			@Override
+			public void onGetPoiResult(PoiResult poiResult) {
+
+				mUpdating = false;
+
+				if(poiResult == null)
+				{
+					Log.i(Constants.TAG, "------onGetPoiResult no data !!!!-----");
+					Toast.makeText(mContext, R.string.account_search_failed, Toast.LENGTH_SHORT).show();
+					return ;
+				}
+
+				List<PoiInfo> poiInfos = poiResult.getAllPoi();
+				if(poiInfos != null &&poiInfos.size() > 0) {
+
+					if(mSearchAdapter != null)
+					{
+						Log.i(Constants.TAG, "------AccountAddPositionActivity----AddNewPOI !!!!-----");
+						mSearchAdapter.AddNewPOI(poiInfos);
+					}
+					else
+					{
+						Log.i(Constants.TAG, "------AccountAddPositionActivity----Initial  adapter-----");
+						mSearchAdapter = new PoiSearchAdapter(AccountAddPositionActivity.this, poiInfos, locationLatLng);
+						searchPois.setAdapter(mSearchAdapter);
+					}
+
+					searchPois.setVisibility(View.VISIBLE);
+					mLoadProgress.setVisibility(View.VISIBLE);
+					mLoadText.setVisibility(View.INVISIBLE);
+					searchPois.setOnScrollListener(AccountAddPositionActivity.this);
+					mFooterView.setOnClickListener(null);
+				}
+				else
+				{
+					if(mCurrentPageNumber != 1) {
+						mIsEnd = true;
+						mLoadProgress.setVisibility(View.INVISIBLE);
+						mLoadText.setText(R.string.end);
+						mLoadText.setVisibility(View.VISIBLE);
+						Log.i(Constants.TAG, "------AccountAddPositionActivity---- last page !!!!-----");
+					}
+					else {
+						Log.i(Constants.TAG, "------AccountAddPositionActivity---- getAllPoi no data !!!!-----");
+						Toast.makeText(mContext, R.string.account_search_failed, Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+
+			//poi 详情查询结果回调
+			@Override
+			public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+			}
+
+			@Override
+			public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+
+			}
+		});
+	}
+
 	private  void m_RequestSearchData(String value)
 	{
 		if (value.length() == 0 || "".equals(value)) {
 			searchPois.setVisibility(View.GONE);
 		} else {
-			//创建PoiSearch实例
-			PoiSearch poiSearch = PoiSearch.newInstance();
-			//城市内检索
-			PoiCitySearchOption poiCitySearchOption = new PoiCitySearchOption();
-			//关键字
-			poiCitySearchOption.keyword(value);
-			//城市
-			poiCitySearchOption.city(city);
-			//设置每页容量，默认为每页14条
-			poiCitySearchOption.pageCapacity(14);
-			//分页编号
-			poiCitySearchOption.pageNum(1);
-			poiSearch.searchInCity(poiCitySearchOption);
-			//设置poi检索监听者
-			poiSearch.setOnGetPoiSearchResultListener(new OnGetPoiSearchResultListener() {
-				//poi 查询结果回调
-				@Override
-				public void onGetPoiResult(PoiResult poiResult) {
-					if(poiResult == null)
-					{
-						Log.i(Constants.TAG, "------onGetPoiResult no data !!!!-----");
-						Toast.makeText(mContext, R.string.account_search_failed, Toast.LENGTH_SHORT).show();
-						return ;
-					}
-
-					List<PoiInfo> poiInfos = poiResult.getAllPoi();
-					if(poiInfos != null &&poiInfos.size() > 0) {
-						PoiSearchAdapter poiSearchAdapter = new PoiSearchAdapter(AccountAddPositionActivity.this, poiInfos, locationLatLng);
-						searchPois.setVisibility(View.VISIBLE);
-						searchPois.setAdapter(poiSearchAdapter);
-					}
-					else
-					{
-						Log.i(Constants.TAG, "------AccountAddPositionActivity---- getAllPoi no data !!!!-----");
-						Toast.makeText(mContext, R.string.account_search_failed, Toast.LENGTH_SHORT).show();
-					}
-				}
-
-				//poi 详情查询结果回调
-				@Override
-				public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
-				}
-
-				@Override
-				public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
-
-				}
-			});
+			mKeyWords = value;
+			mCurrentPageNumber = 0;
+			mSearchAdapter = null;
+			m_TriggerSearchData();
 		}
 	}
 	//回退键
@@ -664,77 +724,23 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void m_InitSearchView()
-	{
-		LayoutInflater inflater = ( LayoutInflater ) getSystemService ( Context . LAYOUT_INFLATER_SERVICE ) ;
 
-		View customActionBarView = inflater . inflate ( R . layout . search_view_title , null ) ;
-
-		mSearchView = (SearchView) customActionBarView . findViewById ( R .id.search_view ) ;
-
-		mSearchView.setVisibility(View.VISIBLE);
-		mSearchView.setIconifiedByDefault(true);
-		mSearchView.setIconified(false);
-		mSearchView.setQueryHint(getString(R.string.account_search_hint));
-		if (Build.VERSION.SDK_INT >= 14) {
-			// when edittest is empty, don't show cancal button
-			mSearchView.onActionViewExpanded();
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+						 int visibleItemCount, int totalItemCount) {
+		if (mUpdating) {
+			return;
 		}
-
-		mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-			@Override
-			public boolean onClose() {
-				return false;
-			}
-		});
-		mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				Toast.makeText(mContext, "onQueryTextSubmit--" + query, Toast.LENGTH_SHORT).show();
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				//Toast.makeText(mContext, "text change", Toast.LENGTH_SHORT).show();
-
-				if (newText != null && newText.length() > 0) {
-					//show search result
-					mCurSearchContent = newText;
-					m_RequestSearchData(mCurSearchContent);
-					///new PrepareSearchTask(newText).execute();
-				} else {
-					// show search history
-					//mHideSearchResultContent();
-					//mShowSearchHistoryList();
-				}
-				return false;
-			}
-		});
-
-		ActionBar.LayoutParams params = new ActionBar.LayoutParams( ActionBar.LayoutParams. WRAP_CONTENT ,
-				ActionBar.LayoutParams. WRAP_CONTENT , Gravity. CENTER_VERTICAL
-				| Gravity. RIGHT ) ;
-
-		getSupportActionBar(). setCustomView(customActionBarView, params) ;
-
-		m_ChangeSearchViewDefaultStyle();
+		if (mUpdating == false && totalItemCount != 0
+				&& firstVisibleItem + visibleItemCount >= totalItemCount && !mIsEnd) {
+			mUpdating = true;
+			m_TriggerSearchData();
+		}
 	}
 
-	private void m_ChangeSearchViewDefaultStyle()
-	{
-		//mEdit = (SearchView.SearchAutoComplete) mSearchView.findViewById(R.id.search_src_text);
-		//mEdit.setTextColor(getResources().getColor(R.color.white_color));
-		//mEdit.setHintTextColor(getResources().getColor(R.color.list_line_color));
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-		LinearLayout inputLine   = (LinearLayout) mSearchView.findViewById(R.id.search_plate);
-		inputLine.setBackgroundColor(Color.WHITE);
-
-		//ImageView icTip = (ImageView) mSearchView.findViewById(R.id.search_button);
-		//icTip.setImageResource(R.mipmap.ic_search);
-
-		//ImageView  CloseButton  = (ImageView) mSearchView.findViewById(R.id.search_close_btn);
-		//CloseButton.setImageResource(R.mipmap.abc_ic_clear_mtrl_alpha);
 	}
 
 }

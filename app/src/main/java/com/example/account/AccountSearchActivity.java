@@ -31,6 +31,7 @@ import com.example.module.Account;
 import com.example.module.SearchHistory;
 import com.umeng.analytics.MobclickAgent;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -210,7 +211,24 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
 
     private void m_ChangeSearchViewDefaultStyle()
     {
+        try {
+            Class<?> argClass=mSearchView.getClass();
+
+            Field mQueryTextView = argClass.getDeclaredField("mQueryTextView");
+            mQueryTextView.setAccessible(true);
+            Class<?> mTextViewClass = mQueryTextView.get(mSearchView).getClass().getSuperclass().getSuperclass().getSuperclass();
+
+            Field mCursorDrawableRes = mTextViewClass.getDeclaredField("mCursorDrawableRes");
+
+            mCursorDrawableRes.setAccessible(true);
+
+            mCursorDrawableRes.set(mQueryTextView.get(mSearchView), R.drawable.color_cursor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //mEdit = (SearchView.SearchAutoComplete) mSearchView.findViewById(R.id.search_src_text);
+
+        //mEdit.setCu   textCursorDrawable
         //mEdit.setTextColor(getResources().getColor(R.color.white_color));
         //mEdit.setHintTextColor(getResources().getColor(R.color.list_line_color));
 
