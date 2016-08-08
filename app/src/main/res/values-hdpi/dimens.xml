@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="detail_image_list_width">480dp</dimen>
+    <dimen name="detail_image_list_height">480dp</dimen>
+
+</resources>
