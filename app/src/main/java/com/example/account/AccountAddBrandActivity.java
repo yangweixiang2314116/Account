@@ -34,6 +34,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -220,10 +221,11 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 				String BrandValue = tag.getText().toString();
 				
 				Log.i(Constants.TAG, "----Brand--" + BrandValue);
-				mIntent.putExtra("brand", BrandValue);
-				setResult(Activity.RESULT_OK, mIntent); 
-				finish();
-				
+
+				mBrandEditText.setText(BrandValue);
+				mBrandEditText.setSelection(BrandValue.length());
+
+
 			}
 			
 		});

@@ -168,7 +168,9 @@ package com.example.account;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -221,6 +223,7 @@ import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.example.module.NetworkUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
@@ -293,7 +296,6 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		setContentView(R.layout.activity_account_add_position);
 		mLayoutInflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		initView();
 
 		mIntent = getIntent();
 
@@ -302,8 +304,39 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+		if(NetworkUtils.isNetworkAvailable(mContext)) {
+			initView();
+		}
+		else{
+			m_ShowNetWorkMessageBox();
+		}
 	}
 
+	private boolean m_ShowNetWorkMessageBox()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+		View messageContent = mLayoutInflater.inflate(
+				R.layout.dialog_content_info, null);
+		builder.setView(messageContent);
+
+		TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+		content.setText(getString(R.string.network_disconnect));
+
+		builder.setPositiveButton(R.string.give_up_sure,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog,
+										int which) {
+						getWindow().setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+						finish();
+
+					}
+				})	.create().show();
+		return true;
+	}
 	private void initView() {
 		mMapView = (MapView) findViewById(R.id.main_bdmap);
 		mBaiduMap = mMapView.getMap();
@@ -678,37 +711,42 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// activity 恢复时同时恢复地图控件
-		mMapView.onResume();
+		if(mMapView != null) {
+			// activity 恢复时同时恢复地图控件
+			mMapView.onResume();
+		}
 		MobclickAgent.onResume(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// activity 暂停时同时暂停地图控件
-		mMapView.onPause();
+		if(mMapView != null) {
+			// activity 暂停时同时暂停地图控件
+			mMapView.onPause();
+		}
 		MobclickAgent.onPause(this);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(mMapView != null) {
+			//退出时停止定位
+			mLocClient.stop();
+			//退出时关闭定位图层
+			mBaiduMap.setMyLocationEnabled(false);
 
-		//退出时停止定位
-		mLocClient.stop();
-		//退出时关闭定位图层
-		mBaiduMap.setMyLocationEnabled(false);
+			// activity 销毁时同时销毁地图控件
+			mMapView.onDestroy();
 
-		// activity 销毁时同时销毁地图控件
-		mMapView.onDestroy();
+			//释放资源
+			if (geoCoder != null) {
+				geoCoder.destroy();
+			}
 
-		//释放资源
-		if (geoCoder != null) {
-			geoCoder.destroy();
+			mMapView = null;
 		}
-
-		mMapView = null;
 	}
 
 	@SuppressLint("NewApi")

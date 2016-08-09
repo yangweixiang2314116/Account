@@ -45,6 +45,7 @@
 
     <string name="delete_title">提示</string>
     <string name="confirm_to_delete">确定要删除这条记录吗？</string>
+    <string name="network_disconnect">网络不可用, 请连接网络再试。</string>
     <string name="give_up_edit">退出此次编辑？</string>
     <string name="give_up_sure">确定</string>
     <string name="give_up_cancel">取消</string>
