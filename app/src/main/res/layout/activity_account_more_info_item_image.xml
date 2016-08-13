@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/more_info_item_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/add_image_item_width"
+        android:layout_height="@dimen/add_image_item_height"
         android:layout_centerVertical="true"
         android:scaleType="fitXY" />
 

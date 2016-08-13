@@ -11,6 +11,7 @@ public class LinearLayoutForListView extends LinearLayout {
     private BaseAdapter m_adapter;
     private OnClickListener onClickListener = null;
 
+    /*
     public void bindLinearLayout() {
         int count = m_adapter.getCount();
         
@@ -24,7 +25,8 @@ public class LinearLayoutForListView extends LinearLayout {
         }
         
     }
-	
+	*/
+
     public LinearLayoutForListView(Context context) {
         super(context);
 	}
@@ -43,4 +45,9 @@ public class LinearLayoutForListView extends LinearLayout {
 		// TODO Auto-generated method stub
 		m_adapter = Adapter;
 	}
+
+    public BaseAdapter getAdapter()
+    {
+        return m_adapter;
+    }
 }

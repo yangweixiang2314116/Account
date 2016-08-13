@@ -4,4 +4,6 @@
     <dimen name="detail_image_list_width">480dp</dimen>
     <dimen name="detail_image_list_height">480dp</dimen>
 
+    <dimen name="add_image_item_width">85dp</dimen>
+    <dimen name="add_image_item_height">85dp</dimen>
 </resources>

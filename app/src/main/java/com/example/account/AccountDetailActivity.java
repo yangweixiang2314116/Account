@@ -2,6 +2,7 @@ package com.example.account;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -123,24 +125,6 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		case android.R.id.home:
 			finish();
 			break;
-		/*
-		case R.id.menu_detail_edit:
-			{
-				Bundle mBundle = new Bundle();
-				if (m_CurrentAccount == null) {
-					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-				}
-				Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
-
-				mBundle.putLong("id", m_CurrentAccount.getId());
-				
-				Intent intent = new Intent(this, AccountStartActivity.class);
-				intent.putExtras(mBundle);
-				this.startActivity(intent);
-				finish();
-			}
-			break;
-			*/
 		default:
 			break;
 		}
@@ -180,11 +164,28 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		mImageListDataSource = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
 		m_DetailImageListAdapter = new AccountDetailImageListAdapter(this,mImageListDataSource);
 		m_AccountImageList.setAdapter(m_DetailImageListAdapter);
-        
-		//m_AccountImageList.setOnClickListener((OnClickListener) AccountDetailActivity.this);
-		m_AccountImageList.bindLinearLayout();
-		
-		//m_DetailImageListAdapter.updateUI();
+
+		int count = m_DetailImageListAdapter.getCount();
+
+		Log.i(Constants.TAG, "------bindLinearLayout--------"+count);
+
+		m_AccountImageList.removeAllViews();
+		for (int i = 0; i < count; i++) {
+			final int currentIndex = i;
+			View v = m_DetailImageListAdapter.getView(i, null, null);
+			v.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ImageItem item = mImageListDataSource.get(currentIndex);
+					Log.i(Constants.TAG, "------currentIndex--------"+currentIndex);
+					Log.i(Constants.TAG, "------item.Path--------"+item.Path);
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setDataAndType(Uri.parse("file://" + item.Path), "image/*");
+					startActivity(intent);
+				}
+			});
+			m_AccountImageList.addView(v, i);
+		}
 		
 		return true;
 	}

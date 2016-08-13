@@ -20,6 +20,8 @@
 
     <dimen name="detail_image_list_width">300dp</dimen>
     <dimen name="detail_image_list_height">200dp</dimen>
+    <dimen name="add_image_item_width">60dp</dimen>
+    <dimen name="add_image_item_height">60dp</dimen>
 
     <!-- Slide Menu-->
     <dimen name="slidingmenu_offset">60dp</dimen>
