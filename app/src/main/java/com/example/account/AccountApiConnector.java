@@ -121,7 +121,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "--post account item tag--"+item.Category);
 		Log.i(Constants.TAG, "--post account item brand--"+item.Brand);
 		Log.i(Constants.TAG, "--post account item note--"+item.Comments);
-		Log.i(Constants.TAG, "--post account item position--"+item.Position);
+		//Log.i(Constants.TAG, "--post account item position--"+item.Position);
 		Log.i(Constants.TAG, "--post account item created--"+AccountCommonUtil.ConverWholeDateToString(item.CreateTime));
 		
 		ArrayList<ImageItem> DetailImageList = (ArrayList<ImageItem>) item.Imageitems();
@@ -176,7 +176,7 @@ public class AccountApiConnector {
 		params.put("tag",item.Category);
 		params.put("brand",item.Brand);
 		params.put("note",item.Comments);
-		params.put("position",item.Position);
+		//params.put("position",item.Position);
 		params.put("created", AccountCommonUtil.ConverWholeDateToString(item.CreateTime));
 
 		
@@ -185,7 +185,7 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "--post account item tag--"+item.Category);
 		Log.i(Constants.TAG, "--post account item brand--"+item.Brand);
 		Log.i(Constants.TAG, "--post account item note--"+item.Comments);
-		Log.i(Constants.TAG, "--post account item position--"+item.Position);
+		//Log.i(Constants.TAG, "--post account item position--"+item.Position);
 		
 		
 		ArrayList<ImageItem> DetailImageList = (ArrayList<ImageItem>) item.Imageitems();

@@ -9,6 +9,7 @@ import com.example.module.Account;
 import com.example.module.ImageItem;
 import com.example.module.ImageLoader;
 import com.example.module.MoreInfoItem;
+import com.example.module.PoiItem;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
@@ -66,9 +67,11 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	private String m_LatestBrand = "";
 	private String m_LatestPosition = "";
 	private PoiInfo m_LatestPoi ;
+	private PoiItem m_CurrentPoi = null;
 	private Double m_LatestCost ;
 	private ArrayList<String> m_LatestImageList = new ArrayList<String>();
 	private boolean  m_bImageListChange = false;
+	private boolean  m_bPoiInfoChange = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +132,10 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_LatestCost = m_CurrentAccount.Cost;
 			m_LatestCategory = m_CurrentAccount.Category;
 			m_LatestBrand = m_CurrentAccount.Brand;
-			m_LatestPosition = m_CurrentAccount.Position;
-
+			m_CurrentPoi = PoiItem.GetPoiItem(m_CurrentAccount);
+			if(m_CurrentPoi != null) {
+				m_LatestPosition = m_CurrentPoi.name;
+			}
 		} else {
 			Log.i(Constants.TAG, "-----AccountStartActivity- new account-------");
 			m_CurrentAccount = new Account();
@@ -334,7 +339,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				m_InputEditText.setSelection(m_InputEditText.length());
 
 				Log.i(Constants.TAG,
-						"--m_LatestCost.Cost--" + m_LatestCost+ "---currentValue--------" + currentValue);
+						"--m_LatestCost.Cost--" + m_LatestCost + "---currentValue--------" + currentValue);
 
 				m_LatestCost = currentValue;
 				m_bChanged = false;
@@ -469,6 +474,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + poi);
 					m_LatestPoi = poi;
 					m_LatestPosition = poi.name;
+					m_bPoiInfoChange = true;
 				}
 			}
 			break;
@@ -589,7 +595,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 			m_CurrentAccount.Brand = m_LatestBrand;
 
-			m_CurrentAccount.Position = m_LatestPosition;
+			//m_CurrentAccount.Position = m_LatestPosition;
 
 			m_CurrentAccount.Category = m_LatestCategory;
 
@@ -602,6 +608,14 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_CurrentAccount.save();
 
 			Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
+
+			if(m_bPoiInfoChange){
+				PoiItem.delete(m_CurrentAccount);
+
+				PoiItem item = PoiItem.build(m_LatestPoi,m_CurrentAccount);
+				item.save();
+			}
+
 			if(m_bImageListChange) {
 
 				if(!m_bCreateNewAccount) {

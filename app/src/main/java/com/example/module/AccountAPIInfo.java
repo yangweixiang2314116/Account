@@ -35,7 +35,7 @@ public class AccountAPIInfo
 		 Cost = item.Cost;
 		Category = item.Category;
 		 Brand = item.Brand;
-		Position = item.Position;
+		//Position = item.Position;
 		 Comments =item.Comments ;
 		CreateTime = item.CreateTime;
 		UpdatedTime = item.UpdatedTime;

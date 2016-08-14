@@ -366,21 +366,6 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		topRL = (RelativeLayout) findViewById(R.id.main_top_RL);
 
 		searchAddress = (EditText) findViewById(R.id.main_search_address);
-		/*
-		searchAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-					searchAddress.setCursorVisible(true);
-					getWindow().setSoftInputMode(
-							WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
-				} else {
-					searchAddress.setCursorVisible(false);
-				}
-			}
-		});
-
-		*/
 
 		searchPois = (ListView) findViewById(R.id.main_search_pois);
 

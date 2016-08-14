@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/account_detail_list_item_image"
-        android:layout_width="@dimen/detail_image_list_width"
-        android:layout_height="@dimen/detail_image_list_height"
+        android:layout_width="@dimen/x300"
+        android:layout_height="@dimen/x300"
         android:scaleType="centerCrop" />
 
 </RelativeLayout>

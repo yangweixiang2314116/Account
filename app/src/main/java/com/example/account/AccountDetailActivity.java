@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import com.example.module.Account;
 import com.example.module.CategoryHistory;
 import com.example.module.ImageItem;
+import com.example.module.PoiItem;
 import com.umeng.analytics.MobclickAgent;
 
 import android.content.Intent;
@@ -152,9 +153,16 @@ public class AccountDetailActivity extends ActionBarActivity  {
 	
 		TextView Brand = (TextView) findViewById(R.id.detail_brand_value);
 		Brand.setText(m_CurrentAccount.Brand);
-	
+
 		TextView Position = (TextView) findViewById(R.id.detail_position_value);
-		Position.setText(m_CurrentAccount.Position);
+		PoiItem poi = PoiItem.GetPoiItem(m_CurrentAccount);
+		if(poi != null) {
+			Log.i(Constants.TAG, "------poi.name--------"+poi.name);
+			Position.setText(poi.name);
+		}else
+		{
+			Position.setText("");
+		}
 		
 		TextView Comments = (TextView) findViewById(R.id.detail_comments_value);
 		Comments.setText(m_CurrentAccount.Comments);
