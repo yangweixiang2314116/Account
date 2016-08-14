@@ -103,8 +103,8 @@
 
     <com.example.account.AddView
         android:id="@+id/account_add_picture"
-        android:layout_width="@dimen/add_image_item_width"
-        android:layout_height="@dimen/add_image_item_height"
+        android:layout_width="@dimen/y40"
+        android:layout_height="@dimen/y40"
         android:layout_toRightOf="@id/image_contents"
         android:background="@drawable/account_add_image_button_bg"
         />
@@ -115,7 +115,7 @@
     <View
         android:layout_below="@id/account_image_add_part"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="?android:attr/listDivider"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
@@ -152,9 +152,10 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/account_commnets_bottom_line"
         android:layout_below="@id/add_comment_part"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="?android:attr/listDivider" />
@@ -163,7 +164,7 @@
         android:id="@+id/account_more_info_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/add_comment_part"
+        android:layout_below="@id/account_commnets_bottom_line"
         android:divider="#00000000"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent" >

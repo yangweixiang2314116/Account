@@ -230,7 +230,6 @@ import java.util.List;
 
 public class AccountAddPositionActivity extends AppCompatActivity implements BDLocationListener, OnGetGeoCoderResultListener, BaiduMap.OnMapStatusChangeListener, TextWatcher, OnScrollListener  {
 
-	private SearchView  mSearchView  = null;
 	private String mCurSearchContent = "";
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
@@ -367,6 +366,21 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		topRL = (RelativeLayout) findViewById(R.id.main_top_RL);
 
 		searchAddress = (EditText) findViewById(R.id.main_search_address);
+		/*
+		searchAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					searchAddress.setCursorVisible(true);
+					getWindow().setSoftInputMode(
+							WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
+				} else {
+					searchAddress.setCursorVisible(false);
+				}
+			}
+		});
+
+		*/
 
 		searchPois = (ListView) findViewById(R.id.main_search_pois);
 
@@ -507,6 +521,18 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 
 		//文本输入框改变监听，必须在定位完成之后
 		searchAddress.addTextChangedListener(this);
+		searchAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					searchAddress.setCursorVisible(true);
+					getWindow().setSoftInputMode(
+							WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
+				} else {
+					searchAddress.setCursorVisible(false);
+				}
+			}
+		});
 
 		//创建GeoCoder实例对象
 		geoCoder = GeoCoder.newInstance();
@@ -534,6 +560,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		List<PoiInfo> poiInfos = reverseGeoCodeResult.getPoiList();
 		PoiAdapter poiAdapter = new PoiAdapter(AccountAddPositionActivity.this, poiInfos);
 		poisLL.setAdapter(poiAdapter);
+		poisLL.requestFocus();
 
 		if(mLocClient.isStarted()) {
 			Log.i(Constants.TAG, "------AccountAddPositionActivity---- stop-----");

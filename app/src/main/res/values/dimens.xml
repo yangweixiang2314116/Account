@@ -37,4 +37,6 @@
     <dimen name="setting_item_padding">8dp</dimen>
     <dimen name="seprate_line">1px</dimen>
     <!-- Setting-->
+
+
 </resources>
