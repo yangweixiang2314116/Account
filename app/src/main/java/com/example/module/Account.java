@@ -33,6 +33,8 @@ public class Account extends Model implements Parcelable {
     public String Category;
     @Column(name = "Brand")
     public String Brand;
+	@Column(name = "Position")
+	public String Position;
     @Column(name = "Comments")
     public String Comments;
     @Column(name = "CreateTime")
@@ -80,6 +82,7 @@ public class Account extends Model implements Parcelable {
         parcel.writeDouble(Cost);
         parcel.writeString(Category);
         parcel.writeString(Brand);
+		parcel.writeString(Position);
         parcel.writeString(Comments);
         parcel.writeLong(CreateTime);
         parcel.writeLong(LastSyncTime);
@@ -94,7 +97,7 @@ public class Account extends Model implements Parcelable {
     	UpdatedTime = System.currentTimeMillis();
     	Category = "";
     	Brand = "";
-    	//Position = "";
+    	Position = "";
 		Comments = "";
     	Cost = 0.0;
     	
@@ -110,7 +113,7 @@ public class Account extends Model implements Parcelable {
 		Cost = cost;
 		Category = category;
 		Brand = brand;
-		//Position = position;
+		Position = position;
 		Comments = comments;
 		CreateTime = createTime;
 		UpdatedTime = updateTime;
@@ -126,6 +129,7 @@ public class Account extends Model implements Parcelable {
 		Cost = cost;
 		Category = category;
 		Brand = brand;
+		Position = position;
 		Comments = comments;
 		CreateTime = createTime;
 		UpdatedTime = updateTime;
@@ -311,7 +315,7 @@ public class Account extends Model implements Parcelable {
 			}
 			
 			item.Comments = response.isNull("note") ? "":response.getString("note");
-			//item.Position = response.isNull("addr") ? "":response.getString("addr");
+			item.Position = response.isNull("addr") ? "":response.getString("addr");
 			
 			String modify = response.isNull("modified") ? "":response.getString("modified");
 			
@@ -321,7 +325,7 @@ public class Account extends Model implements Parcelable {
 			Log.i(Constants.TAG, "--Account--build-Category-" + item.Category);
 			Log.i(Constants.TAG, "--Account--build-Brand-" + item.Brand);
 			Log.i(Constants.TAG, "--Account--build-Comments-" + item.Comments);
-			//Log.i(Constants.TAG, "--Account--build-Position-" + item.Position);
+			Log.i(Constants.TAG, "--Account--build-Position-" + item.Position);
 			
 			Log.i(Constants.TAG, "--Account--build-modify time-" + modify);
 			
@@ -402,7 +406,7 @@ public class Account extends Model implements Parcelable {
 		Cost = data.Cost;
 		Category = data.Category;
 		Brand = data.Brand;
-		//Position = data.Position;
+		Position = data.Position;
 		Comments = data.Comments;
 		CreateTime = data.CreateTime;
 		UpdatedTime = data.UpdatedTime;

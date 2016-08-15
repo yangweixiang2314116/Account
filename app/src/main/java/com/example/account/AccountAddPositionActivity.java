@@ -291,6 +291,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 		//注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
+		overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
 		setTheme(R.style.MIS_NO_ACTIONBAR);
 		setContentView(R.layout.activity_account_add_position);
 		mLayoutInflater = (LayoutInflater) this
@@ -359,6 +360,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 						finish();
+						overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 					}
 			}
 		});
@@ -386,6 +388,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 							WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 					finish();
+					overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 				}
 			}
 		});

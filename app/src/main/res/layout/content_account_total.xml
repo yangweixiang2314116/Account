@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/account_total_top"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/y120"
         android:layout_alignParentTop="true"
         android:background="@color/account_top_background_color" >
 
@@ -25,7 +25,7 @@
             android:padding="10dp"
             android:text="@string/default_total_date"
             android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/total_value_label"
@@ -35,13 +35,14 @@
             android:layout_centerHorizontal="true"
             android:text="@string/total_cost"
             android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/total_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/total_value_label"
+            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:text="@string/default_total_cost"
             android:textColor="#fff"

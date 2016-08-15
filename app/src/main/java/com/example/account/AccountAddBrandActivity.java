@@ -57,7 +57,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
 		setTheme(R.style.MIS_NO_ACTIONBAR);
 		setContentView(R.layout.activity_account_add_brand);
 
@@ -107,6 +107,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 				finish();
+				overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 			}
 		});
 
@@ -239,6 +240,7 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 			break;
 		default:
 			break;

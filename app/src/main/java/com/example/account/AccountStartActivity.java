@@ -350,31 +350,30 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	}
 
 	private boolean m_LoadMoreInfoDataSrc() {
-		TypedArray infoItems = mResources.obtainTypedArray(R.array.more_info_list_text);
 
-			//m_CurrentAccount = Account.load(Account.class, m_CurrentAccountId);
-			
+		 final Integer ACCOUNT_MORE_INFO_ITEM_COUNT = 3;
+
 			mMoreInfoListDataSource.clear();
-			for (int index = 0; index < infoItems.length(); index++) {
+			for (int index = 0; index < ACCOUNT_MORE_INFO_ITEM_COUNT; index++) {
 				MoreInfoItem item = null;
 				switch (index) {
 				case Constants.ACCOUNT_MORE_INFO_CATEGORY: {
 					
-					item = new MoreInfoItem(infoItems.getString(index), m_LatestCategory,
+					item = new MoreInfoItem(getString(R.string.add_category_app_name), m_LatestCategory,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 					mMoreInfoListDataSource.add(item);
 				}
 					break;
 				case Constants.ACCOUNT_MORE_INFO_BRAND: {
 					
-					item = new MoreInfoItem(infoItems.getString(index), m_LatestBrand,
+					item = new MoreInfoItem(getString(R.string.add_brand_app_name), m_LatestBrand,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 					mMoreInfoListDataSource.add(item);
 				}
 					break;
 				case Constants.ACCOUNT_MORE_INFO_POSITION: {
 					
-					item = new MoreInfoItem(infoItems.getString(index), m_LatestPosition,
+					item = new MoreInfoItem(getString(R.string.add_position_app_name), m_LatestPosition,
 							Constants.ACCOUNT_MORE_INFO_TYPE_TEXT);
 					mMoreInfoListDataSource.add(item);
 				}
@@ -383,7 +382,6 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 					break;
 				}
 			}
-			infoItems.recycle();
 		
 		return true;
 	}
@@ -595,7 +593,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 
 			m_CurrentAccount.Brand = m_LatestBrand;
 
-			//m_CurrentAccount.Position = m_LatestPosition;
+			m_CurrentAccount.Position = m_LatestPosition;
 
 			m_CurrentAccount.Category = m_LatestCategory;
 
