@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -446,6 +447,8 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(Constants.TAG, "onActivityResult" + "requestCode" + requestCode + "\n resultCode=" + resultCode);
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
 			case Constants.ACCOUNT_MORE_INFO_CATEGORY:{
@@ -651,6 +654,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 	}
 
 	public void onPause() {
+		Log.i(Constants.TAG, "-onPause  -------" );
 		super.onPause();
 		MobclickAgent.onPause(this);
 	}

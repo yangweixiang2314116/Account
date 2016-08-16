@@ -212,23 +212,31 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 
 		TextView brandTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
 		brandTag.setText(tvName);
-		brandTag.setOnClickListener(new OnClickListener(){
+		brandTag.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				TextView tag = (TextView)v;
-				
-				String BrandValue = tag.getText().toString();
-				
-				Log.i(Constants.TAG, "----Brand--" + BrandValue);
+				TextView tag = (TextView) v;
 
-				mBrandEditText.setText(BrandValue);
-				mBrandEditText.setSelection(BrandValue.length());
+				String current = tag.getText().toString();
 
+				Log.i(Constants.TAG, "----Brand--" + current);
+
+				//mBrandEditText.setText(BrandValue);
+				//mBrandEditText.setSelection(BrandValue.length());
+
+				mIntent.putExtra("brand", current);
+				BrandHistory item = BrandHistory.GetBrandItemByContent(current);
+				item.LastUseTime = System.currentTimeMillis();
+				item.save();
+
+				setResult(Activity.RESULT_OK, mIntent);
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				finish();
+				overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 
 			}
-			
 		});
 
 		mHotFlowLayout.addView(brandTag);

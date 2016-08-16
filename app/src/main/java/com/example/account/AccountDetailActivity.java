@@ -1,7 +1,9 @@
 package com.example.account;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +21,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +43,7 @@ public class AccountDetailActivity extends ActionBarActivity  {
     private  ArrayList<ImageItem> mImageListDataSource = null;
     private AccountDetailImageListAdapter m_DetailImageListAdapter = null;
 	private Button mEditButton = null;
+	private LayoutInflater mLayoutInflater = null;
 	private Context mContext;
 
 	@Override
@@ -102,7 +106,8 @@ public class AccountDetailActivity extends ActionBarActivity  {
 			}
 		});
 		MobclickAgent.onEvent(mContext, "enter_detail");
-
+		mLayoutInflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
 	}
 
@@ -180,8 +185,8 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		m_AccountImageList.removeAllViews();
 		for (int i = 0; i < count; i++) {
 			final int currentIndex = i;
-			View v = m_DetailImageListAdapter.getView(i, null, null);
-			v.setOnClickListener(new OnClickListener() {
+			final View thumbnail = m_DetailImageListAdapter.getView(i, null, null);
+			thumbnail.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					ImageItem item = mImageListDataSource.get(currentIndex);
@@ -192,7 +197,36 @@ public class AccountDetailActivity extends ActionBarActivity  {
 					startActivity(intent);
 				}
 			});
-			m_AccountImageList.addView(v, i);
+
+			thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					final ImageItem item = mImageListDataSource.get(currentIndex);
+					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+					View messageContent = mLayoutInflater.inflate(R.layout.dialog_content_info, null);
+					builder.setView(messageContent);
+
+					TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
+					content.setText(getString(R.string.confirm_to_delete));
+					builder.setPositiveButton(R.string.give_up_sure,
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+													int which) {
+									item.delete();
+									m_AccountImageList.removeView(thumbnail);
+									Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
+											.show();
+
+								}
+							}).setNegativeButton(R.string.give_up_cancel, null)
+							.create().show();
+					return false;
+				}
+			});
+			m_AccountImageList.addView(thumbnail, i);
 		}
 		
 		return true;

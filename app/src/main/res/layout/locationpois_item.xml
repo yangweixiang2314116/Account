@@ -4,7 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/account_list_item_selector_bg"
-    android:padding="10dp">
+    android:paddingTop="@dimen/y7"
+    android:paddingBottom="@dimen/y7"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp">
 
     <LinearLayout
         android:id="@+id/locationpois_linearlayout"

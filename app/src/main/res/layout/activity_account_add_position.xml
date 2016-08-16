@@ -12,7 +12,7 @@
         <RelativeLayout
             android:id="@+id/main_top_RL"
             android:layout_width="match_parent"
-            android:layout_height="250dp">
+            android:layout_height="@dimen/y140">
 
             <com.baidu.mapapi.map.MapView
                 android:id="@+id/main_bdmap"
@@ -42,7 +42,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/y25"
             android:background="@android:color/white"
             android:gravity="center"
             android:orientation="horizontal">
@@ -50,10 +50,10 @@
             <EditText
                 android:id="@+id/main_search_address"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/add_new_position_hint"
                 android:padding = "10dp"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:background="@null"
                 android:cursorVisible="false"
                 android:textCursorDrawable="@drawable/color_cursor"

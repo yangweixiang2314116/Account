@@ -331,8 +331,9 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 										int which) {
 						getWindow().setSoftInputMode(
 								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-						finish();
 
+						finish();
+						overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 					}
 				})	.create().show();
 		return true;
@@ -714,6 +715,7 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 			mKeyWords = value;
 			mCurrentPageNumber = 0;
 			mSearchAdapter = null;
+			mIsEnd = false;
 			m_TriggerSearchData();
 		}
 	}

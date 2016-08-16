@@ -208,10 +208,20 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 				// TODO Auto-generated method stub
 				TextView tag = (TextView)v;
 				
-				String CategoryValue = tag.getText().toString();
-				Log.i(Constants.TAG, "----Category--" + CategoryValue);
-				mCategoryEditText.setText(CategoryValue);
-				mCategoryEditText.setSelection(CategoryValue.length());
+				String current = tag.getText().toString();
+				Log.i(Constants.TAG, "----Category--" + current);
+				//mCategoryEditText.setText(CategoryValue);
+				//mCategoryEditText.setSelection(CategoryValue.length());
+
+				mIntent.putExtra("category", current);
+				CategoryHistory item = CategoryHistory.GetCategoryItemByContent(current);
+				item.LastUseTime = System.currentTimeMillis();
+				item.save();
+
+				setResult(Activity.RESULT_OK, mIntent);
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				finish();
+				overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 			}
 			
 		});
