@@ -100,8 +100,8 @@
         </activity>
 
         <activity
-            android:name="com.example.account.AccountLoginRegisterActivity"
-            android:label="@string/account_login_register_text" >
+            android:name="com.example.account.AccountAllImageActivity"
+            android:label="@string/account_browser_picture" >
         </activity>
 
         <activity

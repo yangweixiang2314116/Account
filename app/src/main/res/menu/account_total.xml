@@ -17,5 +17,11 @@
         app:showAsAction="ifRoom">
     </item>
 
+    <item
+        android:id="@+id/total_account_add"
+        android:icon="@mipmap/ic_add_white_24dp"
+        android:title="@string/account_search"
+        app:showAsAction="ifRoom">
+    </item>
 
 </menu>

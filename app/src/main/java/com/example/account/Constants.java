@@ -17,10 +17,11 @@ public class Constants {
 
 	public static final int ACCOUNT_SLIDEING_MENU_ASCEND= 0;
 	public static final int ACCOUNT_SLIDEING_MENU_DESCEND= 1;
-	public static final int ACCOUNT_SLIDEING_MENU_SEARCH= 2;
-	public static final int ACCOUNT_SLIDEING_MENU_SYNC= 3;
-	public static final int ACCOUNT_SLIDEING_MENU_COMMENT= 4;
-	public static final int ACCOUNT_SLIDEING_MENU_SETTING= 5;
+	public static final int ACCOUNT_SLIDEING_MENU_IMAGE= 2;
+	public static final int ACCOUNT_SLIDEING_MENU_SEARCH= 3;
+	public static final int ACCOUNT_SLIDEING_MENU_SYNC= 4;
+	public static final int ACCOUNT_SLIDEING_MENU_COMMENT= 5;
+	public static final int ACCOUNT_SLIDEING_MENU_SETTING= 6;
 
 	  public static final int ACCOUNT_MORE_INFO_TYPE_TEXT = 0;
 	  public static final int ACCOUNT_MORE_INFO_TYPE_IMAGE = 1;

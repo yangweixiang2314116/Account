@@ -1,27 +1,18 @@
 package com.example.account;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.example.module.Account;
 import com.example.module.ImageItem;
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class AccountDetailImageListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater = null;
@@ -91,18 +82,20 @@ public class AccountDetailImageListAdapter extends BaseAdapter {
 
 		ViewHolderImage holderImage = null;
 
-		//if (convertView == null) {
+		if (convertView == null) {
 
-			holderImage = new ViewHolderImage();
+		holderImage = new ViewHolderImage();
 
-			convertView = mInflater.inflate(R.layout.activity_account_detail_list_item, null);
+		convertView = mInflater.inflate(R.layout.activity_account_detail_list_item, null);
 
-			holderImage.content = (ImageView) convertView.findViewById(R.id.account_detail_list_item_image);
-			//convertView.setTag(holderImage);
+		holderImage.content = (ImageView) convertView.findViewById(R.id.account_detail_list_item_image);
+		convertView.setTag(holderImage);
 
-		//} else {
+		} else {
 
-		//	holderImage = (ViewHolderImage) convertView.getTag();
+		holderImage = (ViewHolderImage) convertView.getTag();
+		}
+
 		String DecoderImagePath = "";
 		if(mDetailImageList.get(position).Path.equals("")  == false) {
 			String ImagePath = mDetailImageList.get(position).Path;

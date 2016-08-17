@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.example.account.Constants;
 
 @Table(name = "ImageItems")
 public class ImageItem extends Model {
@@ -39,4 +40,12 @@ public class ImageItem extends Model {
                 .where("Account   = ?", account.getId())
                 .execute();
     }
+
+    public static List<ImageItem> getAllImages(){
+        return new Select()
+                .from(ImageItem.class)
+                .orderBy("CreateTime desc")
+                .execute();
+    }
+
 }

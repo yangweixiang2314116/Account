@@ -138,9 +138,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         }
 
         if(AccountCommonUtil.IsSupportSync(this)) {
-            //MenuItem plusItem = m_OptionsMenu.findItem(R.id.total_account_add);
-            //plusItem.setVisible(false);
-            //Log.i(Constants.TAG, "The AccountLoadActivity---->invisible plusItem");
+            MenuItem plusItem = m_OptionsMenu.findItem(R.id.total_account_add);
+            plusItem.setVisible(false);
+            Log.i(Constants.TAG, "The AccountLoadActivity---->invisible plusItem");
         }
         else
         {
@@ -290,7 +290,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 }
             }
             break;
-            /*
+
             case R.id.total_account_add:{
                 Log.i(Constants.TAG, "-------start to add-------");
                 MobclickAgent.onEvent(mContext, "create_account");
@@ -298,7 +298,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 startActivity(intent);
             }
             break;
-            */
+
             default:
                 break;
         }
@@ -417,10 +417,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         Log.i(Constants.TAG, "------start m_InitSlidingMenuContent--------");
         List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
         if(AccountCommonUtil.IsSupportSync(this)) {
-            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_search,
+            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_browser,
+                    R.mipmap.ic_search,
                     R.mipmap.ic_refresh, R.mipmap.ic_comment_icon, R.mipmap.ic_drawer_settings};
-            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_sort_sync,
-                    R.string.account_search, R.string.account_comment, R.string.account_setting};
+            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_browser_picture,
+                    R.string.account_search, R.string.account_sort_sync, R.string.account_comment, R.string.account_setting};
+
 
             for (int i = 0; i < icons.length; i++) {
                 Map<String, Object> listem = new HashMap<String, Object>();
@@ -430,8 +432,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             }
         }
         else{
-            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_search};
-            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_search};
+            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_browser, R.mipmap.ic_search};
+            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc,  R.string.account_browser_picture,
+                    R.string.account_search};
 
             for (int i = 0; i < icons.length; i++) {
                 Map<String, Object> listem = new HashMap<String, Object>();
@@ -467,6 +470,16 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         startActivity(intent);
                     }
                         break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_IMAGE:
+                    {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, AccountAllImageActivity.class);
+
+                        Log.i(Constants.TAG, "------enter into AccountAllImageActivity--------");
+                        MobclickAgent.onEvent(mContext, "slidemenu_enter_all_image");
+                        startActivity(intent);
+                    }
+                    break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SYNC:
                     {
                         Log.i(Constants.TAG, "-------start to sync-------");
