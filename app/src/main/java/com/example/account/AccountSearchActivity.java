@@ -124,6 +124,8 @@ public class AccountSearchActivity extends ActionBarActivity implements AdapterV
                     {
                         mSearchView.setQuery(mCurSearchContent, false);
                     }
+                    mSearchView.clearFocus();
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     new PrepareSearchTask(mCurSearchContent).execute();
                 }
             });
