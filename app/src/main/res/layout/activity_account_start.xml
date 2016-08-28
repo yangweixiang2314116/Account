@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -35,11 +34,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/content_part"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/action_bar_layout">
+
     <RelativeLayout
         android:id="@+id/account_start_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y120"
-        android:layout_below="@id/action_bar_layout"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:background="@color/account_top_background_color" >
 
         <TextView
@@ -85,24 +91,27 @@
     <ListView
         android:id="@+id/account_more_info_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@id/account_start_top"
         android:divider="#00000000"
         android:dividerHeight="0dp"
+        android:layout_weight="2.5"
         android:listSelector="@android:color/transparent" >
     </ListView>
 
     <RelativeLayout
         android:id="@+id/account_image_add_part"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="10dp"
+        android:layout_weight="1"
         android:layout_below="@id/account_more_info_list">
 
         <LinearLayout
             android:id="@+id/image_contents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:orientation="horizontal">
 
         </LinearLayout>
@@ -112,32 +121,33 @@
         android:id="@+id/account_add_picture"
         android:layout_width="@dimen/x52"
         android:layout_height="@dimen/x52"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/image_contents"
         android:background="@drawable/account_add_image_button_bg"
         />
 
-
     </RelativeLayout>
-
-    <View
-        android:layout_below="@id/account_image_add_part"
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:background="?android:attr/listDivider"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
 
     <LinearLayout
         android:id="@+id/add_comment_part"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y80"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_below="@id/account_image_add_part"
+        android:layout_weight="2"
         android:padding ="10dp">
+
+        <View
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="1px"
+            android:background="?android:attr/listDivider" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:scrollbars="vertical" >
 
     <EditText
@@ -156,15 +166,14 @@
         android:textCursorDrawable="@drawable/color_cursor"
         android:textColor="@color/content_text_color" />
     </ScrollView>
+
+        <View
+            android:id="@+id/account_commnets_bottom_line"
+            android:layout_below="@id/account_add_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="1px"
+            android:background="?android:attr/listDivider" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/account_commnets_bottom_line"
-        android:layout_below="@id/add_comment_part"
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="?android:attr/listDivider" />
-
+        </LinearLayout>
 </RelativeLayout>

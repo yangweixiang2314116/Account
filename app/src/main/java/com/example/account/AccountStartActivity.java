@@ -113,7 +113,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 				//notify data change
 				AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
 				getWindow().setSoftInputMode(
-						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
 				finish();
 				overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
 			}
@@ -126,7 +126,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_CurrentAccount = Account.load(Account.class, id);
 			m_bCreateNewAccount = false;
 			getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN );
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
 
 			m_LatestCreateTime = m_CurrentAccount.CreateTime;
 			m_LatestComments = m_CurrentAccount.Comments;
@@ -142,7 +142,7 @@ public class AccountStartActivity extends ActionBarActivity implements AdapterVi
 			m_CurrentAccount = new Account();
 			m_bCreateNewAccount = true;
 			getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE |  WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
 
 			m_LatestCreateTime = System.currentTimeMillis();
 
