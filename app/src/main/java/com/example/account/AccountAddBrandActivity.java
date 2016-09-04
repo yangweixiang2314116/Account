@@ -100,6 +100,11 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 						item.LastUseTime = System.currentTimeMillis();
 						item.save();
 					}
+
+					//hide soft input
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(mBrandEditText.getWindowToken(), 0);
+
 					setResult(Activity.RESULT_OK, mIntent);
 				}
 
@@ -231,6 +236,10 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 				item.LastUseTime = System.currentTimeMillis();
 				item.save();
 
+				//hide soft input
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mBrandEditText.getWindowToken(), 0);
+
 				setResult(Activity.RESULT_OK, mIntent);
 				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				finish();
@@ -247,6 +256,10 @@ public class AccountAddBrandActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
+			//hide soft input
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(mBrandEditText.getWindowToken(), 0);
+
 			finish();
 			overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 			break;

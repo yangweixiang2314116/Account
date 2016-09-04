@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -102,6 +103,11 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 						item.LastUseTime = System.currentTimeMillis();
 						item.save();
 					}
+
+                    //hide soft input
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mCategoryEditText.getWindowToken(), 0);
+
 					setResult(Activity.RESULT_OK, mIntent);
 				}
 
@@ -206,7 +212,12 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				TextView tag = (TextView)v;
+				//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                //hide soft input
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mCategoryEditText.getWindowToken(), 0);
+                TextView tag = (TextView)v;
 				
 				String current = tag.getText().toString();
 				Log.i(Constants.TAG, "----Category--" + current);
@@ -217,9 +228,8 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 				CategoryHistory item = CategoryHistory.GetCategoryItemByContent(current);
 				item.LastUseTime = System.currentTimeMillis();
 				item.save();
-
 				setResult(Activity.RESULT_OK, mIntent);
-				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 				finish();
 				overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 			}
@@ -310,6 +320,10 @@ public class AccountAddCategoryActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
+                //hide soft input
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mCategoryEditText.getWindowToken(), 0);
+
 				finish();
 				overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
 				break;
