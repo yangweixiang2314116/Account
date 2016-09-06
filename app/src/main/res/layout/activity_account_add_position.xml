@@ -12,7 +12,7 @@
         <RelativeLayout
             android:id="@+id/main_top_RL"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y140">
+            android:layout_height="140dp">
 
             <com.baidu.mapapi.map.MapView
                 android:id="@+id/main_bdmap"
@@ -42,7 +42,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y25"
+            android:layout_height="25dp"
             android:background="@android:color/white"
             android:gravity="center"
             android:orientation="horizontal">

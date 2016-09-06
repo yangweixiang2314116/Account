@@ -32,6 +32,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -116,8 +117,6 @@ public class AccountStartActivity extends ActionBarActivity  {
                 m_SaveAccount();
                 //notify data change
                 AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
-                getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 finish();
                 overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
             }
@@ -129,8 +128,6 @@ public class AccountStartActivity extends ActionBarActivity  {
             Log.i(Constants.TAG, "-----AccountStartActivity- accountId-------" + id);
             m_CurrentAccount = Account.load(Account.class, id);
             m_bCreateNewAccount = false;
-            getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
             m_LatestCreateTime = m_CurrentAccount.CreateTime;
             m_LatestComments = m_CurrentAccount.Comments;
@@ -146,7 +143,7 @@ public class AccountStartActivity extends ActionBarActivity  {
             m_CurrentAccount = new Account();
             m_bCreateNewAccount = true;
             getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
             m_LatestCreateTime = System.currentTimeMillis();
 
@@ -154,41 +151,53 @@ public class AccountStartActivity extends ActionBarActivity  {
 
         m_InitDateText();
         m_InitAddButton();
+        m_InitCommentsText();
         m_InitEditText();
         m_InitMoreInfoList();
-        m_InitCommentsText();
         m_InitImageList();
 
         MobclickAgent.onEvent(mContext, "enter_start");
     }
 
+    private Handler mHandler = new Handler();
     private boolean m_InitCommentsText() {
         m_CommentsText = (EditText) findViewById(R.id.account_add_comments);
-        /*
-        m_CommentsText.setOnClickListener(new View.OnClickListener() {
+        m_CommentsText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v, boolean hasFocus) {
+            public boolean onTouch(View v, MotionEvent event) {
                 final ScrollView scrollLayout = (ScrollView) findViewById(R.id.account_scrollview);
+                Log.i(Constants.TAG, "-----AccountStartActivity- onTouch----scroll to bottom---");
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollLayout.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                }, 100);
+                return false;
+            }
+        });
+
+        /*
+          m_CommentsText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    m_CommentsText.setCursorVisible(true);
-                    //scroll.fullScroll(ScrollView.FOCUS_DOWN);
-                    scrollLayout.post(new Runnable() {
+
+                    final ScrollView scrollLayout = (ScrollView) findViewById(R.id.account_scrollview);
+                    Log.i(Constants.TAG, "-----AccountStartActivity- onClick----scroll to bottom---");
+
+                    mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             scrollLayout.fullScroll(ScrollView.FOCUS_DOWN);
                         }
-                    });
-
+                    }, 100);
                 } else {
-                    m_CommentsText.setCursorVisible(false);
-                    //scroll.fullScroll(ScrollView.FOCUS_UP);
-                    scrollLayout.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scrollLayout.fullScroll(ScrollView.FOCUS_UP);
-                        }
-                    });
+
                 }
+
             }
         });
         */
@@ -284,8 +293,8 @@ public class AccountStartActivity extends ActionBarActivity  {
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        getWindow().setSoftInputMode(
-                                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        //getWindow().setSoftInputMode(
+                        //        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN  | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                         finish();
                         overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
                     }
@@ -507,8 +516,6 @@ public class AccountStartActivity extends ActionBarActivity  {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(Constants.TAG, "onActivityResult" + "requestCode" + requestCode + "---resultCode=" + resultCode);
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {

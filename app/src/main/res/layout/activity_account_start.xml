@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginRight="@dimen/x10"
+                android:layout_marginRight="10dp"
                 android:background="@color/actionbar_background_color"
                 android:minHeight="1dp"
                 android:minWidth="1dp"
@@ -35,9 +35,9 @@
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/account_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/account_scrollview"
         android:layout_below="@id/action_bar_layout"
         android:scrollbars="vertical">
 
@@ -98,8 +98,7 @@
                 android:id="@+id/account_more_info_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
+                android:orientation="vertical"></LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/account_image_add_part"
@@ -120,55 +119,45 @@
 
                 <com.example.account.AddView
                     android:id="@+id/account_add_picture"
-                    android:layout_width="@dimen/x52"
-                    android:layout_height="@dimen/x52"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/image_contents"
                     android:background="@drawable/account_add_image_button_bg" />
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/add_comment_part"
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1px"
+                android:layout_below="@id/account_image_add_part"
+                android:background="?android:attr/listDivider" />
+
+
+            <EditText
+                android:id="@+id/account_add_comments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/account_image_add_part"
-                android:orientation="vertical"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:padding="10dp">
+                android:background="@null"
+                android:gravity="top|left"
+                android:hint="@string/add_comments_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:lineSpacingExtra="4dip"
+                android:minHeight="120dp"
+                android:padding="10dp"
+                android:textColor="@color/content_text_color"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="16sp" />
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1px"
-                    android:layout_alignParentTop="true"
-                    android:background="?android:attr/listDivider" />
-
-
-                <EditText
-                    android:id="@+id/account_add_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:cursorVisible="false"
-                    android:gravity="top|left"
-                    android:hint="@string/add_comments_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="textMultiLine"
-                    android:lineSpacingExtra="4dip"
-                    android:minHeight="@dimen/y60"
-                    android:textColor="@color/content_text_color"
-                    android:textCursorDrawable="@drawable/color_cursor"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/account_commnets_bottom_line"
-                    android:layout_width="wrap_content"
-                    android:layout_height="1px"
-                    android:layout_below="@id/account_add_comments"
-                    android:background="?android:attr/listDivider" />
-            </LinearLayout>
-
+            <View
+                android:id="@+id/account_commnets_bottom_line"
+                android:layout_width="wrap_content"
+                android:layout_height="1px"
+                android:layout_below="@id/account_add_comments"
+                android:background="?android:attr/listDivider" />
         </LinearLayout>
+
     </ScrollView>
 </RelativeLayout>

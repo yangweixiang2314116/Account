@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/account_total_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y120"
+        android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:background="@color/account_top_background_color" >
 

@@ -78,6 +78,7 @@
 
         <activity
             android:name="com.example.account.AccountStartActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="@string/start_input_title" >
         </activity>
         <activity
