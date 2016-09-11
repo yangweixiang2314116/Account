@@ -110,7 +110,7 @@ public class AccountDetailImageListAdapter extends BaseAdapter {
 
 			if (DecoderImagePath.isEmpty() == false) {
 				Picasso.with(mContext).load(DecoderImagePath)
-						.resizeDimen(R.dimen.detail_image_list_width, R.dimen.detail_image_list_height).centerCrop()
+						.fit().centerCrop()
 						.placeholder(R.mipmap.info_item_image).into(holderImage.content);
 			}
 		//}

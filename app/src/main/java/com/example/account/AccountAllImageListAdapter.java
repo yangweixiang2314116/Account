@@ -2,7 +2,6 @@ package com.example.account;
 
 import java.util.ArrayList;
 import com.example.module.ImageItem;
-import com.example.module.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
@@ -97,7 +96,7 @@ public class AccountAllImageListAdapter extends BaseAdapter {
             holderImage = (ViewHolderImage) convertView.getTag();
         }
 
-        /*
+
         String DecoderImagePath = "";
         if(mDetailImageList.get(position).Path.equals("")  == false) {
             String ImagePath = mDetailImageList.get(position).Path;
@@ -108,15 +107,14 @@ public class AccountAllImageListAdapter extends BaseAdapter {
             DecoderImagePath = mDetailImageList.get(position).ServerPath;
         }
 
-        Log.i(Constants.TAG, "---position----" + position + "--DecoderImagePath---"+DecoderImagePath);
+        Log.i(Constants.TAG, "---position----" + position + "--DecoderImagePath---" + DecoderImagePath);
 
         if (DecoderImagePath.isEmpty() == false) {
             Picasso.with(mContext).load(DecoderImagePath)
-                    .placeholder(R.mipmap.info_item_image).into(holderImage.content);
+                    .fit()
+                    .placeholder(R.mipmap.info_item_image).
+                    into(holderImage.content);
         }
-        */
-        String ImagePath = mDetailImageList.get(position).Path;
-        ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(ImagePath, holderImage.content);
 
         return convertView;
     }

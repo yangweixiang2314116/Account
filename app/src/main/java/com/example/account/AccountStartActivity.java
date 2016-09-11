@@ -7,7 +7,6 @@ import com.activeandroid.ActiveAndroid;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.example.module.Account;
 import com.example.module.ImageItem;
-import com.example.module.ImageLoader;
 import com.example.module.MoreInfoItem;
 import com.example.module.PoiItem;
 import com.squareup.picasso.Picasso;
@@ -19,7 +18,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -30,21 +28,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -64,7 +56,6 @@ public class AccountStartActivity extends ActionBarActivity  {
     private AddView m_AddButton = null;
     private LayoutInflater mLayoutInflater = null;
     protected ArrayList<MoreInfoItem> mMoreInfoListDataSource = new ArrayList<MoreInfoItem>();
-    //protected AccountMoreInfoListAdapter m_MoreInfoAdapter = null;
     private Button mFinishButton = null;
 
     private long m_LatestCreateTime;
@@ -418,16 +409,7 @@ public class AccountStartActivity extends ActionBarActivity  {
     private boolean m_InitMoreInfoList() {
         m_LoadMoreInfoDataSrc();
         m_MoreInfoList = (LinearLayout) findViewById(R.id.account_more_info_list);
-        //m_MoreInfoAdapter = new AccountMoreInfoListAdapter(this, mMoreInfoListDataSource);
 
-        //m_MoreInfoList.setAdapter(m_MoreInfoAdapter);
-
-        //m_MoreInfoList.setOnItemClickListener(AccountStartActivity.this);
-        //m_MoreInfoAdapter.updateUI();
-        //setListViewHeightBasedOnChildren(m_MoreInfoList);
-
-        //ScrollView scroll  = (ScrollView)findViewById(R.id.account_scrollview);
-        //scroll.fullScroll(ScrollView.FOCUS_UP);
         m_MoreInfoList.removeAllViews();
         for (int index = 0; index < mMoreInfoListDataSource.size(); index++) {
             MoreInfoItem item = mMoreInfoListDataSource.get(index);
@@ -612,15 +594,14 @@ public class AccountStartActivity extends ActionBarActivity  {
             ImageView ImageItem = (ImageView) commentItem
                     .findViewById(R.id.more_info_item_image);
 
-            //String DecoderImagePath = "file://" + addPath;
+            String DecoderImagePath = "file://" + addPath;
 
-            //Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --DecoderImagePath--" + DecoderImagePath);
+            Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --DecoderImagePath--" + DecoderImagePath);
 
-            //Picasso.with(mContext)
-            //		.load(DecoderImagePath)
-            //		.into(ImageItem);
-
-            ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(addPath, ImageItem);
+            Picasso.with(mContext)
+            		.load(DecoderImagePath)
+                    .fit()
+            		.into(ImageItem);
 
             commentItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
