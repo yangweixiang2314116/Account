@@ -867,6 +867,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             }
 
         });
+
         return true;
     }
 

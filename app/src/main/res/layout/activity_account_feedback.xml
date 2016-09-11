@@ -1,13 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/tag_activity_background_color">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/action_bar_layout"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/feedback_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/actionbar_background_color"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <Button
+                android:id="@+id/commit"
+                android:background="@drawable/tool_bar_action_btn"
+                android:minHeight="1dp"
+                android:minWidth="1dp"
+                android:layout_marginRight="16dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/tool_btn_default_text_color"
+                android:textSize="14sp"
+                android:layout_gravity="right"
+                android:text="@string/menu_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
 
     <EditText
         android:id="@+id/suggestion"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/action_bar_layout"
         android:gravity="left|top"
+        android:padding = "10dp"
+        android:background="@null"
+        android:textCursorDrawable="@drawable/color_cursor"
         android:scrollbars="vertical"
         android:singleLine="false"
         android:inputType="textMultiLine"

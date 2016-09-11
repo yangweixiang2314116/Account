@@ -43,7 +43,7 @@ public class AccountLoadActivity extends Activity {
         setContentView(R.layout.activity_account_load);
         MobclickAgent.setDebugMode(true);
 
-        AccountCommonUtil.setSupportSync(this, false);
+        AccountCommonUtil.setSupportSync(this, true);
         mResources = this.getResources();
 
         boolean mFirst = AccountCommonUtil.IsFirstEnter(this);

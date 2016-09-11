@@ -1,53 +1,74 @@
 package com.example.account;
 
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
-import com.example.module.AccountRestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.CountDownLatch;
-
-import cz.msebera.android.httpclient.Header;
 
 
 public class AccountFeedbackActivity extends ActionBarActivity {
-    private EditText mFeedback;
-    private Context mContext;
+    private EditText mFeedback = null;
+    private Context mContext ;
+    private Button mSubmitButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
+        setTheme(R.style.MIS_NO_ACTIONBAR);
+
         setContentView(R.layout.activity_account_feedback);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.feedback_toolbar);
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+        }
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayUseLogoEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+            getSupportActionBar().setTitle(getString(R.string.account_comment));
+        }
+
         mContext = this;
         mFeedback = (EditText) findViewById(R.id.suggestion);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        mSubmitButton = (Button) findViewById(R.id.commit);
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                m_ProcessFeedBackContent();
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+                finish();
+                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+            }
+        });
         MobclickAgent.onEvent(mContext, "enter_feedback");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.account_feedback, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_feedback) {
+     boolean m_ProcessFeedBackContent()
+    {
             String feedback = mFeedback.getText().toString();
             if (feedback.length() == 0) {
                 Toast.makeText(mContext, R.string.account_feedback_empty, Toast.LENGTH_SHORT)
@@ -85,12 +106,6 @@ public class AccountFeedbackActivity extends ActionBarActivity {
             }
             return true;
         }
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     protected void onResume() {
         super.onResume();
@@ -100,6 +115,24 @@ public class AccountFeedbackActivity extends ActionBarActivity {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                //hide soft input
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mFeedback.getWindowToken(), 0);
+
+                finish();
+                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

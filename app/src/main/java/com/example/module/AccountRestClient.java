@@ -24,8 +24,8 @@ import java.security.cert.CertificateException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
-    //private static final String BASE_URL = "http://192.168.1.104:8000/";
-	private static final String BASE_URL = "https://192.168.1.220/";
+    private static final String BASE_URL = "http://192.168.1.105:8000/";
+	//private static final String BASE_URL = "https://192.168.1.220/";
 
     private static AsyncHttpClient client = null;
 	private static String TokenPre = " Token ";
@@ -52,8 +52,7 @@ public class AccountRestClient {
 	{
 		Log.i(Constants.TAG, "-AccountRestClient -- Init--start-");
 
-		//client = new AsyncHttpClient();
-
+		/*
 		KeyStore localTrustStore = null;
 		MySSLSocketFactory sslFactory = null;
 		try {
@@ -96,6 +95,7 @@ public class AccountRestClient {
 
 		Log.i(Constants.TAG, "--setSSLSocketFactory--");
 		client.setSSLSocketFactory(sslFactory);
+		*/
 
 		if(AccountCommonUtil.IsLogin(mContext))
 		{

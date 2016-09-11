@@ -179,6 +179,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.text.Editable;
@@ -350,6 +351,10 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 				PoiAdapter adapter = (PoiAdapter) poisLL.getAdapter();
 					if(adapter != null)
 					{
+						//hide soft input
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(searchAddress.getWindowToken(), 0);
+
 						PoiInfo poi = (PoiInfo)adapter.getItem(position);
 						Bundle data = new Bundle();
 						data.putParcelable("poi", poi);
@@ -378,6 +383,10 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 
 				if(mSearchAdapter != null)
 				{
+					//hide soft input
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(searchAddress.getWindowToken(), 0);
+
 					PoiInfo poi = (PoiInfo)mSearchAdapter.getItem(position);
 					Bundle data = new Bundle();
 					data.putParcelable("poi", poi);

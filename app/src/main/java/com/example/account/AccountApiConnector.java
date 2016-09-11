@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.example.module.Account;
 import com.example.module.AccountRestClient;
 import com.example.module.ImageItem;
+import com.example.module.PoiItem;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -115,6 +116,9 @@ public class AccountApiConnector {
 		params.put("note",item.Comments);
 		//params.put("addr",item.Position);
 		params.put("created", AccountCommonUtil.ConverWholeDateToString(item.CreateTime));
+
+		PoiItem poi = PoiItem.GetPoiItem(item);
+		params.put("buy_place",poi);
 		
 		Log.i(Constants.TAG, "--post account item id--"+item.getId());
 		Log.i(Constants.TAG, "--post account item price--"+item.Cost);

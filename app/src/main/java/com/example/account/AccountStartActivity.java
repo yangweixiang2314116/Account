@@ -46,7 +46,6 @@ public class AccountStartActivity extends ActionBarActivity  {
 
     private EditText m_InputEditText = null;
     private LinearLayout m_MoreInfoList = null;
-    private Resources mResources = null;
     private Account m_CurrentAccount = null;
     private TextView m_CurrentTimeText = null;
     private EditText m_CommentsText = null;
@@ -63,7 +62,7 @@ public class AccountStartActivity extends ActionBarActivity  {
     private String m_LatestCategory = "";
     private String m_LatestBrand = "";
     private String m_LatestPosition = "";
-    private PoiInfo m_LatestPoi;
+    private PoiInfo m_LatestPoi = null;
     private PoiItem m_CurrentPoi = null;
     private Double m_LatestCost;
     private ArrayList<String> m_LatestImageList = new ArrayList<String>();
@@ -96,7 +95,6 @@ public class AccountStartActivity extends ActionBarActivity  {
             Log.i(Constants.TAG, "------AccountDetailActivity----ActionBar Setting---");
         }
 
-        mResources = this.getResources();
         mContext = this;
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -126,9 +124,7 @@ public class AccountStartActivity extends ActionBarActivity  {
             m_LatestCategory = m_CurrentAccount.Category;
             m_LatestBrand = m_CurrentAccount.Brand;
             m_CurrentPoi = PoiItem.GetPoiItem(m_CurrentAccount);
-            if (m_CurrentPoi != null) {
-                m_LatestPosition = m_CurrentPoi.name;
-            }
+            m_LatestPosition = m_CurrentAccount.Position;
         } else {
             Log.i(Constants.TAG, "-----AccountStartActivity- new account-------");
             m_CurrentAccount = new Account();
@@ -433,6 +429,12 @@ public class AccountStartActivity extends ActionBarActivity  {
                     processOnItemClick(nCurrentIndex);
                 }
             });
+
+            if(item.itemValue.equals("") == false) {
+                ImageView check = (ImageView) InfoItem
+                        .findViewById(R.id.more_info_check);
+                check.setImageResource(R.mipmap.checkbox_checked);
+            }
             m_MoreInfoList.addView(InfoItem);
         }
 
@@ -658,9 +660,17 @@ public class AccountStartActivity extends ActionBarActivity  {
             }
 
             m_CurrentAccount.save();
-
             Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
 
+            if(m_LatestPoi != null) {
+                //delete old poi info
+                if (PoiItem.GetPoiItem(m_CurrentAccount) != null) {
+                    PoiItem.delete(m_CurrentAccount);
+                }
+                //add new poi info
+                PoiItem poi = PoiItem.build(m_LatestPoi, m_CurrentAccount);
+                poi.save();
+            }
             if (m_bPoiInfoChange) {
                 PoiItem.delete(m_CurrentAccount);
 
