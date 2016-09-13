@@ -128,6 +128,8 @@
     <string name="account_guide_not_chose_budget">装修预算未选择</string>
     <string name="account_guide_not_chose_area">装修面积未选择</string>
     <string name="account_guide_start_use">"开始记账"</string>
+    <string name="account_my_user_info">"我"</string>
+    <string name="account_my_user_info_unknow">"未知"</string>
 
     <!--feed back -->
     <string name="account_feedback_thanks">非常感谢您的宝贵意见</string>

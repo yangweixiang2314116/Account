@@ -549,12 +549,19 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 //TODO if not login , show text , indictor already login
                 Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
 
-                if (AccountCommonUtil.IsLogin(mContext)) {
-                    Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
-                } else {
-                    //m_RegisterUser("86", "15062256959");
-                    m_ShowSMSLoginPoup();
-                }
+                //if (AccountCommonUtil.IsLogin(mContext)) {
+
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, AccountUserInfoActivity.class);
+
+                    Log.i(Constants.TAG, "------enter into AccountUserInfoActivity--------");
+
+                    startActivity(intent);
+
+                    //Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
+                //} else {
+                //    m_ShowSMSLoginPoup();
+                //}
             }
         });
 

@@ -128,6 +128,11 @@
 
         <activity
             android:name="com.example.account.AccountSettingActivity"
+            android:label="@string/account_my_user_info" >
+        </activity>
+
+        <activity
+            android:name="com.example.account.AccountUserInfoActivity"
             android:label="@string/account_setting" >
         </activity>
 

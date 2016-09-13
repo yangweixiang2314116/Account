@@ -45,6 +45,13 @@
           <item>"不清楚"</item>
      </string-array>
 
+     <string-array name="user_info">
+          <item>"城市"</item>
+          <item>"装修风格"</item>
+          <item>"装修预算"</item>
+          <item>"房屋面积"</item>
+     </string-array>
+
 
      <string-array name="guide_chose_budget_text">
           <item>"3万"</item>
