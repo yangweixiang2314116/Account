@@ -125,6 +125,10 @@ public class AccountStartActivity extends ActionBarActivity  {
             m_LatestBrand = m_CurrentAccount.Brand;
             m_CurrentPoi = PoiItem.GetPoiItem(m_CurrentAccount);
             m_LatestPosition = m_CurrentAccount.Position;
+
+            getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+
         } else {
             Log.i(Constants.TAG, "-----AccountStartActivity- new account-------");
             m_CurrentAccount = new Account();
@@ -149,6 +153,7 @@ public class AccountStartActivity extends ActionBarActivity  {
     private Handler mHandler = new Handler();
     private boolean m_InitCommentsText() {
         m_CommentsText = (EditText) findViewById(R.id.account_add_comments);
+        /*
         m_CommentsText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -164,6 +169,7 @@ public class AccountStartActivity extends ActionBarActivity  {
                 return false;
             }
         });
+        */
 
         /*
           m_CommentsText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -294,7 +300,7 @@ public class AccountStartActivity extends ActionBarActivity  {
         m_InputEditText = (EditText) findViewById(R.id.start_input_value);
 
         if (false == m_bCreateNewAccount) {
-            DecimalFormat df = new DecimalFormat("###,###");
+            DecimalFormat df = new DecimalFormat("###,###.##");
 
             String afterFormat = df.format(m_LatestCost);
 
@@ -303,6 +309,9 @@ public class AccountStartActivity extends ActionBarActivity  {
             m_InputEditText.setText(afterFormat);
 
             m_InputEditText.setSelection(m_InputEditText.length());
+
+            m_CommentsText.clearFocus();
+            m_InputEditText.requestFocus();
         }else{
             m_InputEditText.requestFocus();
         }
@@ -344,7 +353,7 @@ public class AccountStartActivity extends ActionBarActivity  {
 
                 Double currentValue = Double.valueOf(cuttedStr.toString());
 
-                DecimalFormat df = new DecimalFormat("###,###");
+                DecimalFormat df = new DecimalFormat("###,###.##");
 
                 String afterFormat = df.format(currentValue);
 

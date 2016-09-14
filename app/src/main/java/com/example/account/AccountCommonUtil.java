@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 
+
 public class AccountCommonUtil {
 
 	static String ConverDateToString(long date)
@@ -191,9 +192,29 @@ public class AccountCommonUtil {
 		return true;
 	}
 
+	public static String GetCurrentCity(Context context)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		return pSharedPreferences.getString(
+				"city", "");
+	}
+
+	public static boolean SetCurrentCity(Context context, String city)
+	{
+		SharedPreferences pSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		pSharedPreferences.edit().putString("city", city)
+				.apply();
+		return true;
+	}
+
 	public static void sendBroadcastForAccountDataChange(Context context) {
 		Intent intent = new Intent(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
 		context.sendBroadcast(intent);
 	}
+
 
 }

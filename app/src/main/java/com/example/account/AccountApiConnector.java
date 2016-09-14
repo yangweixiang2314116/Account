@@ -243,4 +243,23 @@ public class AccountApiConnector {
 		AccountRestClient.instance(mcontext).post(url, params ,handler);
 	}
 
+	public void postUserInfo(String city, String style, String budget, String area,  JsonHttpResponseHandler handler)
+	{
+		Log.i(Constants.TAG, "-start to -postUserInfo--city--"+city);
+		Log.i(Constants.TAG, "-start to -postUserInfo--style--"+style);
+		Log.i(Constants.TAG, "-start to -postUserInfo--budget--"+budget);
+		Log.i(Constants.TAG, "-start to -postUserInfo--area--"+area);
+
+		String url = "jz/user-profiles/";
+
+		RequestParams params = new RequestParams();
+
+		params.put("city",city);
+		params.put("decoration_style",style);
+		params.put("budget",budget);
+		params.put("house_area",area);
+
+		AccountRestClient.instance(mcontext).post(url, params ,handler);
+	}
+
 }

@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.module.NetworkUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
@@ -27,6 +28,7 @@ import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +39,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cz.msebera.android.httpclient.Header;
+
 public class AccountUserInfoActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
     private Context mContext = null;
     private Button mSubmitButton = null;
@@ -44,6 +48,11 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     private Resources mResources = null;
     private List<Map<String, Object>> mDataList  = new ArrayList<Map<String, Object>>();
     private SimpleAdapter mAdapter = null;
+
+    private String mCity = "";
+    private String mStyle = "";
+    private String mBudget = "";
+    private String mArea = "";
 
     public static final int ACCOUNT_USER_INFO_CITY = 0;
     public static final int ACCOUNT_USER_INFO_STYLE = 1;
@@ -77,8 +86,14 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
             @Override
             public void onClick(View v) {
 
-                finish();
-                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                if(NetworkUtils.isNetworkAvailable(mContext))
+                {
+                    m_ProcessUserInfoContent();
+                }
+                else {
+                    finish();
+                    overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                }
         }});
 
         mContext = this;
@@ -108,16 +123,20 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
             switch(i)
             {
                 case ACCOUNT_USER_INFO_CITY:
-                    //TODO
+                    mCity = AccountCommonUtil.GetCurrentCity(mContext);
+                    value = mCity;
                     break;
                 case ACCOUNT_USER_INFO_STYLE:
-                    value = AccountCommonUtil.GetGudieStyle(mContext);
+                    mStyle = AccountCommonUtil.GetGudieStyle(mContext);
+                    value = mStyle;
                     break;
                 case ACCOUNT_USER_INFO_BUGET:
-                    value = AccountCommonUtil.GetGudieBudget(mContext);
+                    mBudget = AccountCommonUtil.GetGudieBudget(mContext);
+                    value = mBudget;
                     break;
                 case ACCOUNT_USER_INFO_AREA:
-                    value = AccountCommonUtil.GetGudieArea(mContext);
+                    mArea = AccountCommonUtil.GetGudieArea(mContext);
+                    value = mArea;
                     break;
                 default:
                     break;
@@ -157,5 +176,42 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+    }
+
+    public boolean m_ProcessUserInfoContent()
+    {
+            Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
+            AccountApiConnector.instance(mContext).postUserInfo(mCity,
+                    mStyle, mBudget, mArea, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // If the response is JSONObject instead of expected JSONArray
+                    Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
+
+                    finish();
+                    overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                    super.onFailure(statusCode, headers, throwable, response);
+                    Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
+
+                    Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
+
+                    finish();
+                    overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.i(Constants.TAG, "---postUserInfo--onFinish-----");
+                    super.onFinish();
+                }
+
+            });
+
+        return true;
     }
 }

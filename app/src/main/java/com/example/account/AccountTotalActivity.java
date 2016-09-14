@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.activeandroid.ActiveAndroid;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
@@ -64,7 +68,7 @@ import cz.msebera.android.httpclient.Header;
 
 @SuppressWarnings("deprecation")
 public class AccountTotalActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener,
-        AdapterView.OnItemLongClickListener
+        AdapterView.OnItemLongClickListener, BDLocationListener
 {
 
     private SwipeMenuListView m_TotalAllAccountList = null;
@@ -87,6 +91,10 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private BroadcastReceiver mReceiver = null;
     private boolean m_bConnected = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
+    /**
+     * 定位端
+     */
+    private LocationClient mLocClient = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +134,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_InitReceiver();
 
         m_InitBindler();
+
+        m_InitCurrentyCity();
+
         new PrepareTask().execute();
 
     }
@@ -216,6 +227,20 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         return ;
     }
 
+    private void m_InitCurrentyCity()
+    {
+        String city = AccountCommonUtil.GetCurrentCity(this);
+        Log.i(Constants.TAG, "m_InitCurrentyCity---->"+city);
+        if(city.equals(""))
+        {
+            RequestCurrentCity();
+        }
+        else
+        {
+            Log.i(Constants.TAG, "m_InitCurrentyCity----already load city-");
+        }
+    }
+
     protected void onStart(){
         super.onStart();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onStart");
@@ -249,6 +274,10 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         if(m_bConnected)
         {
             unbindService(mConnection);
+        }
+
+        if(mLocClient != null && mLocClient.isStarted()) {
+            mLocClient.stop();
         }
     }
 
@@ -664,6 +693,22 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         m_TotalAllAccountList.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
     }
 
+    @Override
+    public void onReceiveLocation(BDLocation bdLocation) {
+        //Receive Location
+        //经纬度
+        double lati = bdLocation.getLatitude();
+        double longa = bdLocation.getLongitude();
+        //打印出当前位置
+        Log.i(Constants.TAG, "location.getAddrStr()=" + bdLocation.getAddrStr());
+        //打印出当前城市
+        Log.i(Constants.TAG, "location.getCity()=" + bdLocation.getCity());
+        //返回码
+        int i = bdLocation.getLocType();
+
+        AccountCommonUtil.SetCurrentCity(this, bdLocation.getCity());
+    }
+
     private class PrepareTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
@@ -852,6 +897,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 			mSharedPreferences.edit().putBoolean("is_login", true)
                                     .apply();
 
+                    m_ProcessUserInfoContent();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -882,4 +929,58 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         void onProgress(int progress);
     }
 
+    public  String RequestCurrentCity()
+    {
+        //初始化定位
+        mLocClient = new LocationClient(this);
+        //注册定位监听
+        mLocClient.registerLocationListener(this);
+
+        LocationClientOption option = new LocationClientOption();
+        //就是这个方法设置为true，才能获取当前的位置信息
+        option.setIsNeedAddress(true);
+        option.setOpenGps(true);
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        //int span = 1000;
+        //option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        mLocClient.setLocOption(option);
+        mLocClient.start();
+        return "";
+    }
+
+    public boolean m_ProcessUserInfoContent()
+    {
+        Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
+        String city = AccountCommonUtil.GetCurrentCity(mContext);
+        String style = AccountCommonUtil.GetGudieStyle(mContext);
+        String budget = AccountCommonUtil.GetGudieBudget(mContext);
+        String area = AccountCommonUtil.GetGudieArea(mContext);
+        AccountApiConnector.instance(mContext).postUserInfo(city,
+                style, budget, area, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        // If the response is JSONObject instead of expected JSONArray
+                        Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                        super.onFailure(statusCode, headers, throwable, response);
+                        Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
+                        Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        Log.i(Constants.TAG, "---postUserInfo--onFinish-----");
+                        super.onFinish();
+                    }
+
+                });
+
+        return true;
+    }
 }
