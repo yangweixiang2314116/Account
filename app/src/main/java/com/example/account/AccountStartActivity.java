@@ -495,10 +495,8 @@ public class AccountStartActivity extends ActionBarActivity  {
             case Constants.ACCOUNT_MORE_INFO_POSITION: {
                 Log.i(Constants.TAG, "--onItemClick--ACCOUNT_MORE_INFO_POSITION--");
                 MobclickAgent.onEvent(mContext, "add_position");
-                Intent intent = new Intent();
-                intent.setClass(this, AccountAddPositionActivity.class);
 
-                startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_POSITION);
+                m_ShowShoppingTypePoup();
             }
             break;
             default:
@@ -541,11 +539,21 @@ public class AccountStartActivity extends ActionBarActivity  {
                         m_LatestPoi = poi;
                         m_LatestPosition = poi.name;
                         m_bPoiInfoChange = true;
-                        m_UpdateMoreInfoList(requestCode, m_LatestPosition);
+                        m_UpdateMoreInfoList(Constants.ACCOUNT_MORE_INFO_POSITION, m_LatestPosition);
                     }
                 }
                 break;
 
+                case Constants.ACCOUNT_MORE_INFO_SHOPPING_ONLINE:
+                {
+                    if (data != null) {
+                        String online = data.getStringExtra("online");
+                        Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_SHOPPING_ONLINE--online--" + online);
+                        m_LatestPosition = online;
+                        m_UpdateMoreInfoList(Constants.ACCOUNT_MORE_INFO_POSITION, m_LatestPosition);
+                    }
+                }
+                break;
                 case Constants.ACCOUNT_MORE_INFO_IMAGE: {
                     if (data != null) {
 
@@ -729,4 +737,41 @@ public class AccountStartActivity extends ActionBarActivity  {
         MobclickAgent.onPause(this);
     }
 
+    private void m_ShowShoppingTypePoup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        View messageContent = mLayoutInflater.inflate(
+                R.layout.dialog_shopping_type, null);
+        builder.setView(messageContent);
+        builder.create();
+        final AlertDialog dialog =builder.show();
+
+        Button  online = (Button)messageContent.findViewById(R.id.dialog_shopping_online);
+        online.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                intent.setClass(mContext, AccountAddOnlineShoppingActivity.class);
+
+                startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_SHOPPING_ONLINE);
+
+                dialog.dismiss();
+            }
+        });
+
+        Button  offline = (Button)messageContent.findViewById(R.id.dialog_shopping_offline);
+        offline.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, AccountAddPositionActivity.class);
+
+                startActivityForResult(intent, Constants.ACCOUNT_MORE_INFO_POSITION);
+                dialog.dismiss();
+
+            }
+        });
+
+    }
 }

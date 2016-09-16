@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/dialog_shopping_online"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/account_list_item_selector_bg"
+        android:gravity="center"
+        android:text="@string/add_position_shopping_online"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/dialog_shopping_centerline"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/seprate_line"
+        android:layout_below="@id/dialog_shopping_online"
+        android:background="?android:attr/listDivider" />
+
+    <Button
+        android:id="@+id/dialog_shopping_offline"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/dialog_shopping_centerline"
+        android:background="@drawable/account_list_item_selector_bg"
+        android:gravity="center"
+        android:text="@string/add_position_shopping_offline"
+        android:textSize="16sp" />
+
+</RelativeLayout>

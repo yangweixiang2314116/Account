@@ -96,6 +96,11 @@
         </activity>
 
         <activity
+            android:name="com.example.account.AccountAddOnlineShoppingActivity"
+            android:label="@string/add_position_app_name" >
+        </activity>
+
+        <activity
             android:name="com.example.account.AccountAddBrandActivity"
             android:label="@string/add_brand_app_name" >
         </activity>

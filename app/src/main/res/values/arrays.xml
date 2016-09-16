@@ -1,108 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-     <string-array name="hot_label_history_text">
-          <item>"橱柜"</item>
-          <item>"衣柜"</item>
-          <item>"鞋柜"</item>
-          <item>"冰箱"</item>
-          <item>"抽油烟机"</item>
-          <item>"电视机"</item>
-          <item>"移门"</item>
-          <item>"墙纸"</item>
-          <item>"燃气热水器"</item>
-          <item>"地板"</item>
-          <item>"卫浴"</item>
-     </string-array>
+    <string-array name="hot_label_history_text">
+        <item>"橱柜"</item>
+        <item>"衣柜"</item>
+        <item>"鞋柜"</item>
+        <item>"冰箱"</item>
+        <item>"抽油烟机"</item>
+        <item>"电视机"</item>
+        <item>"移门"</item>
+        <item>"墙纸"</item>
+        <item>"燃气热水器"</item>
+        <item>"地板"</item>
+        <item>"卫浴"</item>
+    </string-array>
 
-     <string-array name="hot_brand_history_text">
-          <item>"方太"</item>
-          <item>"顶固"</item>
-          <item>"大自然"</item>
-          <item>"西门子"</item>
-          <item>"老板"</item>
-          <item>"三星"</item>
-          <item>"新风移门"</item>
-          <item>"美心"</item>
-          <item>"林内"</item>
-          <item>"摩恩"</item>
-          <item>"TOTO"</item>
-     </string-array>
-
-
-     <string-array name="guide_chose_style">
-          <item>"北欧风格"</item>
-          <item>"现代简约"</item>
-          <item>"日式风格"</item>
-          <item>"田园风"</item>
-          <item>"地中海"</item>
-          <item>"现代美式"</item>
-          <item>"美式乡村"</item>
-          <item>"新中式风格"</item>
-          <item>"欧式古典"</item>
-          <item>"东南亚风格"</item>
-          <item>"混搭风格"</item>
-          <item>"不清楚"</item>
-     </string-array>
-
-     <string-array name="user_info">
-          <item>"城市"</item>
-          <item>"装修风格"</item>
-          <item>"装修预算"</item>
-          <item>"房屋面积"</item>
-     </string-array>
+    <string-array name="hot_brand_history_text">
+        <item>"方太"</item>
+        <item>"顶固"</item>
+        <item>"大自然"</item>
+        <item>"西门子"</item>
+        <item>"老板"</item>
+        <item>"三星"</item>
+        <item>"新风移门"</item>
+        <item>"美心"</item>
+        <item>"林内"</item>
+        <item>"摩恩"</item>
+        <item>"TOTO"</item>
+    </string-array>
 
 
-     <string-array name="guide_chose_budget_text">
-          <item>"3万"</item>
-          <item>"4万"</item>
-          <item>"5万"</item>
-          <item>"6万"</item>
-          <item>"7万"</item>
-          <item>"8万"</item>
-          <item>"9万"</item>
-          <item>"10万"</item>
-          <item>"12万"</item>
-          <item>"13万"</item>
-          <item>"14万"</item>
-          <item>"15万"</item>
-          <item>"16万"</item>
-          <item>"17万"</item>
-          <item>"18万"</item>
-          <item>"19万"</item>
-          <item>"20万"</item>
-          <item>"25万"</item>
-          <item>"30万"</item>
-          <item>"35万"</item>
-          <item>"40万"</item>
-          <item>"50万"</item>
-          <item>"60万"</item>
-          <item>"70万"</item>
-          <item>"80万"</item>
-          <item>"90万"</item>
-          <item>"100万"</item>
-          <item>"150万"</item>
-          <item>"200万"</item>
-     </string-array>
+    <string-array name="guide_chose_style">
+        <item>"北欧风格"</item>
+        <item>"现代简约"</item>
+        <item>"日式风格"</item>
+        <item>"田园风"</item>
+        <item>"地中海"</item>
+        <item>"现代美式"</item>
+        <item>"美式乡村"</item>
+        <item>"新中式风格"</item>
+        <item>"欧式古典"</item>
+        <item>"东南亚风格"</item>
+        <item>"混搭风格"</item>
+        <item>"不清楚"</item>
+    </string-array>
 
-     <string-array name="guide_chose_area_text">
-          <item>"40㎡以下"</item>
-          <item>"40~50㎡"</item>
-          <item>"50~60㎡"</item>
-          <item>"60~70㎡"</item>
-          <item>"70~80㎡"</item>
-          <item>"80~90㎡"</item>
-          <item>"90~100㎡"</item>
-          <item>"100~110㎡"</item>
-          <item>"110~120㎡"</item>
-          <item>"120~130㎡"</item>
-          <item>"130~140㎡"</item>
-          <item>"150~160㎡"</item>
-          <item>"160~170㎡"</item>
-          <item>"170~180㎡"</item>
-          <item>"180~190㎡"</item>
-          <item>"190~200㎡"</item>
-          <item>"200㎡以上"</item>
-     </string-array>
+    <string-array name="user_info">
+        <item>"城市"</item>
+        <item>"装修风格"</item>
+        <item>"装修预算"</item>
+        <item>"房屋面积"</item>
+    </string-array>
+
+
+    <string-array name="guide_chose_budget_text">
+        <item>"3万"</item>
+        <item>"4万"</item>
+        <item>"5万"</item>
+        <item>"6万"</item>
+        <item>"7万"</item>
+        <item>"8万"</item>
+        <item>"9万"</item>
+        <item>"10万"</item>
+        <item>"12万"</item>
+        <item>"13万"</item>
+        <item>"14万"</item>
+        <item>"15万"</item>
+        <item>"16万"</item>
+        <item>"17万"</item>
+        <item>"18万"</item>
+        <item>"19万"</item>
+        <item>"20万"</item>
+        <item>"25万"</item>
+        <item>"30万"</item>
+        <item>"35万"</item>
+        <item>"40万"</item>
+        <item>"50万"</item>
+        <item>"60万"</item>
+        <item>"70万"</item>
+        <item>"80万"</item>
+        <item>"90万"</item>
+        <item>"100万"</item>
+        <item>"150万"</item>
+        <item>"200万"</item>
+    </string-array>
+
+    <string-array name="guide_chose_area_text">
+        <item>"40㎡以下"</item>
+        <item>"40~50㎡"</item>
+        <item>"50~60㎡"</item>
+        <item>"60~70㎡"</item>
+        <item>"70~80㎡"</item>
+        <item>"80~90㎡"</item>
+        <item>"90~100㎡"</item>
+        <item>"100~110㎡"</item>
+        <item>"110~120㎡"</item>
+        <item>"120~130㎡"</item>
+        <item>"130~140㎡"</item>
+        <item>"150~160㎡"</item>
+        <item>"160~170㎡"</item>
+        <item>"170~180㎡"</item>
+        <item>"180~190㎡"</item>
+        <item>"190~200㎡"</item>
+        <item>"200㎡以上"</item>
+    </string-array>
+
+    <string-array name="buy_online_website_text">
+        <item>"齐家网"</item>
+        <item>"当当"</item>
+        <item>"亚马逊"</item>
+        <item>"苏宁易购"</item>
+        <item>"天猫商城"</item>
+        <item>"京东商城"</item>
+        <item>"淘宝"</item>
+    </string-array>
 
 </resources>

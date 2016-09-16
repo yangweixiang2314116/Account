@@ -17,6 +17,7 @@ import com.activeandroid.ActiveAndroid;
 import com.example.module.Account;
 import com.example.module.BrandHistory;
 import com.example.module.CategoryHistory;
+import com.example.module.OnlineHistory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -167,6 +168,31 @@ public class AccountLoadActivity extends Activity {
 
     }
 
+    private void m_InitialOnlineShopping()
+    {
+        Log.i(Constants.TAG, "------m_InitialOnlineShopping-----start---");
+        ActiveAndroid.beginTransaction();
+        try {
+
+            TypedArray infoItems = mResources.obtainTypedArray(R.array.buy_online_website_text);
+
+            for(int i=0;i<infoItems.length() ;i++){
+
+                OnlineHistory item = new OnlineHistory();
+                item.Content = infoItems.getString(i);
+                item.LastUseTime = System.currentTimeMillis();
+                item.save();
+            }
+
+            infoItems.recycle();
+
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+
+    }
+
     private class InitialDataTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
@@ -178,6 +204,8 @@ public class AccountLoadActivity extends Activity {
             m_InitialHotLabel();
 
             m_InitialHotBrand();
+
+            m_InitialOnlineShopping();
             return true;
         }
 

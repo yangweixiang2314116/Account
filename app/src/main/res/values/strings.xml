@@ -72,6 +72,9 @@
     <string name="add_new_position">新建位置</string>
     <string name="add_new_position_hint">输入位置开始搜索，如红星美凯龙</string>
     <string name="end">已经是最后一页啦</string>
+    <string name="add_position_shopping_offline">实体店</string>
+    <string name="add_position_shopping_online">网购</string>
+    <string name="add_new_online_hint">输入新的网站，如淘宝</string>
     <!--ADD Position -->
 
     <!--Slide Menu-->
