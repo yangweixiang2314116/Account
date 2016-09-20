@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/detail_category_label"
+                    android:text="@string/add_category_app_lable"
                     android:textColor="@color/detail_label_color"
                     android:textSize="18sp" />
 
@@ -136,7 +136,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="@dimen/detail_others_value_left"
                     android:layout_toRightOf="@id/detail_total_category_lable"
-                    android:text="地板"
+                    android:text=""
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:textColor="@color/detail_value_color"
@@ -149,7 +149,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/detail_category_value"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/detail_brand_label"
+                    android:text="@string/add_brand_app_lable"
                     android:textColor="@color/detail_label_color"
                     android:textSize="18sp" />
 
@@ -161,7 +161,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="@dimen/detail_others_value_left"
                     android:layout_toRightOf="@id/detail_brand_lable"
-                    android:text="大自然"
+                    android:text=""
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:textColor="@color/detail_value_color"
@@ -174,7 +174,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/detail_brand_value"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/detail_position_label"
+                    android:text="@string/add_position_app_lable"
                     android:textColor="@color/detail_label_color"
                     android:textSize="18sp" />
 
@@ -185,7 +185,7 @@
                     android:layout_below="@id/detail_brand_value"
                     android:layout_marginLeft="@dimen/detail_others_value_left"
                     android:layout_toRightOf="@id/detail_postion_lable"
-                    android:text="卡子门红星美凯龙"
+                    android:text=""
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:textColor="@color/detail_value_color"

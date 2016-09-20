@@ -2,6 +2,7 @@ package com.example.account;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import com.activeandroid.ActiveAndroid;
 import com.baidu.mapapi.search.core.PoiInfo;
@@ -14,6 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -205,6 +208,25 @@ public class AccountStartActivity extends ActionBarActivity  {
         m_CurrentTimeText = (TextView) findViewById(R.id.start_date_title);
         String sCurrentDate = AccountCommonUtil.ConverDateToString(m_LatestCreateTime);
         m_CurrentTimeText.setText(sCurrentDate);
+        m_CurrentTimeText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                new DatePickerDialog(AccountStartActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int day) {
+
+                        m_CurrentTimeText.setText(new StringBuilder().append(year).append("-").
+                                append((month + 1) < 10 ? 0 + (month + 1) : (month + 1))
+                                .append("-")
+                                .append((day < 10) ? 0 + day : day));
+
+                        m_LatestCreateTime = AccountCommonUtil.ConverStringToDateWithoutTime(m_CurrentTimeText.getText().toString());
+                    }
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH) ).show();
+            }
+        });
         return true;
     }
 

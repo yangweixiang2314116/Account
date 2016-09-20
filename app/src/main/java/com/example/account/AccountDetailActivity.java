@@ -160,14 +160,7 @@ public class AccountDetailActivity extends ActionBarActivity  {
 		Brand.setText(m_CurrentAccount.Brand);
 
 		TextView Position = (TextView) findViewById(R.id.detail_position_value);
-		PoiItem poi = PoiItem.GetPoiItem(m_CurrentAccount);
-		if(poi != null) {
-			Log.i(Constants.TAG, "------poi.name--------"+poi.name);
-			Position.setText(poi.name);
-		}else
-		{
-			Position.setText("");
-		}
+		Position.setText(m_CurrentAccount.Position);
 		
 		TextView Comments = (TextView) findViewById(R.id.detail_comments_value);
 		Comments.setText(m_CurrentAccount.Comments);

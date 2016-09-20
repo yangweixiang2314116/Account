@@ -55,12 +55,14 @@
 
     <!--ADD Category -->
     <string name="add_category_app_name">买的啥</string>
+    <string name="add_category_app_lable">买的啥: </string>
     <string name="recent_label_text">最近使用</string>
     <string name="add_new_category_hint">输入新的标签，如地板</string>
     <!--ADD Category -->
 
     <!--ADD Brand -->
     <string name="add_brand_app_name">啥品牌</string>
+    <string name="add_brand_app_lable">啥品牌: </string>
     <string name="hot_brand_label_text">热门品牌</string>
     <string name="add_new_brand">新建品牌</string>
     <string name="add_new_brand_hint">输入新的品牌，如大自然</string>
@@ -68,6 +70,7 @@
 
     <!--ADD Position -->
     <string name="add_position_app_name">哪买的</string>
+    <string name="add_position_app_lable">哪买的: </string>
     <string name="hot_position_label_text">热门位置</string>
     <string name="add_new_position">新建位置</string>
     <string name="add_new_position_hint">输入位置开始搜索，如红星美凯龙</string>

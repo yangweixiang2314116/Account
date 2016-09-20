@@ -29,11 +29,29 @@ public class AccountCommonUtil {
         return sDate;
 	}
 	
-	
+	//yyyy-MM-dd hh:mm:ss
 	public static Long ConverStringToDate(String date)
 	{
 		Log.i(Constants.TAG, "-----------ConverDateToString---before convert ----" + date);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		long time = 0;
+		try {
+			time =  format.parse(date).getTime();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Log.i(Constants.TAG, "-----------ConverDateToString---- check Date----" + ConverDateToString(time));
+
+		return time;
+	}
+
+	//yyyy-MM-dd
+	public static Long ConverStringToDateWithoutTime(String date)
+	{
+		Log.i(Constants.TAG, "-----------ConverDateToString---before convert ----" + date);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		long time = 0;
 		try {
 			time =  format.parse(date).getTime();
