@@ -578,7 +578,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 //TODO if not login , show text , indictor already login
                 Log.i(Constants.TAG, "------onClick  m_ShowLoginPoup--------");
 
-                //if (AccountCommonUtil.IsLogin(mContext)) {
+                if (AccountCommonUtil.IsLogin(mContext)) {
 
                     Intent intent = new Intent();
                     intent.setClass(mContext, AccountUserInfoActivity.class);
@@ -588,9 +588,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     startActivity(intent);
 
                     //Toast.makeText(mContext, R.string.account_already_login_success, Toast.LENGTH_SHORT).show();
-                //} else {
-                //    m_ShowSMSLoginPoup();
-                //}
+                } else {
+                    m_ShowSMSLoginPoup();
+                }
             }
         });
 
@@ -843,18 +843,16 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         RegisterPage registerPage = new RegisterPage();
         registerPage.setRegisterCallback(new EventHandler() {
             public void afterEvent(int event, int result, Object data) {
-                Log.i(Constants.TAG, "------afterEvent----event----"+event+"--result--"+result+"---data--"+data);
+                Log.i(Constants.TAG, "------afterEvent----event----" + event + "--result--" + result + "---data--" + data);
 // 解析注册结果
                 if (result == SMSSDK.RESULT_COMPLETE) {
-                    switch(event)
-                    {
-                        case SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE:
-                        {
+                    switch (event) {
+                        case SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE: {
                             @SuppressWarnings("unchecked")
-                            HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
+                            HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
                             String country = (String) phoneMap.get("country");
                             String phone = (String) phoneMap.get("phone");
-                            Log.i(Constants.TAG, "------afterEvent----country----"+country+"--phone--"+phone);
+                            Log.i(Constants.TAG, "------afterEvent----country----" + country + "--phone--" + phone);
 
                             mSharedPreferences.edit().putString("user_name", phone)
                                     .apply();
@@ -864,11 +862,11 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                             userNameText.setText(phone);
 
                             // 提交用户信息到服务端获取TOKEN
-                            if(AccountCommonUtil.IsSupportSync(mContext)) {
+                            if (AccountCommonUtil.IsSupportSync(mContext)) {
                                 m_RegisterUser(country, phone);
                             }
                         }
-                            break;
+                        break;
                         default:
                             break;
                     }
@@ -893,11 +891,13 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     token = response.getString("token");
                     AccountRestClient.SetClientToken(token);
 
-			AccountCommonUtil.SetToken(mContext,token);
-			mSharedPreferences.edit().putBoolean("is_login", true)
-                                    .apply();
+                    AccountCommonUtil.SetToken(mContext, token);
+                    mSharedPreferences.edit().putBoolean("is_login", true)
+                            .apply();
 
-                    m_ProcessUserInfoContent();
+                    if (AccountCommonUtil.GetUserProfileId(mContext) == 0) {
+                        m_ProcessUserInfoContent();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -916,7 +916,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             @Override
             public void onFinish() {
-            	   Log.i(Constants.TAG, "---getToken--onFinish-----" );
+                Log.i(Constants.TAG, "---getToken--onFinish-----");
                 super.onFinish();
             }
 
@@ -964,6 +964,15 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
                         Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
+                        try {
+                                     long  profileId  = response.isNull("id") ? 0 : response.getLong("id");
+                                    Log.i(Constants.TAG, "---postUserInfo--onSuccess--profileId---" + profileId);
+                                     AccountCommonUtil.SetUserProfileId(mContext, profileId);
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            Log.i(Constants.TAG, "--postUserInfo--onSuccess-JSONException-"+e);
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override

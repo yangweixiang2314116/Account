@@ -114,20 +114,30 @@ public class AccountApiConnector {
 		params.put("tag",item.Category);
 		params.put("brand",item.Brand);
 		params.put("note",item.Comments);
-		//params.put("addr",item.Position);
 		params.put("created", AccountCommonUtil.ConverWholeDateToString(item.CreateTime));
 
-		PoiItem poi = PoiItem.GetPoiItem(item);
-		params.put("buy_place",poi);
-		
-		Log.i(Constants.TAG, "--post account item id--"+item.getId());
+		Log.i(Constants.TAG, "--post account item id--" + item.getId());
 		Log.i(Constants.TAG, "--post account item price--"+item.Cost);
 		Log.i(Constants.TAG, "--post account item tag--"+item.Category);
 		Log.i(Constants.TAG, "--post account item brand--"+item.Brand);
 		Log.i(Constants.TAG, "--post account item note--"+item.Comments);
-		//Log.i(Constants.TAG, "--post account item position--"+item.Position);
+		Log.i(Constants.TAG, "--post account item position--"+item.Position);
 		Log.i(Constants.TAG, "--post account item created--"+AccountCommonUtil.ConverWholeDateToString(item.CreateTime));
-		
+
+		//position
+		params.put("place_name",item.Position);
+		PoiItem poi = PoiItem.GetPoiItem(item);
+		if (poi != null) {
+			params.put("place_city",poi.city);
+			params.put("latitude",poi.latitude);
+			params.put("longitude",poi.longitude);
+			params.put("latitudeE6",poi.latitudeE6);
+			params.put("longitudeE6",poi.longitudeE6);
+			params.put("address",poi.address);
+			params.put("phone",poi.phoneNum);
+			params.put("uid",poi.uid);
+		}
+
 		ArrayList<ImageItem> DetailImageList = (ArrayList<ImageItem>) item.Imageitems();
 		if(DetailImageList.size() > 0)
 		{
@@ -180,16 +190,30 @@ public class AccountApiConnector {
 		params.put("tag",item.Category);
 		params.put("brand",item.Brand);
 		params.put("note",item.Comments);
-		//params.put("position",item.Position);
+
+		//position
+		params.put("place_name",item.Position);
+		PoiItem poi = PoiItem.GetPoiItem(item);
+		if (poi != null) {
+			params.put("place_city",poi.city);
+			params.put("latitude",poi.latitude);
+			params.put("longitude",poi.longitude);
+			params.put("latitudeE6",poi.latitudeE6);
+			params.put("longitudeE6",poi.longitudeE6);
+			params.put("address",poi.address);
+			params.put("phone",poi.phoneNum);
+			params.put("uid",poi.uid);
+		}
+
 		params.put("created", AccountCommonUtil.ConverWholeDateToString(item.CreateTime));
 
 		
-		Log.i(Constants.TAG, "--post account item id--"+item.getId());
+		Log.i(Constants.TAG, "--post account item id--" + item.getId());
 		Log.i(Constants.TAG, "--post account item price--"+item.Cost);
 		Log.i(Constants.TAG, "--post account item tag--"+item.Category);
 		Log.i(Constants.TAG, "--post account item brand--"+item.Brand);
 		Log.i(Constants.TAG, "--post account item note--"+item.Comments);
-		//Log.i(Constants.TAG, "--post account item position--"+item.Position);
+		Log.i(Constants.TAG, "--post account item position--"+item.Position);
 		
 		
 		ArrayList<ImageItem> DetailImageList = (ArrayList<ImageItem>) item.Imageitems();
@@ -262,4 +286,23 @@ public class AccountApiConnector {
 		AccountRestClient.instance(mcontext).post(url, params ,handler);
 	}
 
+	public void updateUserInfo(String city, String style, String budget, String area,  JsonHttpResponseHandler handler)
+	{
+		Log.i(Constants.TAG, "-start to -updateUserInfo--city--"+city);
+		Log.i(Constants.TAG, "-start to -updateUserInfo--style--"+style);
+		Log.i(Constants.TAG, "-start to -updateUserInfo--budget--"+budget);
+		Log.i(Constants.TAG, "-start to -updateUserInfo--area--" + area);
+
+		long profileId = AccountCommonUtil.GetUserProfileId(mcontext);
+		String url = "jz/user-profiles/"+profileId+"/";
+
+		RequestParams params = new RequestParams();
+
+		params.put("city",city);
+		params.put("decoration_style",style);
+		params.put("budget",budget);
+		params.put("house_area",area);
+
+		AccountRestClient.instance(mcontext).put(url, params, handler);
+	}
 }
