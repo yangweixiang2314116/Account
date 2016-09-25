@@ -181,13 +181,15 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     public boolean m_ProcessUserInfoContent()
     {
             Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
-            AccountApiConnector.instance(mContext).postUserInfo(mCity,
+            AccountApiConnector.instance(mContext).updateUserInfo(mCity,
                     mStyle, mBudget, mArea, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     // If the response is JSONObject instead of expected JSONArray
                     Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
+
+                    Toast.makeText(mContext, R.string.account_feedback_success, Toast.LENGTH_SHORT).show();
 
                     finish();
                     overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);

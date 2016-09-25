@@ -356,6 +356,12 @@ public class AccountAddPositionActivity extends AppCompatActivity implements BDL
 						imm.hideSoftInputFromWindow(searchAddress.getWindowToken(), 0);
 
 						PoiInfo poi = (PoiInfo)adapter.getItem(position);
+
+						Log.i(Constants.TAG, "--PoiInfo place_area--"+poi.city);
+						Log.i(Constants.TAG, "--PoiInfo longitude--"+poi.name);
+						Log.i(Constants.TAG, "--post account item address--"+poi.address);
+						Log.i(Constants.TAG, "--post account item uid--" + poi.uid);
+
 						Bundle data = new Bundle();
 						data.putParcelable("poi", poi);
 						mIntent.putExtras(data);

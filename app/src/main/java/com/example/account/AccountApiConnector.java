@@ -128,7 +128,15 @@ public class AccountApiConnector {
 		params.put("place_name",item.Position);
 		PoiItem poi = PoiItem.GetPoiItem(item);
 		if (poi != null) {
-			params.put("place_city",poi.city);
+			Log.i(Constants.TAG, "--post account item place_area--"+poi.city);
+			Log.i(Constants.TAG, "--post account item latitude--"+poi.latitude);
+			Log.i(Constants.TAG, "--post account item longitude--"+poi.longitude);
+			Log.i(Constants.TAG, "--post account item latitudeE6--"+poi.latitudeE6);
+			Log.i(Constants.TAG, "--post account item longitudeE6--"+poi.longitudeE6);
+			Log.i(Constants.TAG, "--post account item address--"+poi.address);
+			Log.i(Constants.TAG, "--post account item uid--"+poi.uid);
+
+			params.put("place_area",poi.city);
 			params.put("latitude",poi.latitude);
 			params.put("longitude",poi.longitude);
 			params.put("latitudeE6",poi.latitudeE6);
@@ -195,7 +203,7 @@ public class AccountApiConnector {
 		params.put("place_name",item.Position);
 		PoiItem poi = PoiItem.GetPoiItem(item);
 		if (poi != null) {
-			params.put("place_city",poi.city);
+			params.put("place_area",poi.city);
 			params.put("latitude",poi.latitude);
 			params.put("longitude",poi.longitude);
 			params.put("latitudeE6",poi.latitudeE6);
@@ -262,7 +270,7 @@ public class AccountApiConnector {
 
 		RequestParams params = new RequestParams();
 
-		params.put("feedback",feedback);
+		params.put("content",feedback);
 
 		AccountRestClient.instance(mcontext).post(url, params ,handler);
 	}
