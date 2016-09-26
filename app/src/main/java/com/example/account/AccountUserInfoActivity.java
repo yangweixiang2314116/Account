@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +49,11 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     private Resources mResources = null;
     private List<Map<String, Object>> mDataList  = new ArrayList<Map<String, Object>>();
     private SimpleAdapter mAdapter = null;
+    private LayoutInflater mLayoutInflater = null;
+    private WheelView mWheelArea = null;
+    private int mWheelType = 0;
+    private String mWheelChange = "";
+    private ArrayList<String> mWheelListDataSource = new ArrayList<String>();
 
     private String mCity = "";
     private String mStyle = "";
@@ -98,6 +104,9 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
 
         mContext = this;
         mInfoList = (ListView)findViewById(R.id.account_my_info_list);
+
+        mLayoutInflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         getData();
 
@@ -176,6 +185,9 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        Log.i(Constants.TAG, "---onItemClick-----"+position);
+
+        m_ShowWheelPopup(position);
     }
 
     public boolean m_ProcessUserInfoContent()
@@ -213,6 +225,94 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
                 }
 
             });
+
+        return true;
+    }
+
+    void m_ShowWheelPopup(int  type)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        View messageContent = mLayoutInflater.inflate(
+                R.layout.dialog_wheel_type, null);
+        builder.setView(messageContent);
+        builder.setPositiveButton(R.string.give_up_sure,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        switch(mWheelType)
+                        {
+                            case ACCOUNT_USER_INFO_AREA:
+                                AccountCommonUtil.SetGudieArea(mContext, mWheelChange);
+                                m_UpdateUserInfoList(mWheelType, mWheelChange);
+                                break;
+                            case ACCOUNT_USER_INFO_BUGET:
+                                AccountCommonUtil.SetGudieBudget(mContext, mWheelChange);
+                                m_UpdateUserInfoList(mWheelType, mWheelChange);
+                                break;
+                            case ACCOUNT_USER_INFO_STYLE:
+                                AccountCommonUtil.SetGudieStyle(mContext, mWheelChange);
+                                m_UpdateUserInfoList(mWheelType, mWheelChange);
+                                break;
+                            default:
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton(R.string.give_up_cancel, null)
+                .create().show();
+
+        mWheelType = type;
+        mWheelArea = (WheelView)messageContent. findViewById(R.id.dialog_wheel_view_area);
+
+        TypedArray dataItems = null;
+
+        switch(mWheelType)
+        {
+            case ACCOUNT_USER_INFO_AREA:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_area_text);
+                break;
+            case ACCOUNT_USER_INFO_BUGET:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_budget_text);
+                break;
+            case ACCOUNT_USER_INFO_STYLE:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_style);
+                break;
+            default:
+                break;
+        }
+
+        mWheelListDataSource.clear();
+        for(int i=0;i<dataItems.length() ;i++){
+            mWheelListDataSource.add( dataItems.getString(i));
+        }
+
+        mWheelArea.setOffset(2);
+
+        mWheelArea.setSeletion(5);
+        Log.d(Constants.TAG, "onCreateView: setSeletion !");
+
+        mWheelArea.setItems(mWheelListDataSource);
+        Log.d(Constants.TAG, "onCreateView: setItems !");
+
+        mWheelArea.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
+            @Override
+            public void onSelected(int selectedIndex, String item) {
+                Log.d(Constants.TAG, "selectedIndex: " + selectedIndex + ", item: " + item);
+
+                mWheelChange = item;
+            }
+        });
+
+    }
+
+    private boolean m_UpdateUserInfoList(int index, String value) {
+        View InfoItem = mInfoList.getChildAt(index);
+        TextView itemValue = (TextView) InfoItem
+                .findViewById(R.id.user_info_item_value);
+        itemValue.setText(value);
 
         return true;
     }
