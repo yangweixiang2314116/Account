@@ -17,6 +17,8 @@
     <color name="list_line_color">#CFCFCF</color>
     <color name="account_top_background_color">#3F51B5</color>
 
+    <color name="account_wheel_color">#83cde6</color>
+
     <color name="fa_colorPrimary">#3F51B5</color>
     <color name="fa_colorPrimaryDark">#303F9F</color>
     <color name="fa_colorAccent">#FF4081</color>

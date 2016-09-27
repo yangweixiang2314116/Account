@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/guide_back_color">
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/chose_your_style"
@@ -11,16 +11,15 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/account_guide_chose_area"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/tab_indicator_text"
         android:layout_marginTop="80dp"
         android:layout_marginBottom="60dp"
-        android:textSize="20sp" />
+        android:textSize="24sp" />
 
     <com.example.account.WheelView
         android:id="@+id/wheel_view_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
         android:layout_gravity="center_vertical"
         />
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/guide_back_color">
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/chose_your_style"
@@ -11,16 +11,16 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/account_guide_chose_budget"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/tab_indicator_text"
         android:layout_marginTop="80dp"
-        android:layout_marginBottom="20dp"
-        android:textSize="20sp" />
+        android:layout_marginBottom="60dp"
+        android:textSize="24sp" />
 
     <com.example.account.WheelView
         android:id="@+id/wheel_view_wv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="80dp"
         />
 
     <TextView
@@ -32,7 +32,7 @@
         android:text="@string/account_guide_start_use"
         android:textColor="@android:color/white"
         android:background="@drawable/start_account_btn_selector_bg"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:textSize="20sp" />
 
 </LinearLayout>

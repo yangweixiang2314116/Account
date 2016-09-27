@@ -2,11 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- 实心 -->
-    <solid android:color="@color/guide_back_color" />
+    <solid android:color="@android:color/white" />
     <!-- 边框 -->
     <stroke
-        android:width="0.5dp"
-        android:color="@android:color/white" />
+        android:width="1dp"
+        android:color="@android:color/tab_indicator_text" />
     <!-- 边距 -->
     <padding
         android:bottom="10dp"

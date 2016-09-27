@@ -598,7 +598,10 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
             String userName = mSharedPreferences.getString("user_name", "");
             Log.i(Constants.TAG, "------login user name --------"+userName);
             TextView userNameText = (TextView) findViewById(R.id.total_value_label);
-            userNameText.setText(userName);
+
+            String result = userName.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+            Log.i(Constants.TAG, "------after replace user name --------" + userName + "----result-" + result);
+            userNameText.setText(result);
         }
     }
 
@@ -859,7 +862,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
                             Log.i(Constants.TAG, "------login user name --------" + phone);
                             TextView userNameText = (TextView) findViewById(R.id.total_value_label);
-                            userNameText.setText(phone);
+
+                            String repalceResult = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+                            userNameText.setText(repalceResult);
 
                             // 提交用户信息到服务端获取TOKEN
                             if (AccountCommonUtil.IsSupportSync(mContext)) {

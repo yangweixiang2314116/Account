@@ -63,6 +63,7 @@ public class AccountLoadActivity extends Activity {
 
         boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
 
+        mFirst = true;//TODO delete
         if(mFirst) {
             if(AccountCommonUtil.IsSupportSync(this)) {
                 mHandler.sendEmptyMessageDelayed(SWITCH_GUIDECTIVITY, 100);
