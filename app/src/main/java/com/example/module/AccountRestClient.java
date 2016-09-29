@@ -26,7 +26,7 @@ import javax.net.ssl.SSLSocketFactory;
 public class AccountRestClient {
     //private static final String BASE_URL = "http://192.168.1.105:8000/";
 	//private static final String BASE_URL = "https://192.168.1.220/";
-	private static final String BASE_URL = "http://192.168.1.107:8000/";
+	private static String mServerUrl = "http://192.168.1.107:8000/";
 
     private static AsyncHttpClient client = null;
 	private static String TokenPre = " Token ";
@@ -183,6 +183,13 @@ public class AccountRestClient {
     
 
     private static String getAbsoluteUrl(String relativeUrl) {
-        return BASE_URL + relativeUrl;
+
+		return mServerUrl + relativeUrl;
     }
+
+	public static void setServerUrl(String url) {
+		mServerUrl = url;
+		Log.i(Constants.TAG, "-setServerUrl -- -mServerUrl--"+mServerUrl);
+	}
+
 }

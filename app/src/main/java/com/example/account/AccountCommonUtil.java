@@ -230,5 +230,4 @@ public class AccountCommonUtil {
         context.sendBroadcast(intent);
     }
 
-
 }

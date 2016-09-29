@@ -86,14 +86,6 @@
                     android:paddingLeft="@dimen/setting_text_padding_left"
                     android:text="@string/recommend_to_friend"/>
 
-                <ImageView
-                    android:layout_width="@dimen/setting_arrow"
-                    android:layout_height="@dimen/setting_arrow"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@null"
-                    android:src="@mipmap/right_chevron"/>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"

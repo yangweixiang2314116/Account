@@ -1,5 +1,7 @@
 package com.example.account;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
@@ -12,14 +14,19 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.module.AccountRestClient;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -34,6 +41,8 @@ public class AccountSettingActivity  extends ActionBarActivity implements
     private View mRateForUs;
     private ToggleButton mSwitchOnlyWifi;
     private ToggleButton mSwitchQuickAdd;
+    private RelativeLayout mRecommand;
+    private LayoutInflater mLayoutInflater = null;
     private Context mContext;
 
     @Override
@@ -46,7 +55,7 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
-       // mRecommand = findViewById(R.id.recommend);
+       mRecommand = (RelativeLayout)findViewById(R.id.recommend);
         mSuggestion = findViewById(R.id.suggestion);
         //mFocusUs = findViewById(R.id.focus_us);
         //mCancelAuth = findViewById(R.id.cancel_auth);
@@ -59,7 +68,12 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
 
-        //mRecommand.setOnClickListener(this);
+        mRecommand.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                m_ShowSettingUrlWindow();
+            }
+        });
         mSuggestion.setOnClickListener(this);
        // mFocusUs.setOnClickListener(this);
         mSwitchOnlyWifi.setOnCheckedChangeListener(this);
@@ -71,6 +85,9 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         mSwitchOnlyWifi.setChecked(mSharedPreferences.getBoolean("only_wifi",
                 true));
         mSwitchQuickAdd.setChecked(mSharedPreferences.getBoolean("quick_add", true));
+
+        mLayoutInflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MobclickAgent.onEvent(mContext, "enter_setting");
     }
@@ -140,5 +157,39 @@ public class AccountSettingActivity  extends ActionBarActivity implements
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    private void m_ShowSettingUrlWindow()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        final View messageContent = mLayoutInflater.inflate(
+                R.layout.dialog_setting_url, null);
+        builder.setView(messageContent);
+        builder.setTitle(R.string.recommend_to_friend);
+
+        builder.setPositiveButton(R.string.btn_name_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText content = (EditText)messageContent.findViewById(R.id.account_setting_url);
+
+                Log.i(Constants.TAG, "-----account_setting_url-------" + content.getText().toString());
+
+                AccountRestClient.instance(mContext).setServerUrl(content.getText().toString());
+
+                Toast.makeText(AccountSettingActivity.this, R.string.account_feedback_success, Toast.LENGTH_SHORT).show();
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.btn_name_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
     }
 }
