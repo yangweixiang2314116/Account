@@ -755,7 +755,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         MobclickAgent.onEvent(mContext, "delete_account");
                         m_DetailListAdapter.removeItem(current);
                         m_DetailListAdapter.updateUI();
-                        current.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE;
+
+                        current.setNeedSyncDelete();
                         current.save();
 
                         //delete images of this account

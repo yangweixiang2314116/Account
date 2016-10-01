@@ -209,6 +209,11 @@ public class AccountDetailActivity extends ActionBarActivity  {
 								public void onClick(DialogInterface dialog,
 													int which) {
 									item.delete();
+
+									//account need sync up
+									item.account.setNeedSyncUp();
+									item.account.save();
+
 									m_AccountImageList.removeView(thumbnail);
 									Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
 											.show();

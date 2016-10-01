@@ -583,6 +583,11 @@ public class AccountStartActivity extends ActionBarActivity  {
                         String online = data.getStringExtra("online");
                         Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_SHOPPING_ONLINE--online--" + online);
                         m_LatestPosition = online;
+
+                        //clean origin poi data
+                        PoiItem.delete(m_CurrentAccount);
+                        m_LatestPoi = null;
+
                         m_UpdateMoreInfoList(Constants.ACCOUNT_MORE_INFO_POSITION, m_LatestPosition);
                     }
                 }

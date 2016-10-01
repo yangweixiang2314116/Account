@@ -315,7 +315,7 @@ public class Account extends Model implements Parcelable {
 			}
 			
 			item.Comments = response.isNull("note") ? "":response.getString("note");
-			item.Position = response.isNull("addr") ? "":response.getString("addr");
+			item.Position = response.isNull("buy_place_name") ? "":response.getString("buy_place_name");
 			
 			String modify = response.isNull("modified") ? "":response.getString("modified");
 			

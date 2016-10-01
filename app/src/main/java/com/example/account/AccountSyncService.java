@@ -311,16 +311,27 @@ public class AccountSyncService extends Service {
 					});
 
 				} else if (m_CurrentItem.isNeedSyncDelete()) {
-					Log.i(Constants.TAG, "------try to---Delete on server -id----" + m_CurrentItem.getId());
-					mHandler.post(new Runnable() {
+					Log.i(Constants.TAG, "------try to---Delete on server -id----" + m_CurrentItem.getId() + "--m_CurrentItem.AccountId--"+m_CurrentItem.AccountId);
 
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler(latch));
+					if(false == m_CurrentItem.isSyncOnServer())//local item, not exist on server , delete directly
+					{
+						Account.deleteOne(m_CurrentItem);
+						if(latch != null) {
+							latch.countDown();
+							Log.i(Constants.TAG, "-----latch count ---" + latch.getCount());
 						}
+					}
+					else {
+						mHandler.post(new Runnable() {
 
-					});
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(m_CurrentItem, new AccountDeleteJsonHttpResponseHandler(latch));
+							}
+
+						});
+					}
 				} else {
 					Log.i(Constants.TAG, "------do nothing----" + m_CurrentItem.getId());
 					latch.countDown();
