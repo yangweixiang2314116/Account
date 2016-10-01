@@ -70,16 +70,29 @@ public class AccountLoadActivity extends Activity {
                 //AccountCommonUtil.SetNotFirstEnter(this);
             }
             else{
-                mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
+                if(AccountCommonUtil.IsQuickStart(this))
+                {
+                    mHandler.sendEmptyMessageDelayed(SWITCH_STARTACTIVITY, 100);
+                }
+                else {
+                    mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
+                }
             }
         }
         else {
-          mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
+            if(AccountCommonUtil.IsQuickStart(this))
+            {
+                mHandler.sendEmptyMessageDelayed(SWITCH_STARTACTIVITY, 100);
+            }
+            else {
+                mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
+            }
         }
     }
 
     private final static int SWITCH_MAINACTIVITY = 1000;
     private final static int SWITCH_GUIDECTIVITY = 1001;
+    private final static int SWITCH_STARTACTIVITY = 1002;
     public Handler mHandler = new Handler(){
         public void handleMessage(Message msg) {
             switch(msg.what){
@@ -95,6 +108,14 @@ public class AccountLoadActivity extends Activity {
                     startActivity(mIntent);
                     finish();
                     break;
+                case SWITCH_STARTACTIVITY:
+                {
+                    mIntent = new Intent();
+                    mIntent.setClass(AccountLoadActivity.this, AccountStartActivity.class);
+                    startActivity(mIntent);
+                    finish();
+                }
+                break;
             }
             super.handleMessage(msg);
         }

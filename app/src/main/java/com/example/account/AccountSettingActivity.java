@@ -74,6 +74,10 @@ public class AccountSettingActivity  extends ActionBarActivity implements
                 m_ShowSettingUrlWindow();
             }
         });
+
+        //TODO delete
+        mRecommand.setVisibility(View.GONE);
+
         mSuggestion.setOnClickListener(this);
        // mFocusUs.setOnClickListener(this);
         mSwitchOnlyWifi.setOnCheckedChangeListener(this);
@@ -84,10 +88,18 @@ public class AccountSettingActivity  extends ActionBarActivity implements
 
         mSwitchOnlyWifi.setChecked(mSharedPreferences.getBoolean("only_wifi",
                 true));
-        mSwitchQuickAdd.setChecked(mSharedPreferences.getBoolean("quick_add", true));
+        mSwitchQuickAdd.setChecked(mSharedPreferences.getBoolean("quick_add", false));
 
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        if (AccountCommonUtil.IsLogin(mContext)) {
+            mSuggestion.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mSuggestion.setVisibility(View.GONE);
+        }
 
         MobclickAgent.onEvent(mContext, "enter_setting");
     }

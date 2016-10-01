@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
+
 import com.example.module.ImageItem;
 import com.umeng.analytics.MobclickAgent;
 
@@ -24,6 +26,7 @@ public class AccountAllImageActivity  extends ActionBarActivity  implements Adap
 
     private Context mContext = null;
     private GridView m_AllImageGridView = null;
+    private TextView mNoAccountText = null;
     private AccountAllImageListAdapter m_DetailListAdapter = null;
     protected ArrayList<ImageItem> mImageListDataSource = new ArrayList<ImageItem>();
 
@@ -60,12 +63,25 @@ public class AccountAllImageActivity  extends ActionBarActivity  implements Adap
     {
         m_AllImageGridView = (GridView) findViewById(R.id.id_gridView);
 
+        mNoAccountText =  (TextView) findViewById(R.id.empty_no_account);
+
         m_DetailListAdapter = new AccountAllImageListAdapter(this,mImageListDataSource);
         m_AllImageGridView.setAdapter(m_DetailListAdapter);
 
         m_AllImageGridView.setOnItemClickListener(AccountAllImageActivity.this);
 
         m_DetailListAdapter.updateUI();
+
+        if(mImageListDataSource.size() > 0 )
+        {
+            m_AllImageGridView.setVisibility(View.VISIBLE);
+            mNoAccountText.setVisibility(View.GONE);
+        }
+        else
+        {
+            m_AllImageGridView.setVisibility(View.GONE);
+            mNoAccountText.setVisibility(View.VISIBLE);
+        }
 
     }
 

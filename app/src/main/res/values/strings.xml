@@ -46,6 +46,7 @@
     <string name="delete_title">提示</string>
     <string name="confirm_to_delete">确定要删除这条记录吗？</string>
     <string name="network_disconnect">网络不可用, 请连接网络再试。</string>
+    <string name="wifi_network_disconnect">WIFI网络不可用, 请连接WIFI再试或者在setting中改变设置。</string>
     <string name="give_up_edit">退出此次编辑？</string>
     <string name="give_up_sure">确定</string>
     <string name="give_up_cancel">取消</string>
@@ -157,4 +158,6 @@
     <string name="can_not_open_market">无法打开市场</string>
     <!--setting -->
 
+    <string name="accout_empty_prepare_start">这里空空如也，开始记账吧</string>
+    <string name="accout_empty_image_start">这里空空如也，开始在记账中添加图片吧</string>
 </resources>

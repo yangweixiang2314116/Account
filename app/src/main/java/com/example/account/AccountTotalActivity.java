@@ -29,6 +29,8 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.module.Account;
 import com.example.module.AccountRestClient;
+import com.example.module.ImageItem;
+import com.example.module.NetworkUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
@@ -67,9 +69,8 @@ import cn.smssdk.gui.RegisterPage;
 import cz.msebera.android.httpclient.Header;
 
 @SuppressWarnings("deprecation")
-public class AccountTotalActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener,
-        AdapterView.OnItemLongClickListener, BDLocationListener
-{
+public class AccountTotalActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener, BDLocationListener {
 
     private SwipeMenuListView m_TotalAllAccountList = null;
     private ListView m_SlideMenuList = null;
@@ -83,10 +84,10 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
     private Double m_CurrentTotalCost = 0.0;
     private Menu m_OptionsMenu = null;
     private AccountSyncService.AccountSyncServiceBinder mBinder = null;
-    private ServiceConnection mConnection =null;
-    private   SlidingMenu m_Menu  = null;
-    private  RelativeLayout m_LoginLayout = null;
-    private Toolbar  m_ToolBar = null;
+    private ServiceConnection mConnection = null;
+    private SlidingMenu m_Menu = null;
+    private RelativeLayout m_LoginLayout = null;
+    private Toolbar m_ToolBar = null;
     private SharedPreferences mSharedPreferences = null;
     private BroadcastReceiver mReceiver = null;
     private boolean m_bConnected = false;
@@ -141,43 +142,39 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     }
 
-    private void m_InitActionBar()
-    {
+    private void m_InitActionBar() {
         if (m_OptionsMenu == null) {
             Log.i(Constants.TAG, "------AccountTotalActivity----m_InitActionBar -----");
             return;
         }
 
-        if(AccountCommonUtil.IsSupportSync(this)) {
+        if (AccountCommonUtil.IsSupportSync(this)) {
             MenuItem plusItem = m_OptionsMenu.findItem(R.id.total_account_add);
             plusItem.setVisible(false);
             Log.i(Constants.TAG, "The AccountLoadActivity---->invisible plusItem");
-        }
-        else
-        {
+        } else {
             MenuItem refreshItem = m_OptionsMenu.findItem(R.id.total_account_sync);
             refreshItem.setVisible(false);
             Log.i(Constants.TAG, "The AccountLoadActivity---->invisible refreshItem");
         }
     }
 
-    private void m_InitBindler()
-    {
+    private void m_InitBindler() {
         mConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                Log.i(Constants.TAG, "onServiceConnected----namer"+name);
-                mBinder = (AccountSyncService.AccountSyncServiceBinder)service;
+                Log.i(Constants.TAG, "onServiceConnected----namer" + name);
+                mBinder = (AccountSyncService.AccountSyncServiceBinder) service;
 
-                AccountSyncService Syncservice =  mBinder.getService();
+                AccountSyncService Syncservice = mBinder.getService();
 
                 Syncservice.setOnProgressListener(new OnProgressListener() {
                     @Override
                     public void onProgress(int progress) {
 
-                        Log.i(Constants.TAG, "onProgress----progress--"+progress);
+                        Log.i(Constants.TAG, "onProgress----progress--" + progress);
 
-                        switch (progress){
+                        switch (progress) {
                             case Constants.ACCOUNT_SYNC_ERROR:
                                 Toast.makeText(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
                                 setRefreshActionButtonState(false);
@@ -198,19 +195,18 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.i(Constants.TAG, "onServiceDisconnected----namer"+name);
+                Log.i(Constants.TAG, "onServiceDisconnected----namer" + name);
                 m_bConnected = false;
             }
         };
 
-        Intent intent = new Intent(this,AccountSyncService.class);
+        Intent intent = new Intent(this, AccountSyncService.class);
         bindService(intent, mConnection, BIND_AUTO_CREATE);
 
     }
 
-    private  void m_InitReceiver()
-    {
-         mReceiver = new BroadcastReceiver() {
+    private void m_InitReceiver() {
+        mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE)) {
@@ -224,29 +220,25 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         IntentFilter filter = new IntentFilter(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
         registerReceiver(mReceiver, filter);
 
-        return ;
+        return;
     }
 
-    private void m_InitCurrentyCity()
-    {
+    private void m_InitCurrentyCity() {
         String city = AccountCommonUtil.GetCurrentCity(this);
-        Log.i(Constants.TAG, "m_InitCurrentyCity---->"+city);
-        if(city.equals(""))
-        {
+        Log.i(Constants.TAG, "m_InitCurrentyCity---->" + city);
+        if (city.equals("")) {
             RequestCurrentCity();
-        }
-        else
-        {
+        } else {
             Log.i(Constants.TAG, "m_InitCurrentyCity----already load city-");
         }
     }
 
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onStart");
     }
 
-    protected void onRestart(){
+    protected void onRestart() {
         super.onRestart();
         //start load all account from DB
         //new PrepareTask().execute();
@@ -271,12 +263,11 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         unregisterReceiver(mReceiver);
         mReceiver = null;
 
-        if(m_bConnected)
-        {
+        if (m_bConnected) {
             unbindService(mConnection);
         }
 
-        if(mLocClient != null && mLocClient.isStarted()) {
+        if (mLocClient != null && mLocClient.isStarted()) {
             mLocClient.stop();
         }
     }
@@ -308,19 +299,13 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 startActivity(intent);
             }
             break;
-            case R.id.total_account_sync:{
+            case R.id.total_account_sync: {
                 Log.i(Constants.TAG, "-------start to sync-------");
-                if (AccountCommonUtil.IsLogin(mContext) ) {
-                    mBinder.startSync();
-                }
-                else
-                {
-                    m_ShowQuestionLoginPoup();
-                }
+                m_ProcessSyncAction();
             }
             break;
 
-            case R.id.total_account_add:{
+            case R.id.total_account_add: {
                 Log.i(Constants.TAG, "-------start to add-------");
                 MobclickAgent.onEvent(mContext, "create_account");
                 Intent intent = new Intent(mContext, AccountStartActivity.class);
@@ -351,10 +336,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         }
     }
 
-    private void m_InitalTotalAccountList()
-    {
+    private void m_InitalTotalAccountList() {
 
-        m_DetailListAdapter = new AccountTotalDetailListAdapter(this,mDetailListDataSource);
+        m_DetailListAdapter = new AccountTotalDetailListAdapter(this, mDetailListDataSource);
         m_TotalAllAccountList.setAdapter(m_DetailListAdapter);
 
         m_TotalAllAccountList.setOnItemClickListener(AccountTotalActivity.this);
@@ -364,7 +348,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         m_TotalCostText = (TextView) findViewById(R.id.total_value);
 
-        DecimalFormat df= new DecimalFormat("#,##0.00");
+        DecimalFormat df = new DecimalFormat("#,##0.00");
 
         String formatCost = df.format(m_CurrentTotalCost);
 
@@ -372,17 +356,16 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
     }
 
-    private void m_UpdateTotalCost()
-    {
+    private void m_UpdateTotalCost() {
         m_TotalCostText = (TextView) findViewById(R.id.total_value);
 
-        DecimalFormat df= new DecimalFormat("#,##0.00");
+        DecimalFormat df = new DecimalFormat("#,##0.00");
 
         String formatCost = df.format(m_CurrentTotalCost);
 
         m_TotalCostText.setText(formatCost);
 
-        return ;
+        return;
     }
 
     @Override
@@ -396,8 +379,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         this.startActivity(intent);
     }
 
-    private void m_InitSlidingMenu()
-    {
+    private void m_InitSlidingMenu() {
         // configure the SlidingMenu
         m_Menu = new SlidingMenu(this);
         m_Menu.setMode(SlidingMenu.LEFT);
@@ -434,19 +416,17 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         });
 
         boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
-        if(mFirst)
-        {
+        if (mFirst) {
             m_Menu.showMenu();
             AccountCommonUtil.SetNotFirstEnter(mContext);
         }
     }
 
-    private void m_InitSlidingMenuContent()
-    {
+    private void m_InitSlidingMenuContent() {
         Log.i(Constants.TAG, "------start m_InitSlidingMenuContent--------");
         List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
-        if(AccountCommonUtil.IsSupportSync(this)) {
-            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_browser,
+        if (AccountCommonUtil.IsSupportSync(this)) {
+            int[] icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_browser,
                     R.mipmap.ic_search,
                     R.mipmap.ic_refresh, R.mipmap.ic_comment_icon, R.mipmap.ic_drawer_settings};
             int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_browser_picture,
@@ -459,10 +439,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 listem.put("title", getString(titles[i]));
                 listems.add(listem);
             }
-        }
-        else{
-            int[]  icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_browser, R.mipmap.ic_search};
-            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc,  R.string.account_browser_picture,
+        } else {
+            int[] icons = {R.mipmap.ic_ascending, R.mipmap.ic_descending, R.mipmap.ic_browser, R.mipmap.ic_search};
+            int[] titles = {R.string.account_sort_asc, R.string.account_sort_desc, R.string.account_browser_picture,
                     R.string.account_search};
 
             for (int i = 0; i < icons.length; i++) {
@@ -474,19 +453,18 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         }
 
         SimpleAdapter adapter = new SimpleAdapter(this, listems,
-                R.layout.slide_menu_list_item, new String[] { "icon", "title"},
-                new int[] { R.id.slidemenu_list_icon, R.id.slidemenu_list_title});
+                R.layout.slide_menu_list_item, new String[]{"icon", "title"},
+                new int[]{R.id.slidemenu_list_icon, R.id.slidemenu_list_title});
 
         m_SlideMenuList = (ListView) findViewById(R.id.account_slidemenu_list);
         m_SlideMenuList.setAdapter(adapter);
         m_SlideMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(Constants.TAG, "------onItemClick  position--------"+position);
+                Log.i(Constants.TAG, "------onItemClick  position--------" + position);
                 switch (position) {
                     case Constants.ACCOUNT_SLIDEING_MENU_ASCEND:
-                    case Constants.ACCOUNT_SLIDEING_MENU_DESCEND:
-                    {
+                    case Constants.ACCOUNT_SLIDEING_MENU_DESCEND: {
                         Intent intent = new Intent();
                         intent.setClass(mContext, AccountSortActivity.class);
 
@@ -498,9 +476,8 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         intent.putExtras(mBundle);
                         startActivity(intent);
                     }
-                        break;
-                    case Constants.ACCOUNT_SLIDEING_MENU_IMAGE:
-                    {
+                    break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_IMAGE: {
                         Intent intent = new Intent();
                         intent.setClass(mContext, AccountAllImageActivity.class);
 
@@ -509,22 +486,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         startActivity(intent);
                     }
                     break;
-                    case Constants.ACCOUNT_SLIDEING_MENU_SYNC:
-                    {
+                    case Constants.ACCOUNT_SLIDEING_MENU_SYNC: {
                         Log.i(Constants.TAG, "-------start to sync-------");
-                        if (AccountCommonUtil.IsLogin(mContext) ) {
-                            MobclickAgent.onEvent(mContext, "slidemenu_enter_sync");
-                            mBinder.startSync();
-                        }
-                        else
-                        {
-                            MobclickAgent.onEvent(mContext, "slidemenu_enter_login");
-                            m_ShowQuestionLoginPoup();
-                        }
+                        m_ProcessSyncAction();
                     }
-                        break;
-                    case Constants.ACCOUNT_SLIDEING_MENU_SEARCH:
-                    {
+                    break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_SEARCH: {
                         Intent intent = new Intent();
                         intent.setClass(mContext, AccountSearchActivity.class);
 
@@ -532,27 +499,23 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         MobclickAgent.onEvent(mContext, "slidemenu_enter_search");
                         startActivity(intent);
                     }
-                        break;
-                    case Constants.ACCOUNT_SLIDEING_MENU_COMMENT:
-                    {
+                    break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_COMMENT: {
                         Log.i(Constants.TAG, "-------start to feedback-------");
-                       // if (AccountCommonUtil.IsLogin(mContext) ) {
-                        MobclickAgent.onEvent(mContext, "slidemenu_enter_feedback");
+                        if (AccountCommonUtil.IsLogin(mContext)) {
+                            MobclickAgent.onEvent(mContext, "slidemenu_enter_feedback");
                             Intent intent = new Intent();
                             intent.setClass(mContext, AccountFeedbackActivity.class);
 
                             Log.i(Constants.TAG, "------enter into AccountFeedbackActivity--------");
 
                             startActivity(intent);
-                    //    }
-                      //  else
-                       // {
-                     //       m_ShowQuestionLoginPoup();
-                     //   }
+                        } else {
+                            m_ShowQuestionLoginPoup();
+                        }
                     }
-                        break;
-                    case Constants.ACCOUNT_SLIDEING_MENU_SETTING:
-                    {
+                    break;
+                    case Constants.ACCOUNT_SLIDEING_MENU_SETTING: {
                         Log.i(Constants.TAG, "-------start to AccountSettingActivity-------");
                         // if (AccountCommonUtil.IsLogin(mContext) ) {
                         MobclickAgent.onEvent(mContext, "slidemenu_enter_setting");
@@ -563,14 +526,14 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
                         startActivity(intent);
                     }
-                        break;
+                    break;
                     default:
                         break;
                 }
             }
         });
 
-         m_LoginLayout = (RelativeLayout) findViewById(R.id.account_start_login);
+        m_LoginLayout = (RelativeLayout) findViewById(R.id.account_start_login);
         m_LoginLayout.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -596,7 +559,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
         if (AccountCommonUtil.IsLogin(mContext)) {
             String userName = mSharedPreferences.getString("user_name", "");
-            Log.i(Constants.TAG, "------login user name --------"+userName);
+            Log.i(Constants.TAG, "------login user name --------" + userName);
             TextView userNameText = (TextView) findViewById(R.id.total_value_label);
 
             String result = userName.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
@@ -605,8 +568,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         }
     }
 
-    private void m_InitAddButton()
-    {
+    private void m_InitAddButton() {
 
         m_AddNewAccountButton = (FloatingActionButton) findViewById(R.id.fab);
         m_AddNewAccountButton.attachToListView(m_TotalAllAccountList);
@@ -625,8 +587,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         });
     }
 
-    private void m_InitSwipeMenuList()
-    {
+    private void m_InitSwipeMenuList() {
         m_TotalAllAccountList = (SwipeMenuListView) findViewById(R.id.account_detail_list);
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -664,7 +625,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 deleteItem.setTitleColor(Color.WHITE);
 
                 // set item width
-                deleteItem.setWidth(AccountCommonUtil.dp2px(mContext,90));
+                deleteItem.setWidth(AccountCommonUtil.dp2px(mContext, 90));
                 // set a icon
                 //deleteItem.setIcon(R.drawable.ic_delete);
                 // add to menu
@@ -725,12 +686,11 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
 
             Log.i(Constants.TAG, "------mDetailListDataSource--------");
 
-            Log.i(Constants.TAG, "------mDetailListDataSource.size()--------"+mDetailListDataSource.size());
+            Log.i(Constants.TAG, "------mDetailListDataSource.size()--------" + mDetailListDataSource.size());
 
             m_CurrentTotalCost = 0.0;
-            for(int index = 0 ; index < mDetailListDataSource.size(); index++)
-            {
-                Log.i(Constants.TAG, "------mDetailListDataSource--index-"+index + "--Cost--"+mDetailListDataSource.get(index).Cost);
+            for (int index = 0; index < mDetailListDataSource.size(); index++) {
+                Log.i(Constants.TAG, "------mDetailListDataSource--index-" + index + "--Cost--" + mDetailListDataSource.get(index).Cost);
                 m_CurrentTotalCost += mDetailListDataSource.get(index).Cost;
             }
             return true;
@@ -754,13 +714,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         return false;
     }
 
-    private void m_editSelectedItem(int position)
-    {
+    private void m_editSelectedItem(int position) {
         Account current = mDetailListDataSource.get(position);
 
         Bundle mBundle = new Bundle();
         if (current == null) {
-            Log.i(Constants.TAG, "--current == null--"+position);
+            Log.i(Constants.TAG, "--current == null--" + position);
         }
         Log.i(Constants.TAG, "-m_CurrentAccount-id--" + current.getId());
 
@@ -773,18 +732,18 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         this.startActivity(intent);
 
     }
-    private void m_ShowDeletePoup(int position)
-    {
+
+    private void m_ShowDeletePoup(int position) {
         final Account current = mDetailListDataSource.get(position);
 
         Log.i(Constants.TAG, "------onItemLongClick--------" + current.getId());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-         View messageContent = mLayoutInflater.inflate(R.layout.dialog_content_info, null);
+        View messageContent = mLayoutInflater.inflate(R.layout.dialog_content_info, null);
         builder.setView(messageContent);
 
-        TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
         content.setText(getString(R.string.confirm_to_delete));
         builder.setPositiveButton(R.string.give_up_sure,
                 new DialogInterface.OnClickListener() {
@@ -798,6 +757,9 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         m_DetailListAdapter.updateUI();
                         current.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE;
                         current.save();
+
+                        //delete images of this account
+                        ImageItem.deleteAll(current);
 
                         //update total cost
                         m_CurrentTotalCost -= current.Cost;
@@ -817,7 +779,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                 R.layout.dialog_content_info, null);
         builder.setView(messageContent);
 
-        TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
+        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
         content.setText(getString(R.string.account_login_notice_body));
 
         builder.setCancelable(false);
@@ -934,8 +896,7 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         void onProgress(int progress);
     }
 
-    public  String RequestCurrentCity()
-    {
+    public String RequestCurrentCity() {
         //初始化定位
         mLocClient = new LocationClient(this);
         //注册定位监听
@@ -955,8 +916,30 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
         return "";
     }
 
-    public boolean m_ProcessUserInfoContent()
-    {
+    public boolean m_ProcessSyncAction() {
+        if (AccountCommonUtil.IsLogin(mContext)) {
+            if (NetworkUtils.isNetworkAvailable(mContext)) {
+                if (AccountCommonUtil.IsOnlyWifi(mContext)) {
+                    if (NetworkUtils.isWifiConnected(mContext)) {
+                        mBinder.startSync();
+                    } else {
+                        Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    mBinder.startSync();
+                }
+            } else {
+                Toast.makeText(mContext, R.string.network_disconnect, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            MobclickAgent.onEvent(mContext, "slidemenu_enter_login");
+            m_ShowQuestionLoginPoup();
+        }
+        return true;
+    }
+
+
+    public boolean m_ProcessUserInfoContent() {
         Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
         String city = AccountCommonUtil.GetCurrentCity(mContext);
         String style = AccountCommonUtil.GetGudieStyle(mContext);
@@ -970,12 +953,12 @@ public class AccountTotalActivity extends AppCompatActivity  implements AdapterV
                         // If the response is JSONObject instead of expected JSONArray
                         Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
                         try {
-                                     long  profileId  = response.isNull("id") ? 0 : response.getLong("id");
-                                    Log.i(Constants.TAG, "---postUserInfo--onSuccess--profileId---" + profileId);
-                                     AccountCommonUtil.SetUserProfileId(mContext, profileId);
+                            long profileId = response.isNull("id") ? 0 : response.getLong("id");
+                            Log.i(Constants.TAG, "---postUserInfo--onSuccess--profileId---" + profileId);
+                            AccountCommonUtil.SetUserProfileId(mContext, profileId);
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
-                            Log.i(Constants.TAG, "--postUserInfo--onSuccess-JSONException-"+e);
+                            Log.i(Constants.TAG, "--postUserInfo--onSuccess-JSONException-" + e);
                             e.printStackTrace();
                         }
                     }

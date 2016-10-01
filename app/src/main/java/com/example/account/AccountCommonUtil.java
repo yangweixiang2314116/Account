@@ -123,6 +123,14 @@ public class AccountCommonUtil {
                 "only_wifi", true);
     }
 
+    public static boolean IsQuickStart(Context context) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        return pSharedPreferences.getBoolean(
+                "quick_add", false);
+    }
+
     public static String GetToken(Context context) {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);

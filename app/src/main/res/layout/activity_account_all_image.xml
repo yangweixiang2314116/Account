@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     android:padding="5dp">
 
+    <TextView
+        android:id="@+id/empty_no_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/accout_empty_image_start"
+        android:textColor="@color/more_info_text_color"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="18sp" />
+
     <GridView
         android:id="@+id/id_gridView"
         android:layout_width="match_parent"
@@ -16,6 +29,7 @@
         android:numColumns="3"
         android:stretchMode="columnWidth"
         android:layout_alignParentTop = "true"
+        android:visibility="gone"
         android:verticalSpacing="3dip" >
     </GridView>
 

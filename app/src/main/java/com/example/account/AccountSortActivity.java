@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.example.module.Account;
 import com.umeng.analytics.MobclickAgent;
 
@@ -26,6 +28,7 @@ public class AccountSortActivity  extends ActionBarActivity  implements AdapterV
     private Context mContext = null;
     private int mSortType ;
     private ListView m_TotalAllAccountList = null;
+    private TextView mNoAccountText = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
 
@@ -94,12 +97,25 @@ public class AccountSortActivity  extends ActionBarActivity  implements AdapterV
     {
         m_TotalAllAccountList = (ListView) findViewById(R.id.account_sort_list);
 
+        mNoAccountText = (TextView) findViewById(R.id.sort_empty_no_account);
+
         m_DetailListAdapter = new AccountTotalDetailListAdapter(this,mDetailListDataSource);
         m_TotalAllAccountList.setAdapter(m_DetailListAdapter);
 
         m_TotalAllAccountList.setOnItemClickListener(AccountSortActivity.this);
 
         m_DetailListAdapter.updateUI();
+
+        if(mDetailListDataSource.size() > 0 )
+        {
+            m_TotalAllAccountList.setVisibility(View.VISIBLE);
+            mNoAccountText.setVisibility(View.GONE);
+        }
+        else
+        {
+            m_TotalAllAccountList.setVisibility(View.GONE);
+            mNoAccountText.setVisibility(View.VISIBLE);
+        }
 
     }
 

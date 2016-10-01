@@ -109,6 +109,13 @@ public class AccountStartActivity extends ActionBarActivity  {
                 m_SaveAccount();
                 //notify data change
                 AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
+                if(AccountCommonUtil.IsQuickStart(mContext))
+                {
+                    Intent mIntent = new Intent();
+                    mIntent.setClass(mContext, AccountTotalActivity.class);
+                    startActivity(mIntent);
+                }
+
                 finish();
                 overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
             }
@@ -308,8 +315,12 @@ public class AccountStartActivity extends ActionBarActivity  {
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        //getWindow().setSoftInputMode(
-                        //        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN  | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                        if(AccountCommonUtil.IsQuickStart(mContext))
+                        {
+                            Intent mIntent = new Intent();
+                            mIntent.setClass(mContext, AccountTotalActivity.class);
+                            startActivity(mIntent);
+                        }
                         finish();
                         overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
                     }
