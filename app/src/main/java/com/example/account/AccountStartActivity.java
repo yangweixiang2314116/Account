@@ -585,7 +585,12 @@ public class AccountStartActivity extends ActionBarActivity  {
                         m_LatestPosition = online;
 
                         //clean origin poi data
-                        PoiItem.delete(m_CurrentAccount);
+                        //Log.i(Constants.TAG, "--ACCOUNT id --" + m_CurrentAccount.getId());
+
+                        //PoiItem item = PoiItem.GetPoiItem(m_CurrentAccount);
+                        if(m_CurrentAccount.getId() != null) {
+                            PoiItem.delete(m_CurrentAccount);
+                        }
                         m_LatestPoi = null;
 
                         m_UpdateMoreInfoList(Constants.ACCOUNT_MORE_INFO_POSITION, m_LatestPosition);

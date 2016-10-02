@@ -191,6 +191,11 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     }
                 });
                 m_bConnected = true;
+
+                if(AccountCommonUtil.CanSyncNow(mContext))
+                {
+                    mBinder.startSync();
+                }
             }
 
             @Override

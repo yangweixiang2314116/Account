@@ -10,6 +10,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.example.module.NetworkUtils;
+
 
 public class AccountCommonUtil {
 
@@ -233,9 +235,46 @@ public class AccountCommonUtil {
         return true;
     }
 
+    public static boolean SetServerUrl(Context context, String url) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        pSharedPreferences.edit().putString("url", url)
+                .apply();
+        return true;
+    }
+
+    public static String GetServerUrl(Context context) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        return pSharedPreferences.getString(
+                "url", "");
+    }
+
     public static void sendBroadcastForAccountDataChange(Context context) {
         Intent intent = new Intent(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
         context.sendBroadcast(intent);
     }
 
+    public static boolean CanSyncNow(Context context)
+    {
+        if (AccountCommonUtil.IsLogin(context)) {
+            if (NetworkUtils.isNetworkAvailable(context)) {
+                if (AccountCommonUtil.IsOnlyWifi(context)) {
+                    if (NetworkUtils.isWifiConnected(context)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return  false;
+        }
+    }
 }

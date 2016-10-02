@@ -28,6 +28,11 @@ public class AccountApiConnector {
 		if (mInstance == null) {
 			mInstance = new AccountApiConnector();
 			mcontext  =  context;
+
+			String url = AccountCommonUtil.GetServerUrl(mcontext);
+			if(url.equals("") == false) {
+				AccountRestClient.instance(mcontext).setServerUrl(url);
+			}
 		}
 		return mInstance;
 	}

@@ -76,7 +76,7 @@ public class AccountSettingActivity  extends ActionBarActivity implements
         });
 
         //TODO delete
-        mRecommand.setVisibility(View.GONE);
+        //mRecommand.setVisibility(View.GONE);
 
         mSuggestion.setOnClickListener(this);
        // mFocusUs.setOnClickListener(this);
@@ -187,6 +187,7 @@ public class AccountSettingActivity  extends ActionBarActivity implements
 
                 Log.i(Constants.TAG, "-----account_setting_url-------" + content.getText().toString());
 
+                AccountCommonUtil.SetServerUrl(mContext, content.getText().toString());
                 AccountRestClient.instance(mContext).setServerUrl(content.getText().toString());
 
                 Toast.makeText(AccountSettingActivity.this, R.string.account_feedback_success, Toast.LENGTH_SHORT).show();
