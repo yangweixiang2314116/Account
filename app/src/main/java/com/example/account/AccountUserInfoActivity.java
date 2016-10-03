@@ -42,12 +42,12 @@ import android.widget.Toast;
 
 import cz.msebera.android.httpclient.Header;
 
-public class AccountUserInfoActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
+public class AccountUserInfoActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
     private Context mContext = null;
     private Button mSubmitButton = null;
     private ListView mInfoList = null;
     private Resources mResources = null;
-    private List<Map<String, Object>> mDataList  = new ArrayList<Map<String, Object>>();
+    private List<Map<String, Object>> mDataList = new ArrayList<Map<String, Object>>();
     private SimpleAdapter mAdapter = null;
     private LayoutInflater mLayoutInflater = null;
     private WheelView mWheelArea = null;
@@ -92,18 +92,17 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
             @Override
             public void onClick(View v) {
 
-                if(NetworkUtils.isNetworkAvailable(mContext))
-                {
+                if (NetworkUtils.isNetworkAvailable(mContext)) {
                     m_ProcessUserInfoContent();
-                }
-                else {
+                } else {
                     finish();
                     overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
                 }
-        }});
+            }
+        });
 
         mContext = this;
-        mInfoList = (ListView)findViewById(R.id.account_my_info_list);
+        mInfoList = (ListView) findViewById(R.id.account_my_info_list);
 
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -111,26 +110,25 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
         getData();
 
 
-        String [] from ={"label","value"};
-        int [] to = {R.id.user_info_item_label, R.id.user_info_item_value};
+        String[] from = {"label", "value"};
+        int[] to = {R.id.user_info_item_label, R.id.user_info_item_value};
         mAdapter = new SimpleAdapter(mContext, mDataList, R.layout.activity_account_user_info_list_item, from, to);
         mInfoList.setAdapter(mAdapter);
         mInfoList.setOnItemClickListener((AdapterView.OnItemClickListener) this);
 
-            //TODO add to Mobclick
+        //TODO add to Mobclick
         MobclickAgent.onEvent(mContext, "enter_userinfo");
     }
 
-    public List<Map<String, Object>> getData(){
+    public List<Map<String, Object>> getData() {
         TypedArray infoItems = mResources.obtainTypedArray(R.array.user_info);
 
         mDataList.clear();
-        for(int i=0;i<infoItems.length() ;i++){
+        for (int i = 0; i < infoItems.length(); i++) {
             Map<String, Object> map = new HashMap<String, Object>();
 
             String value = getString(R.string.account_my_user_info_unknow);
-            switch(i)
-            {
+            switch (i) {
                 case ACCOUNT_USER_INFO_CITY:
                     mCity = AccountCommonUtil.GetCurrentCity(mContext);
                     value = mCity;
@@ -151,7 +149,7 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
                     break;
             }
             map.put("label", infoItems.getString(i));
-            map.put("value",value);
+            map.put("value", value);
             mDataList.add(map);
         }
 
@@ -185,56 +183,98 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        Log.i(Constants.TAG, "---onItemClick-----"+position);
+        Log.i(Constants.TAG, "---onItemClick-----" + position);
 
         m_ShowWheelPopup(position);
     }
 
-    public boolean m_ProcessUserInfoContent()
-    {
-            Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
-            AccountApiConnector.instance(mContext).updateUserInfo(mCity,
-                    mStyle, mBudget, mArea, new JsonHttpResponseHandler() {
+    public boolean m_ProcessUserInfoContent() {
+        Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
+        AccountApiConnector.instance(mContext).updateUserInfo(mCity,
+                mStyle, mBudget, mArea, new JsonHttpResponseHandler() {
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    // If the response is JSONObject instead of expected JSONArray
-                    Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        // If the response is JSONObject instead of expected JSONArray
+                        Log.i(Constants.TAG, "---postUserInfo--onSuccess--response---" + response);
 
-                    Toast.makeText(mContext, R.string.account_feedback_success, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.account_feedback_success, Toast.LENGTH_SHORT).show();
 
-                    finish();
-                    overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
-                }
+                        finish();
+                        overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                    }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                    super.onFailure(statusCode, headers, throwable, response);
-                    Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                        super.onFailure(statusCode, headers, throwable, response);
+                        Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
 
-                    Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
 
-                    finish();
-                    overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
-                }
+                        finish();
+                        overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                    }
 
-                @Override
-                public void onFinish() {
-                    Log.i(Constants.TAG, "---postUserInfo--onFinish-----");
-                    super.onFinish();
-                }
+                    @Override
+                    public void onFinish() {
+                        Log.i(Constants.TAG, "---postUserInfo--onFinish-----");
+                        super.onFinish();
+                    }
 
-            });
+                });
 
         return true;
     }
 
-    void m_ShowWheelPopup(int  type)
-    {
+    void m_ShowWheelPopup(int type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
         View messageContent = mLayoutInflater.inflate(
                 R.layout.dialog_wheel_type, null);
+
+        mWheelType = type;
+        mWheelArea = (WheelView) messageContent.findViewById(R.id.dialog_wheel_view_area);
+
+        TypedArray dataItems = null;
+
+        switch (mWheelType) {
+            case ACCOUNT_USER_INFO_AREA:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_area_text);
+                break;
+            case ACCOUNT_USER_INFO_BUGET:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_budget_text);
+                break;
+            case ACCOUNT_USER_INFO_STYLE:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_style);
+                break;
+            default:
+                break;
+        }
+
+        mWheelListDataSource.clear();
+        for (int i = 0; i < dataItems.length(); i++) {
+            mWheelListDataSource.add(dataItems.getString(i));
+        }
+
+        mWheelArea.setOffset(2);
+
+        int  nFocusIndex = m_GetSelectionIndex();
+        Log.d(Constants.TAG, "----nFocusIndex----"+nFocusIndex);
+        mWheelArea.setSeletion(nFocusIndex);
+        Log.d(Constants.TAG, "onCreateView: setSeletion !");
+
+        mWheelArea.setItems(mWheelListDataSource);
+        Log.d(Constants.TAG, "onCreateView: setItems !");
+
+        mWheelArea.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
+            @Override
+            public void onSelected(int selectedIndex, String item) {
+                Log.d(Constants.TAG, "selectedIndex: " + selectedIndex + ", item: " + item);
+
+                mWheelChange = item;
+            }
+        });
+
         builder.setView(messageContent);
         builder.setPositiveButton(R.string.give_up_sure,
                 new DialogInterface.OnClickListener() {
@@ -242,8 +282,7 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        switch(mWheelType)
-                        {
+                        switch (mWheelType) {
                             case ACCOUNT_USER_INFO_AREA:
                                 AccountCommonUtil.SetGudieArea(mContext, mWheelChange);
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
@@ -264,48 +303,6 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
                 }).setNegativeButton(R.string.give_up_cancel, null)
                 .create().show();
 
-        mWheelType = type;
-        mWheelArea = (WheelView)messageContent. findViewById(R.id.dialog_wheel_view_area);
-
-        TypedArray dataItems = null;
-
-        switch(mWheelType)
-        {
-            case ACCOUNT_USER_INFO_AREA:
-                dataItems = mResources.obtainTypedArray(R.array.guide_chose_area_text);
-                break;
-            case ACCOUNT_USER_INFO_BUGET:
-                dataItems = mResources.obtainTypedArray(R.array.guide_chose_budget_text);
-                break;
-            case ACCOUNT_USER_INFO_STYLE:
-                dataItems = mResources.obtainTypedArray(R.array.guide_chose_style);
-                break;
-            default:
-                break;
-        }
-
-        mWheelListDataSource.clear();
-        for(int i=0;i<dataItems.length() ;i++){
-            mWheelListDataSource.add( dataItems.getString(i));
-        }
-
-        mWheelArea.setOffset(2);
-
-        mWheelArea.setSeletion(5);
-        Log.d(Constants.TAG, "onCreateView: setSeletion !");
-
-        mWheelArea.setItems(mWheelListDataSource);
-        Log.d(Constants.TAG, "onCreateView: setItems !");
-
-        mWheelArea.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
-            @Override
-            public void onSelected(int selectedIndex, String item) {
-                Log.d(Constants.TAG, "selectedIndex: " + selectedIndex + ", item: " + item);
-
-                mWheelChange = item;
-            }
-        });
-
     }
 
     private boolean m_UpdateUserInfoList(int index, String value) {
@@ -315,5 +312,36 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
         itemValue.setText(value);
 
         return true;
+    }
+
+    private int m_GetSelectionIndex()
+    {
+        TypedArray dataItems = null;
+        String lastValue = "";
+        switch (mWheelType) {
+            case ACCOUNT_USER_INFO_AREA:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_area_text);
+                lastValue = AccountCommonUtil.GetGudieArea(mContext);
+                break;
+            case ACCOUNT_USER_INFO_BUGET:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_budget_text);
+                lastValue = AccountCommonUtil.GetGudieBudget(mContext);
+                break;
+            case ACCOUNT_USER_INFO_STYLE:
+                dataItems = mResources.obtainTypedArray(R.array.guide_chose_style);
+                lastValue = AccountCommonUtil.GetGudieStyle(mContext);
+                break;
+            default:
+                break;
+        }
+
+        for (int i = 0; i < dataItems.length(); i++) {
+            if(lastValue.equals(dataItems.getString(i)))
+            {
+                return i;
+            }
+        }
+
+        return 0;
     }
 }

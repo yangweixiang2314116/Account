@@ -191,11 +191,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     }
                 });
                 m_bConnected = true;
-
-                if(AccountCommonUtil.CanSyncNow(mContext))
-                {
-                    mBinder.startSync();
-                }
             }
 
             @Override
@@ -285,6 +280,14 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         Log.i(Constants.TAG, "------onCreateOptionsMenu--------");
 
         m_InitActionBar();
+
+        boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
+        Log.i(Constants.TAG, "------onCreateOptionsMenu----m_bConnected----"+m_bConnected+ "--bCanSync---"+bCanSync);
+
+        if(m_bConnected && bCanSync)
+        {
+                mBinder.startSync();
+        }
         return true;
     }
 
@@ -326,7 +329,9 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     }
 
     public void setRefreshActionButtonState(boolean refreshing) {
+        Log.i(Constants.TAG, "------setRefreshActionButtonState---refreshing-----"+refreshing);
         if (m_OptionsMenu == null) {
+            Log.i(Constants.TAG, "------setRefreshActionButtonState---m_OptionsMenu == null-----");
             return;
         }
 

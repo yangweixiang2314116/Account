@@ -686,6 +686,7 @@ public class AccountStartActivity extends ActionBarActivity  {
                                                     int which) {
                                     m_ImageContents.removeView(commentItem);
                                     m_LatestImageList.remove(nCurrentIndex);
+                                    m_bImageListChange = true;
                                 }
                             }).setNegativeButton(R.string.give_up_cancel, null)
                             .create().show();
