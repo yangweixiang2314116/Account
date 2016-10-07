@@ -138,7 +138,17 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         m_InitCurrentyCity();
 
-        new PrepareTask().execute();
+        Intent intentData = this.getIntent();
+        if (intentData.hasExtra("total")) {
+            m_CurrentTotalCost = intentData.getDoubleExtra("total", 0.0);
+            mDetailListDataSource = intentData.getParcelableArrayListExtra("Accounts");
+            m_InitalTotalAccountList();
+        }
+        else
+        {
+            Log.i(Constants.TAG, "-----intentData == null , no data  -----");
+            new PrepareTask().execute();
+        }
 
     }
 
