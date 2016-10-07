@@ -83,29 +83,7 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
         Log.i(Constants.TAG, "-------onItemClick----style--------"+sStyle);
 
         AccountCommonUtil.SetGudieStyle(mParent,sStyle);
-    //    mListener.onFragmentAction(sStyle);
-    }
-
-
-    private OnStyleFragmentListener mListener;
-
-    @Override
-
-    public void onAttach(Activity activity) {
-
-        super.onAttach(activity);
-        Log.i(Constants.TAG, "-------AccountGuideStyleFragment----onAttach--------");
-        try {
-            mListener = (OnStyleFragmentListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentListener");
-        }
 
     }
 
-    public interface OnStyleFragmentListener {
-
-        public void onFragmentAction(String style);
-
-    }
 }

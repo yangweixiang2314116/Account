@@ -109,7 +109,7 @@ public class AccountGuideBudgetFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-    };
+    }
 
     void m_UpdateStartButton()
     {

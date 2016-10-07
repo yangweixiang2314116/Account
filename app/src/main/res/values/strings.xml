@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">装修记账</string>
-    <string name="action_settings">设置</string>
 
     <!--Common -->
     <string name="btn_name_ok">确认</string>
@@ -14,45 +13,28 @@
     <string name="input_start_cost">请输入金额</string>
     <string name="start_input_title">记一笔</string>
     <string name="cost_detail_title">支出详细</string>
-    <string name="menu_setting">设置</string>
-    <string name="menu_login">登陆</string>
-    <string name="menu_sync">同步</string>
     <string name="menu_finish">完成</string>
-    <string name="menu_preview">预览</string>
     <string name="menu_delete">删除</string>
     <string name="confirm_to_delete_image">确定要删除这张图片吗？</string>
     <string name="menu_edit">编辑</string>
-    <string name="menu_list">换行</string>
     <string name="detail_total_value">总额</string>
     <string name="detail_total_date">日期：</string>
-    <string name="detail_category_label">标签：</string>
-    <string name="detail_brand_label">品牌：</string>
-    <string name="detail_position_label">位置：</string>
     <string name="detail_comments_label">备注：</string>
 
     <string name="total_list_indicator">|</string>
     <string name="total_list_brand_default">无</string>
     <string name="total_list_category_default">默认分类</string>
 
-    <string name="add_comments_app_name">添加备注</string>
     <string name="add_comments_hint">添加备注(最多100字)</string>
     <string name="image_selector_app_name">选择图片</string>
-    <string name="image_number_name">张</string>
-    <string name="image_scan_no_name">哈哈，这里空空如也</string>
-    <string name="image_scan_loading">正在加载</string>
-    <string name="image_scan_no_external_device">暂无外部存储</string>
-    <string name="account_image_add_text">+</string>
 
-    <string name="delete_title">提示</string>
     <string name="confirm_to_delete">确定要删除这条记录吗？</string>
     <string name="network_disconnect">网络不可用, 请连接网络再试。</string>
     <string name="wifi_network_disconnect">WIFI网络不可用, 请连接WIFI再试或者在setting中改变设置。</string>
     <string name="give_up_edit">退出此次编辑？</string>
     <string name="give_up_sure">确定</string>
     <string name="give_up_cancel">取消</string>
-    <string name="give_up_title">提示</string>
     <string name="give_up_success">删除成功</string>
-    <string name="get_data_error">获取数据失败</string>
 
     <!--ADD Category -->
     <string name="add_category_app_name">买的啥</string>
@@ -64,16 +46,12 @@
     <!--ADD Brand -->
     <string name="add_brand_app_name">啥品牌</string>
     <string name="add_brand_app_lable">啥品牌: </string>
-    <string name="hot_brand_label_text">热门品牌</string>
-    <string name="add_new_brand">新建品牌</string>
     <string name="add_new_brand_hint">输入新的品牌，如大自然</string>
     <!--ADD Brand -->
 
     <!--ADD Position -->
     <string name="add_position_app_name">哪买的</string>
     <string name="add_position_app_lable">哪买的: </string>
-    <string name="hot_position_label_text">热门位置</string>
-    <string name="add_new_position">新建位置</string>
     <string name="add_new_position_hint">输入位置开始搜索，如红星美凯龙</string>
     <string name="end">已经是最后一页啦</string>
     <string name="add_position_shopping_offline">实体店</string>
@@ -94,19 +72,14 @@
 
     <!--Login poup-->
     <string name="account_login">登陆</string>
-    <string name="account_login_weixin">微信</string>
-    <string name="account_login_weibo">微博</string>
-    <string name="account_login_qq">QQ</string>
     <string name="account_login_register">注册</string>
-    <string name="account_login_register_text">注册/登陆</string>
     <string name="account_username_hint_text">用户名（5-20个字符，由字母和数字组成）</string>
     <string name="account_password_hint_text">密码（6-20位）</string>
-    <string name="account_login_success">登陆成功</string>
     <string name="account_login_failed">登陆失败</string>
-    <string name="account_already_login_success">已登陆</string>
     <string name="account_login_wait">下次再说</string>
     <string name="account_login_go_now">马上登陆</string>
     <string name="account_login_notice_body">亲，这个功能需要登陆后才能使用哦。</string>
+    <string name="account_force_login_body">亲，登陆后可以同步数据到云端，以免丢失。</string>
     <!--Login poup -->
 
     <!--serach activity-->
@@ -117,10 +90,6 @@
     <string name="account_search_clear_history">清空历史搜索</string>
     <string name="accout_search_clear_history_success">删除成功</string>
     <!--serach activity -->
-
-    <!--Image selector -->
-    <string name="account_image_max_number">最多只能选择4张图片</string>
-    <!--Image selector -->
 
     <!--Sync service  -->
     <string name="account_sync_service_start">同步任务开始</string>
@@ -153,7 +122,6 @@
     <string name="suggestion">意见反馈</string>
     <string name="recommend_to_friend">设置服务端地址</string>
     <string name="update_version">检测更新</string>
-    <string name="focus_us">关注我们</string>
     <string name="rate_for_us">为我们评分</string>
     <string name="can_not_open_market">无法打开市场</string>
     <!--setting -->

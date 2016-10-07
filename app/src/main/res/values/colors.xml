@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBorderGray">#d6d6d6</color>
@@ -17,18 +16,13 @@
     <color name="list_line_color">#CFCFCF</color>
     <color name="account_top_background_color">#3F51B5</color>
 
-    <color name="account_wheel_color">#83cde6</color>
-
     <color name="fa_colorPrimary">#3F51B5</color>
     <color name="fa_colorPrimaryDark">#303F9F</color>
     <color name="fa_colorAccent">#FF4081</color>
 
     <color name="content_text_color">#666666</color>
-    <color name="slide_menu_background">#3e97e7</color>
     <color name="weibo_listtab_off">#8d8d8d</color>
 
-    <color name="guide_back_color">#5f4956</color>
-    <color name="activity_background_color">#E8E8E0</color>
     <color name="setting_item_line">#9FA19F</color>
     <color name="backgroundColor">#E8E8E0</color>
     <color name="backgroundColorPress">#DBDBD3</color>

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class AccountGuideActivity extends AppCompatActivity implements AccountGuideStyleFragment.OnStyleFragmentListener {
+public class AccountGuideActivity extends AppCompatActivity  {
 
     private ViewPager mViewpager = null;
     private me.relex.circleindicator.CircleIndicator mIndicator = null;
@@ -42,18 +42,6 @@ public class AccountGuideActivity extends AppCompatActivity implements AccountGu
 
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
-    }
-
-    @Override
-    public void onFragmentAction(String style) {
-
-        Log.i(Constants.TAG, "-------onFragmentAction----style--------" + style);
-
-        mSharedPreferences.edit().putString("style", style)
-                .apply();
-
-        //move to next page
-        //mViewpager.setCurrentItem(1);
     }
 
     protected void onResume() {

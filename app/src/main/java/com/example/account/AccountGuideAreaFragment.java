@@ -69,5 +69,5 @@ public class AccountGuideAreaFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-    };
+    }
 }

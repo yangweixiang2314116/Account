@@ -22,7 +22,7 @@ public class AccountApiConnector {
 	private static Context mcontext = null;
 	
     private AccountApiConnector() {
-	};
+	}
 
 	public static AccountApiConnector instance(Context context) {
 		if (mInstance == null) {

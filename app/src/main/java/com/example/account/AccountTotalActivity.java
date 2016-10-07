@@ -91,6 +91,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private SharedPreferences mSharedPreferences = null;
     private BroadcastReceiver mReceiver = null;
     private boolean m_bConnected = false;
+    private boolean m_bFirstRefreshList = true;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
     /**
      * 定位端
@@ -373,6 +374,11 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         String formatCost = df.format(m_CurrentTotalCost);
 
         m_TotalCostText.setText(formatCost);
+
+        if(m_bFirstRefreshList && mDetailListDataSource.size() > 30 && AccountCommonUtil.IsLogin(mContext) == false) {
+            m_ShowForceLoginPoup();
+            m_bFirstRefreshList = false;
+        }
 
     }
 
@@ -822,6 +828,27 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         builder.create().show();
     }
 
+    private void m_ShowForceLoginPoup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        View messageContent = mLayoutInflater.inflate(
+                R.layout.dialog_content_info, null);
+        builder.setView(messageContent);
+
+        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
+        content.setText(getString(R.string.account_force_login_body));
+
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.account_login_go_now, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_ShowSMSLoginPoup();
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+    }
 
     private void m_ShowSMSLoginPoup() {
         Log.i(Constants.TAG, "------start m_ShowSMSLoginPoup--------");
