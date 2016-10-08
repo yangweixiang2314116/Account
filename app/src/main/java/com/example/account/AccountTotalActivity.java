@@ -31,6 +31,7 @@ import com.example.module.Account;
 import com.example.module.AccountRestClient;
 import com.example.module.ImageItem;
 import com.example.module.NetworkUtils;
+import com.example.module.NumberScrollTextView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
@@ -79,7 +80,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private FloatingActionButton m_AddNewAccountButton = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
     private Context mContext = null;
-    private TextView m_TotalCostText = null;
+    private NumberScrollTextView m_TotalCostText = null;
     private TextView m_CurrentTimeText = null;
     private Double m_CurrentTotalCost = 0.0;
     private Menu m_OptionsMenu = null;
@@ -139,18 +140,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         m_InitCurrentyCity();
 
-        Intent intentData = this.getIntent();
-        if (intentData.hasExtra("total")) {
-            m_CurrentTotalCost = intentData.getDoubleExtra("total", 0.0);
-            mDetailListDataSource = intentData.getParcelableArrayListExtra("Accounts");
-            m_InitalTotalAccountList();
-        }
-        else
-        {
-            Log.i(Constants.TAG, "-----intentData == null , no data  -----");
-            new PrepareTask().execute();
-        }
-
+        new PrepareTask().execute();
     }
 
     private void m_InitActionBar() {
@@ -367,13 +357,16 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
 //        m_DetailListAdapter.updateUI();
 
-        m_TotalCostText = (TextView) findViewById(R.id.total_value);
+        m_TotalCostText = (NumberScrollTextView) findViewById(R.id.total_value);
 
-        DecimalFormat df = new DecimalFormat("#,##0.00");
+        //DecimalFormat df = new DecimalFormat("#,##0.00");
 
-        String formatCost = df.format(m_CurrentTotalCost);
+        //String formatCost = df.format(m_CurrentTotalCost);
 
-        m_TotalCostText.setText(formatCost);
+        //m_TotalCostText.setText(formatCost);
+        m_TotalCostText.setFromAndEndNumber((float)0.0, m_CurrentTotalCost.floatValue());
+        m_TotalCostText.setDuration(1000);
+        m_TotalCostText.start();
 
         if(m_bFirstRefreshList && mDetailListDataSource.size() > 30 && AccountCommonUtil.IsLogin(mContext) == false) {
             m_ShowForceLoginPoup();
@@ -382,14 +375,20 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
     }
 
-    private void m_UpdateTotalCost() {
-        m_TotalCostText = (TextView) findViewById(R.id.total_value);
+    private void m_UpdateTotalCost(Double oldCost, Double newCost) {
+        m_TotalCostText = (NumberScrollTextView) findViewById(R.id.total_value);
 
-        DecimalFormat df = new DecimalFormat("#,##0.00");
+        m_TotalCostText.setFromAndEndNumber(oldCost.floatValue(), newCost.floatValue());
+        m_TotalCostText.setDuration(1000);
+        m_TotalCostText.start();
 
-        String formatCost = df.format(m_CurrentTotalCost);
+        //DecimalFormat df = new DecimalFormat("#,##0.00");
 
-        m_TotalCostText.setText(formatCost);
+        //String formatCost = df.format(m_CurrentTotalCost);
+
+        //m_TotalCostText.setText(formatCost);
+
+
 
         return;
     }
@@ -397,10 +396,10 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // TODO Auto-generated method stub
-        Log.i(Constants.TAG, "------start AccountDetailActivity--------");
         Intent intent = new Intent(this, AccountDetailActivity.class);
         MobclickAgent.onEvent(mContext, "browser_account");
         Account current = mDetailListDataSource.get(position);
+        Log.i(Constants.TAG, "------start onItemClick----current.getId()----"+current.getId());
         intent.putExtra("id", current.getId());
         this.startActivity(intent);
     }
@@ -789,8 +788,9 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         ImageItem.deleteAll(current);
 
                         //update total cost
+                        double oldCost = m_CurrentTotalCost;
                         m_CurrentTotalCost -= current.Cost;
-                        m_UpdateTotalCost();
+                        m_UpdateTotalCost(oldCost, m_CurrentTotalCost);
                         Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
                                 .show();
 

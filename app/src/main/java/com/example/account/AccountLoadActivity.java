@@ -35,12 +35,6 @@ public class AccountLoadActivity extends Activity {
     };
     private Resources mResources = null;
     private Intent mIntent = null;
-    private ArrayList<Account> mAccounts;
-    private Double mCurrentTotalCost = 0.0;
-
-    // at least display 1000 , no mater load data ready or not
-    private boolean mLoadDataReady = false;
-    private boolean mLoadingEnd = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +77,6 @@ public class AccountLoadActivity extends Activity {
                 }
                 else {
                     mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
-                    new PrepareTask().execute();
                 }
             }
         }
@@ -94,7 +87,6 @@ public class AccountLoadActivity extends Activity {
             }
             else {
                 mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY, 100);
-                new PrepareTask().execute();
             }
         }
     }
@@ -106,16 +98,10 @@ public class AccountLoadActivity extends Activity {
         public void handleMessage(Message msg) {
             switch(msg.what){
                 case SWITCH_MAINACTIVITY:
-
-                    mLoadingEnd = true;
-                    if(mLoadDataReady) {
-                        m_RunTotalActivity();
-                    }
-                    else
-                    {
-                        //wait for loading data from DB ready
-                        Log.i(Constants.TAG, "------wait for loading data from DB ready--------");
-                    }
+                    mIntent = new Intent();
+                    mIntent.setClass(AccountLoadActivity.this, AccountTotalActivity.class);
+                    startActivity(mIntent);
+                    finish();
                     break;
                 case SWITCH_GUIDECTIVITY:
                     mIntent = new Intent();
@@ -252,57 +238,6 @@ public class AccountLoadActivity extends Activity {
             super.onPostExecute(result);
             mHandler.postDelayed(runnable, 1000);
         }
-    }
-
-
-    private class PrepareTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO Auto-generated method stub
-
-            Log.i(Constants.TAG, "------start get all account from DB--------");
-
-            mAccounts = (ArrayList<Account>) Account.getNormalAccounts();
-
-            Log.i(Constants.TAG, "------mAccounts--------");
-
-            Log.i(Constants.TAG, "------mAccounts.size()--------" + mAccounts.size());
-
-            mCurrentTotalCost = 0.0;
-            for (int index = 0; index < mAccounts.size(); index++) {
-                Log.i(Constants.TAG, "------mAccounts--index-" + index + "--Cost--" + mAccounts.get(index).Cost);
-                mCurrentTotalCost += mAccounts.get(index).Cost;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            Log.i(Constants.TAG, "------onPostExecute--------");
-            super.onPostExecute(result);
-
-            mLoadDataReady = true;
-            if(mLoadingEnd)
-            {
-                m_RunTotalActivity();
-            }
-            else
-            {
-                //wait for loading end
-                Log.i(Constants.TAG, "------wait for loading end--------");
-            }
-        }
-    }
-
-    private void m_RunTotalActivity()
-    {
-        mIntent = new Intent();
-        mIntent.setClass(AccountLoadActivity.this, AccountTotalActivity.class);
-        mIntent.putParcelableArrayListExtra("Accounts", mAccounts);
-        mIntent.putExtra("total", mCurrentTotalCost);
-        startActivity(mIntent);
-        finish();
     }
 
 }
