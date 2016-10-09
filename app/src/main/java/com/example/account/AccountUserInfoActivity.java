@@ -92,6 +92,10 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
             @Override
             public void onClick(View v) {
 
+                AccountCommonUtil.SetGudieArea(mContext, mArea);
+                AccountCommonUtil.SetGudieBudget(mContext, mBudget);
+                AccountCommonUtil.SetGudieStyle(mContext, mStyle);
+
                 if (NetworkUtils.isNetworkAvailable(mContext)) {
                     m_ProcessUserInfoContent();
                 } else {
@@ -161,8 +165,8 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                    finish();
+                    overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
                 break;
             default:
                 break;
@@ -205,8 +209,8 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                        super.onFailure(statusCode, headers, throwable, response);
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+                        super.onFailure(statusCode, headers, responseString, throwable);
                         Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
 
                         Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
@@ -284,15 +288,18 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
                                         int which) {
                         switch (mWheelType) {
                             case ACCOUNT_USER_INFO_AREA:
-                                AccountCommonUtil.SetGudieArea(mContext, mWheelChange);
+                                //AccountCommonUtil.SetGudieArea(mContext, mWheelChange);
+                                mArea = mWheelChange;
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
                                 break;
                             case ACCOUNT_USER_INFO_BUGET:
-                                AccountCommonUtil.SetGudieBudget(mContext, mWheelChange);
+                                //AccountCommonUtil.SetGudieBudget(mContext, mWheelChange);
+                                mBudget = mWheelChange;
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
                                 break;
                             case ACCOUNT_USER_INFO_STYLE:
-                                AccountCommonUtil.SetGudieStyle(mContext, mWheelChange);
+                                mStyle = mWheelChange;
+                                //AccountCommonUtil.SetGudieStyle(mContext, mWheelChange);
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
                                 break;
                             default:

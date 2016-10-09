@@ -720,6 +720,14 @@ public class AccountStartActivity extends ActionBarActivity  {
                 m_CurrentAccount.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
             }
 
+            //save image list change flag to DB
+            Log.i(Constants.TAG, "--m_bImageListChange ---" + m_bImageListChange);
+            if (m_bImageListChange) {
+                m_CurrentAccount.ImageListChange = 1;
+            }else{
+                m_CurrentAccount.ImageListChange = 0;
+            }
+
             m_CurrentAccount.save();
             Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
 

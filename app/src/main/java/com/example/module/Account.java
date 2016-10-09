@@ -45,9 +45,9 @@ public class Account extends Model implements Parcelable {
     public long UpdatedTime;
     @Column(name = "SyncStatus")
     public Integer SyncStatus;
-    
+	@Column(name = "ImageListChange")
+	public Integer ImageListChange;//if image not change , do not post image part
 
-	
     public List<ImageItem> Imageitems() {
         return getMany(ImageItem.class, "Account");
     }
@@ -72,7 +72,7 @@ public class Account extends Model implements Parcelable {
     
     public Account(Parcel in) {
         this(in.readLong(), in.readDouble(),in.readString(), in.readString(), in.readString(),in.readString(),
-        		in.readLong(), in.readLong(),in.readLong(), in.readInt());
+        		in.readLong(), in.readLong(),in.readLong(), in.readInt(),in.readInt());
     }
 
 	@Override
@@ -88,6 +88,7 @@ public class Account extends Model implements Parcelable {
         parcel.writeLong(LastSyncTime);
         parcel.writeLong(UpdatedTime);
         parcel.writeInt(SyncStatus);
+		parcel.writeInt(ImageListChange);
 		
 	}
 	
@@ -100,13 +101,13 @@ public class Account extends Model implements Parcelable {
     	Position = "";
 		Comments = "";
     	Cost = 0.0;
-    	
+		ImageListChange = 0;
     	SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD;
     }
     
     private Account(long account, Double cost, String category,
     		String brand, String position, String comments,
-            long createTime, long synctime, long updateTime, Integer action) {
+            long createTime, long synctime, long updateTime, Integer action, Integer change) {
 		super();
 
 		AccountId = account;
@@ -119,6 +120,7 @@ public class Account extends Model implements Parcelable {
 		UpdatedTime = updateTime;
 		LastSyncTime = synctime;
 		SyncStatus = action;
+		ImageListChange = change;
     }
     
     private Account(long account, Double cost, String category,
@@ -217,6 +219,14 @@ public class Account extends Model implements Parcelable {
 	
 	public boolean isNeedSyncCreate() {
 		if (SyncStatus == Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isImageChange() {
+		if (ImageListChange == 1) {
 			return true;
 		} else {
 			return false;

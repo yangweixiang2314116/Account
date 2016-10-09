@@ -449,17 +449,17 @@ public class AccountCreateRunable implements Runnable {
         }
 
         @Override
-
-        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-            super.onFailure(statusCode, headers, throwable, response);
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+            super.onFailure(statusCode, headers, responseString, throwable);
             Log.i(Constants.TAG, "---postAccountItem--onFailure--statusCode---" + statusCode);
-            Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---" + response);
-
+            Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---" + responseString);
             if (mlatch != null) {
                 mlatch.countDown();
                 Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
             }
+            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
         }
+
 
         @Override
         public void onFinish() {
@@ -504,16 +504,16 @@ public class AccountUpdateRunable implements Runnable {
         }
 
         @Override
-
-        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-            super.onFailure(statusCode, headers, throwable, response);
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+            super.onFailure(statusCode, headers, responseString, throwable);
             Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---" + statusCode);
-            Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---" + response);
+            Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---" + responseString);
 
             if (mlatch != null) {
                 mlatch.countDown();
                 Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
             }
+            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -558,16 +558,16 @@ public class AccountDeleteRunable implements Runnable {
         }
 
         @Override
-
-        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-            super.onFailure(statusCode, headers, throwable, response);
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+            super.onFailure(statusCode, headers, responseString, throwable);
             Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---" + statusCode);
-            Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + response);
+            Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + responseString);
 
             if (mlatch != null) {
                 mlatch.countDown();
                 Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
             }
+            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
         }
 
     }

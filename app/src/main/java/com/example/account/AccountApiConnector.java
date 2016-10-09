@@ -227,38 +227,47 @@ public class AccountApiConnector {
 		Log.i(Constants.TAG, "--post account item brand--"+item.Brand);
 		Log.i(Constants.TAG, "--post account item note--"+item.Comments);
 		Log.i(Constants.TAG, "--post account item position--"+item.Position);
+		Log.i(Constants.TAG, "--post account item isImageChange--"+item.isImageChange());
 		
-		
-		ArrayList<ImageItem> DetailImageList = (ArrayList<ImageItem>) item.Imageitems();
-		if(DetailImageList.size() > 0)
-		{
-			for(int index = 0; index < DetailImageList.size(); index++)
-			{
-				String ImagePath = DetailImageList.get(index).Path;
-				
-				Log.i(Constants.TAG, "--post account item ImagePath--"+ImagePath);
-				
-				File file = new File(ImagePath);  
-				if (file.exists() && file.length() > 0) { 
-					try {
-						int imageIndex = index + 1;
-						String key = "image"+ imageIndex;
-						params.put(key,file);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						Log.i(Constants.TAG, "--FileNotFoundException ImagePath-"+ImagePath);
-						e.printStackTrace();
+		if(item.isImageChange()) {
+			ArrayList<ImageItem> DetailImageList = (ArrayList<ImageItem>) item.Imageitems();
+			if (DetailImageList.size() > 0) {
+				for (int index = 0; index < DetailImageList.size(); index++) {
+					String ImagePath = DetailImageList.get(index).Path;
+
+					Log.i(Constants.TAG, "--post account item ImagePath--" + ImagePath);
+
+					File file = new File(ImagePath);
+					if (file.exists() && file.length() > 0) {
+						try {
+							int imageIndex = index + 1;
+							String key = "image" + imageIndex;
+							params.put(key, file);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							Log.i(Constants.TAG, "--FileNotFoundException ImagePath-" + ImagePath);
+							e.printStackTrace();
+						}
 					}
 				}
-			}
 
-			//remove other old images
-			int count = DetailImageList.size();
-			for(; count < ACCOUNT_IMAGE_SELECT_MAX_COUNT ; count++)
+				//remove other old images
+				int count = DetailImageList.size();
+				for (; count < ACCOUNT_IMAGE_SELECT_MAX_COUNT; count++) {
+					int suffix = count + 1;
+					String key = "image" + suffix;
+					params.put(key, "");
+				}
+			}
+			else
 			{
-				int suffix = count + 1;
-				String key = "image"+ suffix;
-				params.put(key,"");
+				//remove other old images
+				int count = 0;
+				for (; count < ACCOUNT_IMAGE_SELECT_MAX_COUNT; count++) {
+					int suffix = count + 1;
+					String key = "image" + suffix;
+					params.put(key, "");
+				}
 			}
 		}
 

@@ -162,6 +162,8 @@ public class AccountCommonUtil {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
+        Log.d(Constants.TAG, "----SetGudieStyle----"+style);
+
         pSharedPreferences.edit().putString("guide_style", style)
                 .apply();
         return true;

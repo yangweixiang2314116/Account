@@ -94,7 +94,7 @@
     <!--Sync service  -->
     <string name="account_sync_service_start">同步任务开始</string>
     <string name="account_sync_service_success">同步任务完成</string>
-    <string name="account_sync_service_error">同步任务发生错误</string>
+    <string name="account_sync_service_error">同步发生错误,服务端异常</string>
     <string name="account_sync_service_already_start">同步任务正在进行，稍后再尝试</string>
 
     <string name="account_guide_chose_style">选择装修风格，记账更加智能</string>
