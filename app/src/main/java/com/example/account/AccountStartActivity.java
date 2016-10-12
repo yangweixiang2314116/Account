@@ -633,7 +633,14 @@ public class AccountStartActivity extends ActionBarActivity  {
             }
 
             for (int index = 0; index < dataList.size(); index++) {
-                m_LatestImageList.add(dataList.get(index).Path);
+                if(dataList.get(index).Path.equals(""))
+                {
+                    //do not display thumbnail when local image path lost
+                    //m_LatestImageList.add(dataList.get(index).ServerPath);
+                }
+                else {
+                    m_LatestImageList.add(dataList.get(index).Path);
+                }
             }
 
             m_UpdateImageList(m_LatestImageList);

@@ -87,12 +87,11 @@ public class AccountFeedbackActivity extends ActionBarActivity {
                         finish();
                     }
 
-
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                        super.onFailure(statusCode, headers, throwable, response);
-                        Log.i(Constants.TAG, "---postFeedback--onFailure--statusCode---" + statusCode);
-
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
+                        Log.i(Constants.TAG, "---postUserInfo--onFailure--responseString---" + responseString);
                         Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
                     }
 
