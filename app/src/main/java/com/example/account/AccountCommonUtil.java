@@ -83,6 +83,16 @@ public class AccountCommonUtil {
                 "is_login", false);
     }
 
+	    public static boolean SetLogin(Context context, boolean login) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        pSharedPreferences.edit().putBoolean("is_login", login)
+                .apply();
+        return true;
+    }
+		
+
     public static boolean IsFirstEnter(Context context) {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -258,6 +268,12 @@ public class AccountCommonUtil {
         Intent intent = new Intent(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
         context.sendBroadcast(intent);
     }
+
+	public static void sendBroadcastForAccountInvalidToken(Context context) {
+        Intent intent = new Intent(Constants.INTENT_NOTIFY_INVALID_TOKEN);
+        context.sendBroadcast(intent);
+    }
+
 
     public static boolean CanSyncNow(Context context)
     {

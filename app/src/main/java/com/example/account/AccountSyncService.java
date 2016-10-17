@@ -230,11 +230,19 @@ public class AccountSyncService extends Service {
 
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
                         super.onFailure(statusCode, headers, throwable, response);
-                        Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + response);
+                        Log.i(Constants.TAG, "---getDetailList--onFailure--responseString---" + response + "--statusCode--"+statusCode);
 
                         if (syncDownLatch != null) {
                             syncDownLatch.countDown();
                             Log.i(Constants.TAG, "-----syncDownLatch count ---" + syncDownLatch.getCount());
+                        }
+
+                        if(statusCode == 401)
+                        {
+                            AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
+                            Log.i(Constants.TAG, "-----sendBroadcastForAccountInvalidToken---");
+                        }else {
+                            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -457,7 +465,13 @@ public class AccountCreateRunable implements Runnable {
                 mlatch.countDown();
                 Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
             }
-            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+            if(statusCode == 401)
+            {
+                AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
+                Log.i(Constants.TAG, "-----sendBroadcastForAccountInvalidToken---");
+            }else {
+                Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+            }
         }
 
 
@@ -513,7 +527,14 @@ public class AccountUpdateRunable implements Runnable {
                 mlatch.countDown();
                 Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
             }
-            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+            if(statusCode == 401)
+            {
+                AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
+                Log.i(Constants.TAG, "-----sendBroadcastForAccountInvalidToken---");
+            }else {
+                Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+            }
+
         }
 
         @Override
@@ -567,7 +588,15 @@ public class AccountDeleteRunable implements Runnable {
                 mlatch.countDown();
                 Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
             }
-            Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+
+            if(statusCode == 401)
+            {
+                AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
+                Log.i(Constants.TAG, "-----sendBroadcastForAccountInvalidToken---");
+            }else {
+                Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+            }
+
         }
 
     }

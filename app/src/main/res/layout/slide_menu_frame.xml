@@ -22,7 +22,7 @@ android:padding="10dp">
             android:background="@mipmap/ic_account_mything" />
 
         <TextView
-            android:id="@+id/total_value_label"
+            android:id="@+id/total_user_namel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/account_login_icon"

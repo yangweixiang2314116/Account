@@ -189,7 +189,15 @@ public class AccountUserInfoActivity extends ActionBarActivity implements Adapte
 
         Log.i(Constants.TAG, "---onItemClick-----" + position);
 
-        m_ShowWheelPopup(position);
+        if(position == ACCOUNT_USER_INFO_CITY)
+        {
+            Log.i(Constants.TAG, "---onItemClick----ACCOUNT_USER_INFO_CITY-- do nothing");
+            Toast.makeText(mContext, R.string.account_user_city_cannot_change, Toast.LENGTH_SHORT).show();
+            //do nothing
+        }
+        else {
+            m_ShowWheelPopup(position);
+        }
     }
 
     public boolean m_ProcessUserInfoContent() {

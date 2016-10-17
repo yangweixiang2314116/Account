@@ -211,14 +211,26 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE)) {
-                    Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver");
+                    Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver---INTENT_NOTIFY_ACCOUNT_CHANGE");
                     //start load all account from DB
                     new PrepareTask().execute();
-                }
+                }else if(intent.getAction().equals(Constants.INTENT_NOTIFY_INVALID_TOKEN))
+                	{
+                    Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver---INTENT_NOTIFY_INVALID_TOKEN");
+                        if (AccountCommonUtil.IsLogin(mContext)) {
+
+                            AccountCommonUtil.SetLogin(mContext, false);
+                            TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
+                            userNameText.setText(getString(R.string.account_not_log_in));
+                            Toast.makeText(mContext, R.string.account_login_expire, Toast.LENGTH_SHORT).show();
+                        }
+				}
             }
         };
 
-        IntentFilter filter = new IntentFilter(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
+	 filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
         registerReceiver(mReceiver, filter);
 
         return;
@@ -585,7 +597,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         if (AccountCommonUtil.IsLogin(mContext)) {
             String userName = mSharedPreferences.getString("user_name", "");
             Log.i(Constants.TAG, "------login user name --------" + userName);
-            TextView userNameText = (TextView) findViewById(R.id.total_value_label);
+            TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
 
             String result = userName.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
             Log.i(Constants.TAG, "------after replace user name --------" + userName + "----result-" + result);
@@ -871,7 +883,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                                     .apply();
 
                             Log.i(Constants.TAG, "------login user name --------" + phone);
-                            TextView userNameText = (TextView) findViewById(R.id.total_value_label);
+                            TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
 
                             String repalceResult = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
                             userNameText.setText(repalceResult);
@@ -907,8 +919,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     AccountRestClient.SetClientToken(token);
 
                     AccountCommonUtil.SetToken(mContext, token);
-                    mSharedPreferences.edit().putBoolean("is_login", true)
-                            .apply();
+					AccountCommonUtil.SetLogin(mContext, true);
 
                     if (AccountCommonUtil.GetUserProfileId(mContext) == 0) {
                         m_ProcessUserInfoContent();
