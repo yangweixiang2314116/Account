@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
+import com.example.module.BaseActivity;
 import com.example.module.BrandHistory;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -42,7 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
 
-public class AccountAddBrandActivity extends ActionBarActivity {
+public class AccountAddBrandActivity extends BaseActivity {
 
 	private FlowLayout mHotFlowLayout;
 	

@@ -20,12 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.module.BaseActivity;
 import com.example.module.OnlineHistory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
-public class AccountAddOnlineShoppingActivity extends ActionBarActivity {
+public class AccountAddOnlineShoppingActivity extends BaseActivity {
 
     private FlowLayout mHotFlowLayout;
 

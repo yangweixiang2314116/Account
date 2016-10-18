@@ -29,6 +29,9 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.module.Account;
 import com.example.module.AccountRestClient;
+import com.example.module.AppManager;
+import com.example.module.CustomToast;
+import com.example.module.DoubleClickExitHelper;
 import com.example.module.ImageItem;
 import com.example.module.NetworkUtils;
 import com.example.module.NumberScrollTextView;
@@ -46,6 +49,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,6 +81,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private ListView m_SlideMenuList = null;
     private LayoutInflater mLayoutInflater = null;
 
+    private DoubleClickExitHelper mDoubleClickExit = null;
     private FloatingActionButton m_AddNewAccountButton = null;
     private AccountTotalDetailListAdapter m_DetailListAdapter = null;
     private Context mContext = null;
@@ -108,6 +113,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         setSupportActionBar(m_ToolBar);
 
         mContext = this;
+        mDoubleClickExit = new DoubleClickExitHelper(this);
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSharedPreferences = PreferenceManager
@@ -120,6 +126,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         SMSSDK.initSDK(this, Constants.ACCOUNT_LOGIN_SMS_APP_KEY, Constants.ACCOUNT_LOGIN_SMS_APP_SECRET);
 
         ActiveAndroid.setLoggingEnabled(false);
+
+        AppManager.getAppManager().addActivity(this);
 
         m_InitSwipeMenuList();
 
@@ -177,15 +185,15 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
                         switch (progress) {
                             case Constants.ACCOUNT_SYNC_ERROR:
-                                Toast.makeText(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
+                                CustomToast.showToast(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT);
                                 setRefreshActionButtonState(false);
                                 break;
                             case Constants.ACCOUNT_SYNC_START:
-                                Toast.makeText(AccountTotalActivity.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT).show();
+                                CustomToast.showToast(AccountTotalActivity.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT);
                                 setRefreshActionButtonState(true);
                                 break;
                             case Constants.ACCOUNT_SYNC_END:
-                                Toast.makeText(AccountTotalActivity.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT).show();
+                                CustomToast.showToast(AccountTotalActivity.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT);
                                 setRefreshActionButtonState(false);
                                 break;
                         }
@@ -411,7 +419,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         Intent intent = new Intent(this, AccountDetailActivity.class);
         MobclickAgent.onEvent(mContext, "browser_account");
         Account current = mDetailListDataSource.get(position);
-        Log.i(Constants.TAG, "------start onItemClick----current.getId()----"+current.getId());
+        Log.i(Constants.TAG, "------start onItemClick----current.getId()----" + current.getId());
         intent.putExtra("id", current.getId());
         this.startActivity(intent);
     }
@@ -1040,4 +1048,13 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         return true;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                return mDoubleClickExit.onKeyDown(keyCode, event);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

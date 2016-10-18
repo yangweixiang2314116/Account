@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
+import com.example.module.BaseActivity;
 import com.example.module.CategoryHistory;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
@@ -41,7 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
 
-public class AccountAddCategoryActivity extends ActionBarActivity {
+public class AccountAddCategoryActivity extends BaseActivity {
 
 	private FlowLayout mHotFlowLayout = null;
 	

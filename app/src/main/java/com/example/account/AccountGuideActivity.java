@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.module.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class AccountGuideActivity extends AppCompatActivity  {
+public class AccountGuideActivity extends BaseActivity {
 
     private ViewPager mViewpager = null;
     private me.relex.circleindicator.CircleIndicator mIndicator = null;

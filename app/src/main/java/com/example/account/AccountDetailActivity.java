@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.example.module.Account;
+import com.example.module.BaseActivity;
 import com.example.module.CategoryHistory;
 import com.example.module.ImageItem;
 import com.example.module.PoiItem;
@@ -35,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
-public class AccountDetailActivity extends ActionBarActivity  {
+public class AccountDetailActivity extends BaseActivity {
 
 
 	private Account m_CurrentAccount = null;

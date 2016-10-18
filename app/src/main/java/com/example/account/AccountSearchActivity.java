@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.module.Account;
+import com.example.module.BaseActivity;
 import com.example.module.SearchHistory;
 import com.umeng.analytics.MobclickAgent;
 
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/5/22.
  */
-public class AccountSearchActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+public class AccountSearchActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private Intent mIntent = null;
     private Context mContext = null;

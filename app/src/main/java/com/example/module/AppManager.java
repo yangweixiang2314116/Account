@@ -28,7 +28,6 @@ public class AppManager {
         activityStack.add(activity);
     }
 
-
     public Activity currentActivity() {
         Activity activity = activityStack.lastElement();
         return activity;
@@ -44,7 +43,7 @@ public class AppManager {
     public void finishActivity(Activity activity) {
         if (activity != null && !activity.isFinishing()) {
             activityStack.remove(activity);
-            activity.finish();
+            //activity.finish();
             activity = null;
         }
     }
@@ -86,8 +85,8 @@ public class AppManager {
     public void AppExit(Context context) {
         try {
             finishAllActivity();
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(0);
+            //android.os.Process.killProcess(android.os.Process.myPid());
+            //System.exit(0);
         } catch (Exception e) {
         }
     }

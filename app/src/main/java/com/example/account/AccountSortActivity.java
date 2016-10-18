@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.module.Account;
+import com.example.module.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/5/16.
  */
-public class AccountSortActivity  extends ActionBarActivity  implements AdapterView.OnItemClickListener{
+public class AccountSortActivity  extends BaseActivity implements AdapterView.OnItemClickListener{
 
     private Intent mIntent = null;
     private Context mContext = null;

@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
+
+import com.example.module.BaseActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 import org.json.JSONException;
@@ -23,7 +25,7 @@ import org.json.JSONObject;
 
 
 
-public class AccountFeedbackActivity extends ActionBarActivity {
+public class AccountFeedbackActivity extends BaseActivity {
     private EditText mFeedback = null;
     private Context mContext ;
     private Button mSubmitButton = null;

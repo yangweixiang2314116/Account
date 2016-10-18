@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.module.BaseActivity;
 import com.example.module.ImageItem;
 import com.umeng.analytics.MobclickAgent;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/5/16.
  */
-public class AccountAllImageActivity  extends ActionBarActivity  implements AdapterView.OnItemClickListener{
+public class AccountAllImageActivity  extends BaseActivity implements AdapterView.OnItemClickListener{
 
     private Context mContext = null;
     private GridView m_AllImageGridView = null;

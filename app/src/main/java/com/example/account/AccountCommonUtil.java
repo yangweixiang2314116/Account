@@ -2,7 +2,9 @@ package com.example.account;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -272,6 +274,19 @@ public class AccountCommonUtil {
 	public static void sendBroadcastForAccountInvalidToken(Context context) {
         Intent intent = new Intent(Constants.INTENT_NOTIFY_INVALID_TOKEN);
         context.sendBroadcast(intent);
+    }
+
+    public static boolean isActivityRunning(String packagename, Context context){
+        ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfos = am.getRunningTasks(1);
+        String cmpNameTemp = null;
+        if(null != runningTaskInfos){
+            cmpNameTemp = runningTaskInfos.get(0).topActivity.toString();
+        }
+        if(null != cmpNameTemp){
+            return cmpNameTemp.contains(packagename);
+        }
+        return false;
     }
 
 

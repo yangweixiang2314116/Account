@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.example.module.Account;
+import com.example.module.BaseActivity;
 import com.example.module.BrandHistory;
 import com.example.module.CategoryHistory;
 import com.example.module.OnlineHistory;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class AccountLoadActivity extends Activity {
+public class AccountLoadActivity extends BaseActivity {
 
     private Runnable runnable = new Runnable( ) {
 

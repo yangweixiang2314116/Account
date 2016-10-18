@@ -224,12 +224,13 @@ import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.example.module.BaseActivity;
 import com.example.module.NetworkUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
-public class AccountAddPositionActivity extends AppCompatActivity implements BDLocationListener, OnGetGeoCoderResultListener, BaiduMap.OnMapStatusChangeListener, TextWatcher, OnScrollListener  {
+public class AccountAddPositionActivity extends BaseActivity implements BDLocationListener, OnGetGeoCoderResultListener, BaiduMap.OnMapStatusChangeListener, TextWatcher, OnScrollListener  {
 
 	private String mCurSearchContent = "";
 	private MapView mMapView;

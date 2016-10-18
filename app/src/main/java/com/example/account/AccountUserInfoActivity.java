@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.module.BaseActivity;
 import com.example.module.NetworkUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -42,7 +43,7 @@ import android.widget.Toast;
 
 import cz.msebera.android.httpclient.Header;
 
-public class AccountUserInfoActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+public class AccountUserInfoActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     private Context mContext = null;
     private Button mSubmitButton = null;
     private ListView mInfoList = null;

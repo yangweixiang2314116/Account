@@ -7,6 +7,7 @@ import java.util.Calendar;
 import com.activeandroid.ActiveAndroid;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.example.module.Account;
+import com.example.module.BaseActivity;
 import com.example.module.ImageItem;
 import com.example.module.MoreInfoItem;
 import com.example.module.PoiItem;
@@ -45,7 +46,7 @@ import android.widget.TextView;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class AccountStartActivity extends ActionBarActivity  {
+public class AccountStartActivity extends BaseActivity {
 
     private EditText m_InputEditText = null;
     private LinearLayout m_MoreInfoList = null;

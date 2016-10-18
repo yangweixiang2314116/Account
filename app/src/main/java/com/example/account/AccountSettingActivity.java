@@ -27,12 +27,13 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.module.AccountRestClient;
+import com.example.module.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by Administrator on 2016/6/21.
  */
-public class AccountSettingActivity  extends ActionBarActivity implements
+public class AccountSettingActivity  extends BaseActivity implements
         OnClickListener, OnCheckedChangeListener{
 
     private SharedPreferences mSharedPreferences;
