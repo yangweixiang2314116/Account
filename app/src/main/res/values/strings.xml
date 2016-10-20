@@ -128,6 +128,7 @@
     <string name="can_not_open_market">无法打开市场</string>
     <!--setting -->
 
+    <string name="down_state">正在下载：%s</string>
     <string name="tip_double_click_exit">再按一次返回键退出程序</string>
     <string name="accout_empty_prepare_start">这里空空如也，开始记账吧</string>
     <string name="accout_empty_image_start">这里空空如也，开始在记账中添加图片吧</string>

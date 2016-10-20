@@ -1,13 +1,21 @@
 package com.example.account;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.app.ActivityManager;
+import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -289,6 +297,31 @@ public class AccountCommonUtil {
         return false;
     }
 
+    //版本名
+    public static String getVersionName(Context context) {
+        return getPackageInfo(context).versionName;
+    }
+
+    //版本号
+    public static int getVersionCode(Context context) {
+        return getPackageInfo(context).versionCode;
+    }
+
+    private static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
+
+        try {
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(),
+                    PackageManager.GET_CONFIGURATIONS);
+
+            return pi;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pi;
+    }
 
     public static boolean CanSyncNow(Context context)
     {
@@ -309,5 +342,47 @@ public class AccountCommonUtil {
         } else {
             return  false;
         }
+    }
+
+
+    public static void openDownLoadService(Context context, String downurl,
+                                           String tilte) {
+        /*
+        final ICallbackResult callback = new ICallbackResult() {
+
+            @Override
+            public void OnBackResult(Object s) {}
+        };
+        */
+
+        ServiceConnection conn = new ServiceConnection() {
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {}
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                AccountDownloadService.DownloadBinder binder = (AccountDownloadService.DownloadBinder) service;
+                //binder.addCallback(callback);
+                binder.start();
+
+            }
+        };
+        Intent intent = new Intent(context, AccountDownloadService.class);
+        intent.putExtra(AccountDownloadService.BUNDLE_KEY_DOWNLOAD_URL, downurl);
+        intent.putExtra(AccountDownloadService.BUNDLE_KEY_TITLE, tilte);
+        context.startService(intent);
+        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+    }
+
+    public static void installAPK(Context context, File file) {
+        if (file == null || !file.exists())
+            return;
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        context.startActivity(intent);
     }
 }
