@@ -5,9 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
+import com.example.account.AccountApiConnector;
 import com.example.account.AccountCommonUtil;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.example.account.Constants;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import org.json.JSONObject;
+
 import cz.msebera.android.httpclient.Header;
 
 public class UpdateManager {
@@ -20,11 +25,14 @@ public class UpdateManager {
 
     private ProgressDialog _waitDialog;
 
-    private AsyncHttpResponseHandler mCheckUpdateHandle = new AsyncHttpResponseHandler() {
+    private JsonHttpResponseHandler mCheckUpdateHandle = new JsonHttpResponseHandler() {
 
         @Override
-        public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-                              Throwable arg3) {
+        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+
+            Log.i(Constants.TAG, "---getVersionInfo--onFailure--statusCode---" + statusCode);
+            Log.i(Constants.TAG, "---getVersionInfo--onFailure--responseString---" + response);
+
             hideCheckDialog();
             if (isShow) {
                 showFaileDialog();
@@ -32,11 +40,12 @@ public class UpdateManager {
         }
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            Log.i(Constants.TAG, "---getVersionInfo--onSuccess--statusCode---" + statusCode);
+            Log.i(Constants.TAG, "---getVersionInfo--onSuccess--responseString---" + response);
             hideCheckDialog();
-            //mUpdate = XmlUtils.toBean(Update.class,
-            //        new ByteArrayInputStream(arg2));
 
+            mUpdate = Update.build(response);
             onFinishCheck();
         }
     };
@@ -62,8 +71,8 @@ public class UpdateManager {
         if (isShow) {
             showCheckDialog();
         }
-        //TODO
-        //OSChinaApi.checkUpdate(mCheckUpdateHandle);
+
+        AccountApiConnector.instance(mContext).getVersionInfo(mCheckUpdateHandle);
     }
 
     private void onFinishCheck() {
@@ -93,13 +102,14 @@ public class UpdateManager {
         if (mUpdate == null) {
             return;
         }
-        AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, mUpdate.getUpdateLog(), new DialogInterface.OnClickListener() {
+        AlertDialog.Builder dialog = DialogHelp.getMessageDialog(mContext, mUpdate.getUpdateLog(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 AccountCommonUtil.openDownLoadService(mContext, mUpdate.getDownloadUrl(), mUpdate.getVersionName());
             }
         });
         dialog.setTitle("发现新版本");
+        dialog.setCancelable(false);
         dialog.show();
     }
 

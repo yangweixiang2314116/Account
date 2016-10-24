@@ -113,7 +113,7 @@ public class AccountRestClient {
     	//Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
 		Log.i(Constants.TAG, "--get url--" + url);
     	//client.get(getAbsoluteUrl(url), params, responseHandler);
-		client.get(url, params, responseHandler);
+		client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
 	public static void get(String url, RequestParams params, TextHttpResponseHandler responseHandler) {

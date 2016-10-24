@@ -35,6 +35,7 @@ import com.example.module.DoubleClickExitHelper;
 import com.example.module.ImageItem;
 import com.example.module.NetworkUtils;
 import com.example.module.NumberScrollTextView;
+import com.example.module.UpdateManager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
@@ -149,6 +150,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         m_InitCurrentyCity();
 
         new PrepareTask().execute();
+
+        checkUpdate();
     }
 
     private void m_InitActionBar() {
@@ -1057,4 +1060,15 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         return super.onKeyDown(keyCode, event);
     }
 
+    private void checkUpdate() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                new UpdateManager(AccountTotalActivity.this, false).checkUpdate();
+            }
+        }, 2000);
+    }
 }

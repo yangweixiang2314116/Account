@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.module.StringUtils;
@@ -108,6 +109,10 @@ public class AccountDownloadService extends Service {
         downloadUrl = intent.getStringExtra(BUNDLE_KEY_DOWNLOAD_URL);
         saveFileName = saveFileName + getSaveFileName(downloadUrl);
         mTitle = String.format(mTitle, intent.getStringExtra(BUNDLE_KEY_TITLE));
+
+        Log.i(Constants.TAG, "---AccountDownloadService--downloadUrl---" + downloadUrl);
+        Log.i(Constants.TAG, "---AccountDownloadService--saveFileName---" + saveFileName);
+        Log.i(Constants.TAG, "---AccountDownloadService--onBind---" + mTitle);
         return binder;
     }
 

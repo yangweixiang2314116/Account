@@ -68,11 +68,20 @@ public class AccountApiConnector {
 
 	public void getDetailList(JsonHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all account --");
-		
+
 		String url = "jz/details/";
 		AccountRestClient.instance(mcontext).getWithToken(url, null, handler);
-		
+
 	}
+
+	public void getVersionInfo(JsonHttpResponseHandler handler) {
+		Log.i(Constants.TAG, "-start to -get getVersionInfo --");
+
+		String url = "app-versions/latest/";
+		AccountRestClient.instance(mcontext).get(url, null, handler);
+
+	}
+
 	
 	public void getHotTagList(double value, JsonHttpResponseHandler handler) {
 		Log.i(Constants.TAG, "-start to -get all hot tag --");

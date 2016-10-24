@@ -347,6 +347,8 @@ public class AccountCommonUtil {
 
     public static void openDownLoadService(Context context, String downurl,
                                            String tilte) {
+        Log.i(Constants.TAG, "---openDownLoadService--downurl---" + downurl);
+        Log.i(Constants.TAG, "---openDownLoadService--tilte---" + tilte);
         /*
         final ICallbackResult callback = new ICallbackResult() {
 
@@ -376,8 +378,13 @@ public class AccountCommonUtil {
     }
 
     public static void installAPK(Context context, File file) {
-        if (file == null || !file.exists())
+        if (file == null || !file.exists()) {
+            Log.i(Constants.TAG, "---installAPK file == null or file not exist---");
             return;
+        }
+
+        Log.i(Constants.TAG, "--start to -installAPK file !!!---");
+
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
