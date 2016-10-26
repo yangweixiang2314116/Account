@@ -284,6 +284,12 @@ public class AccountCommonUtil {
         context.sendBroadcast(intent);
     }
 
+    public static void sendBroadcastForAccountStartSync(Context context) {
+        Intent intent = new Intent(Constants.INTENT_NOTIFY_START_SYNC);
+        context.sendBroadcast(intent);
+    }
+
+
     public static boolean isActivityRunning(String packagename, Context context){
         ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfos = am.getRunningTasks(1);

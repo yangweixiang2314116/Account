@@ -47,6 +47,7 @@ public class UpdateManager {
 
             mUpdate = Update.build(response);
             onFinishCheck();
+
         }
     };
 
@@ -61,6 +62,10 @@ public class UpdateManager {
         }
         boolean haveNew = false;
         int curVersionCode = AccountCommonUtil.getVersionCode(mContext);
+
+        Log.i(Constants.TAG, "---haveNew--curVersionCode---" + curVersionCode);
+        Log.i(Constants.TAG, "---haveNew--version on server---" +  mUpdate.getVersionCode());
+
         if (curVersionCode < mUpdate.getVersionCode()) {
             haveNew = true;
         }
@@ -82,6 +87,7 @@ public class UpdateManager {
             if (isShow) {
                 showLatestDialog();
             }
+            AccountCommonUtil.sendBroadcastForAccountStartSync(mContext);
         }
     }
 

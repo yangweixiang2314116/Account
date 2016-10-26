@@ -236,12 +236,22 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                             Toast.makeText(mContext, R.string.account_login_expire, Toast.LENGTH_SHORT).show();
                         }
 				}
+                else if(intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)){
+                    boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
+                    Log.i(Constants.TAG, "------m_InitReceiver----m_bConnected----"+m_bConnected+ "--bCanSync---"+bCanSync);
+
+                    if(m_bConnected && bCanSync)
+                    {
+                        mBinder.startSync();
+                    }
+                }
             }
         };
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
-	 filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
+	     filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
+        filter.addAction(Constants.INTENT_NOTIFY_START_SYNC);
         registerReceiver(mReceiver, filter);
 
         return;
@@ -305,13 +315,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         m_InitActionBar();
 
-        boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
-        Log.i(Constants.TAG, "------onCreateOptionsMenu----m_bConnected----"+m_bConnected+ "--bCanSync---"+bCanSync);
-
-        if(m_bConnected && bCanSync)
-        {
-                mBinder.startSync();
-        }
         return true;
     }
 
@@ -1062,6 +1065,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
     private void checkUpdate() {
 
+        if (NetworkUtils.isNetworkAvailable(mContext)) {
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
 
@@ -1070,5 +1075,5 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 new UpdateManager(AccountTotalActivity.this, false).checkUpdate();
             }
         }, 2000);
-    }
+    }}
 }
