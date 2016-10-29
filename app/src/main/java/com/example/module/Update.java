@@ -77,7 +77,7 @@ public class Update {
             int versionCode = response.isNull("version_code") ? 0 : response.getInt("version_code");
             String versionName = response.isNull("version_name") ? "" : response.getString("version_name");
             String downloadUrl = response.isNull("download_url") ? "" : response.getString("download_url");
-            String updateLog = response.isNull("updateLog") ? "" : response.getString("updateLog");
+            String updateLog = response.isNull("update_log") ? "" : response.getString("update_log");
 
             Log.i(Constants.TAG, "--Update--build-versionCode-" + versionCode);
             Log.i(Constants.TAG, "--Update--build-versionName-" + versionName);

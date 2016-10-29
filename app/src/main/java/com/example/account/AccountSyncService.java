@@ -69,6 +69,7 @@ public class AccountSyncService extends Service {
         return super.onUnbind(intent);
     }
 
+
     public class AccountSyncServiceBinder extends Binder {
         public void startSync() {
             Log.i(Constants.TAG, "--AccountSyncServiceBinder----startSync--");
@@ -160,8 +161,8 @@ public class AccountSyncService extends Service {
     private boolean m_ProcessSyncUpItems() throws InterruptedException {
 
         int nTotalCount = mAccountSyncUpList.size();
-        final CountDownLatch latch = new CountDownLatch(nTotalCount);
-        Log.i(Constants.TAG, "------CountDownLatch -nTotalCount-" + latch.getCount());
+       // final CountDownLatch latch = new CountDownLatch(nTotalCount);
+        //Log.i(Constants.TAG, "------CountDownLatch -nTotalCount-" + latch.getCount());
 
         for (int index = 0; index < mAccountSyncUpList.size(); index++) {
             m_CurrentItem = mAccountSyncUpList.get(index);
@@ -169,12 +170,12 @@ public class AccountSyncService extends Service {
             if (m_CurrentItem.isNeedSyncCreate()) {
                 Log.i(Constants.TAG, "------try to---Create on server -id----" + m_CurrentItem.getId());
 
-                mHandler.post(new AccountCreateRunable(m_CurrentItem, latch));
+                mHandler.post(new AccountCreateRunable(m_CurrentItem));
 
             } else if (m_CurrentItem.isNeedSyncUp()) {
                 Log.i(Constants.TAG, "------try to---Sync up on server -id----" + m_CurrentItem.getId());
 
-                mHandler.post(new AccountUpdateRunable(m_CurrentItem, latch));
+                mHandler.post(new AccountUpdateRunable(m_CurrentItem));
 
             } else if (m_CurrentItem.isNeedSyncDelete()) {
                 Log.i(Constants.TAG, "------try to---Delete on server -id----" + m_CurrentItem.getId() + "--m_CurrentItem.AccountId--" + m_CurrentItem.AccountId);
@@ -182,20 +183,13 @@ public class AccountSyncService extends Service {
                 if (false == m_CurrentItem.isSyncOnServer())//local item, not exist on server , delete directly
                 {
                     Account.deleteOne(m_CurrentItem);
-                    if (latch != null) {
-                        latch.countDown();
-                        Log.i(Constants.TAG, "-----latch count ---" + latch.getCount());
-                    }
                 } else {
-                    mHandler.post(new AccountDeleteRunable(m_CurrentItem, latch));
+                    mHandler.post(new AccountDeleteRunable(m_CurrentItem));
                 }
             } else {
                 Log.i(Constants.TAG, "------do nothing----" + m_CurrentItem.getId());
-                latch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + latch.getCount());
             }
         }
-        latch.await();
 
         Log.i(Constants.TAG, "-----await finish---");
 
@@ -392,10 +386,11 @@ private class ProcessSyncDownTask extends AsyncTask<Void, Void, Boolean> {
             Log.i(Constants.TAG, "------check items in  AccountList exist on server or not---" + AccountList.size());
             for (int index = 0; index < AccountList.size(); index++) {
                 AccountAPIInfo searchItem = new AccountAPIInfo(AccountList.get(index));
-                if (m_detailList.contains(searchItem) == false) {
+                Account localItem = AccountList.get(index);
+                if (m_detailList.contains(searchItem) == false && localItem.isNeedSyncCreate() == false) {
                     Log.i(Constants.TAG, "------this item had been delete by other device - AccountId ---" + searchItem.AccountId);
 
-                    Account.deleteOne(AccountList.get(index));
+                    Account.deleteOne(localItem);
                     nSyncDownChangedItem++;
                 }
 
@@ -422,25 +417,22 @@ private class ProcessSyncDownTask extends AsyncTask<Void, Void, Boolean> {
 
 public class AccountCreateRunable implements Runnable {
     private Account mItem = null;
-    private CountDownLatch mlatch = null;
 
-    public AccountCreateRunable(Account item, CountDownLatch latch) {
+    public AccountCreateRunable(Account item) {
         this.mItem = item;
-        this.mlatch = latch;
     }
 
     public void run() {
         Log.i(Constants.TAG, "----AccountCreateRunable ---run----" + mItem.getId());
 
-        AccountApiConnector.instance(AccountSyncService.this).postAccountItem(mItem, new AccountCreateJsonHttpResponseHandler(mlatch));
+        AccountApiConnector.instance(AccountSyncService.this).postAccountItem(mItem, new AccountCreateJsonHttpResponseHandler());
     }
 
     private class AccountCreateJsonHttpResponseHandler extends JsonHttpResponseHandler {
 
-        private CountDownLatch mlatch = null;
 
-        public AccountCreateJsonHttpResponseHandler(CountDownLatch latch) {
-            mlatch = latch;
+        public AccountCreateJsonHttpResponseHandler() {
+
         }
 
         @Override
@@ -450,10 +442,6 @@ public class AccountCreateRunable implements Runnable {
 
             new ProcessSyncUpTask(response, Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD).execute();
 
-            if (mlatch != null) {
-                mlatch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
-            }
         }
 
         @Override
@@ -461,10 +449,7 @@ public class AccountCreateRunable implements Runnable {
             super.onFailure(statusCode, headers, responseString, throwable);
             Log.i(Constants.TAG, "---postAccountItem--onFailure--statusCode---" + statusCode);
             Log.i(Constants.TAG, "---postAccountItem--onFailure--responseString---" + responseString);
-            if (mlatch != null) {
-                mlatch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
-            }
+
             if(statusCode == 401)
             {
                 AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
@@ -485,25 +470,21 @@ public class AccountCreateRunable implements Runnable {
 
 public class AccountUpdateRunable implements Runnable {
     private Account mItem = null;
-    private CountDownLatch mlatch = null;
 
-    public AccountUpdateRunable(Account item, CountDownLatch latch) {
+    public AccountUpdateRunable(Account item) {
         this.mItem = item;
-        this.mlatch = latch;
     }
 
     public void run() {
         Log.i(Constants.TAG, "----AccountUpdateRunable ---run----" + mItem.getId());
 
-        AccountApiConnector.instance(AccountSyncService.this).updateAccountItem(mItem, new AccountUpdateJsonHttpResponseHandler(mlatch));
+        AccountApiConnector.instance(AccountSyncService.this).updateAccountItem(mItem, new AccountUpdateJsonHttpResponseHandler());
     }
 
     private class AccountUpdateJsonHttpResponseHandler extends JsonHttpResponseHandler {
 
-        private CountDownLatch mlatch = null;
+        public AccountUpdateJsonHttpResponseHandler() {
 
-        public AccountUpdateJsonHttpResponseHandler(CountDownLatch latch) {
-            mlatch = latch;
         }
 
         @Override
@@ -511,10 +492,6 @@ public class AccountUpdateRunable implements Runnable {
             // If the response is JSONObject instead of expected JSONArray
             Log.i(Constants.TAG, "---updateAccountItem--onSuccess--response---" + response);
             new ProcessSyncUpTask(response, Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP).execute();
-            if (mlatch != null) {
-                mlatch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
-            }
         }
 
         @Override
@@ -523,10 +500,6 @@ public class AccountUpdateRunable implements Runnable {
             Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---" + statusCode);
             Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---" + responseString);
 
-            if (mlatch != null) {
-                mlatch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
-            }
             if(statusCode == 401)
             {
                 AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
@@ -546,24 +519,21 @@ public class AccountUpdateRunable implements Runnable {
 
 public class AccountDeleteRunable implements Runnable {
     private Account mItem = null;
-    private CountDownLatch mlatch = null;
 
-    public AccountDeleteRunable(Account item, CountDownLatch latch) {
+    public AccountDeleteRunable(Account item) {
         this.mItem = item;
-        this.mlatch = latch;
     }
 
     public void run() {
         Log.i(Constants.TAG, "----AccountDeleteRunable ---run----" + mItem.getId());
 
-        AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(mItem, new AccountDeleteJsonHttpResponseHandler(mlatch));
+        AccountApiConnector.instance(AccountSyncService.this).deleteAccountItem(mItem, new AccountDeleteJsonHttpResponseHandler());
     }
 
     private class AccountDeleteJsonHttpResponseHandler extends JsonHttpResponseHandler {
-        private CountDownLatch mlatch = null;
 
-        public AccountDeleteJsonHttpResponseHandler(CountDownLatch latch) {
-            mlatch = latch;
+        public AccountDeleteJsonHttpResponseHandler() {
+
         }
 
         @Override
@@ -571,11 +541,6 @@ public class AccountDeleteRunable implements Runnable {
             // If the response is JSONObject instead of expected JSONArray
             Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---" + response);
             new ProcessSyncUpTask(response, Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_DELETE).execute();
-
-            if (mlatch != null) {
-                mlatch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
-            }
         }
 
         @Override
@@ -583,11 +548,6 @@ public class AccountDeleteRunable implements Runnable {
             super.onFailure(statusCode, headers, responseString, throwable);
             Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---" + statusCode);
             Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + responseString);
-
-            if (mlatch != null) {
-                mlatch.countDown();
-                Log.i(Constants.TAG, "-----latch count ---" + mlatch.getCount());
-            }
 
             if(statusCode == 401)
             {

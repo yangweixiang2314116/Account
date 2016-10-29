@@ -202,7 +202,7 @@ public class AccountDetailActivity extends BaseActivity {
 					builder.setView(messageContent);
 
 					TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-					content.setText(getString(R.string.confirm_to_delete));
+					content.setText(getString(R.string.confirm_to_delete_image));
 					builder.setPositiveButton(R.string.give_up_sure,
 							new DialogInterface.OnClickListener() {
 

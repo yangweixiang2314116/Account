@@ -304,6 +304,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         if (mLocClient != null && mLocClient.isStarted()) {
             mLocClient.stop();
         }
+
+        AccountRestClient.instance(mContext).stop();
     }
 
     @Override

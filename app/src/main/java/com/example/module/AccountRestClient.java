@@ -49,6 +49,12 @@ public class AccountRestClient {
 		return mInstance;
 	}
 
+	public static void stop()
+	{
+		Log.i(Constants.TAG, "-AccountRestClient --cancelAllRequests------");
+		client.cancelAllRequests(true);
+	}
+
 	private void Init(Context context)
 	{
 		Log.i(Constants.TAG, "-AccountRestClient -- Init--start-");
