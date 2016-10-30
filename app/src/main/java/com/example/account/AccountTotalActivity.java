@@ -99,6 +99,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private BroadcastReceiver mReceiver = null;
     private boolean m_bConnected = false;
     private boolean m_bFirstRefreshList = true;
+    private boolean m_bIsServerNormal = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
     /**
      * 定位端
@@ -237,6 +238,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         }
 				}
                 else if(intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)){
+                    m_bIsServerNormal = true;
+                    Log.i(Constants.TAG, "------m_InitReceiver--server work status--m_bIsServerNormal----"+m_bIsServerNormal);
                     boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
                     Log.i(Constants.TAG, "------m_InitReceiver----m_bConnected----"+m_bConnected+ "--bCanSync---"+bCanSync);
 
@@ -995,12 +998,20 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 if (AccountCommonUtil.IsOnlyWifi(mContext)) {
                     if (NetworkUtils.isWifiConnected(mContext)) {
-                        mBinder.startSync();
+                        if(m_bIsServerNormal) {
+                            mBinder.startSync();
+                        }else{
+                            Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    mBinder.startSync();
+                    if(m_bIsServerNormal) {
+                        mBinder.startSync();
+                    }else{
+                        Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 Toast.makeText(mContext, R.string.network_disconnect, Toast.LENGTH_SHORT).show();

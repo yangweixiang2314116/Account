@@ -30,6 +30,7 @@
 
     <string name="confirm_to_delete">确定要删除这条记录吗？</string>
     <string name="network_disconnect">网络不可用, 请连接网络再试。</string>
+    <string name="server_abnormal">服务器异常，我们正在抢修</string>
     <string name="wifi_network_disconnect">WIFI网络不可用, 请连接WIFI再试或者在setting中改变设置。</string>
     <string name="give_up_edit">退出此次编辑？</string>
     <string name="give_up_sure">确定</string>
