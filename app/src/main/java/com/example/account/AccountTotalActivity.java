@@ -379,7 +379,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         m_DetailListAdapter = new AccountTotalDetailListAdapter(this, mDetailListDataSource);
         m_TotalAllAccountList.setAdapter(m_DetailListAdapter);
-
         m_TotalAllAccountList.setOnItemClickListener(AccountTotalActivity.this);
         m_TotalAllAccountList.setOnItemLongClickListener(AccountTotalActivity.this);
 

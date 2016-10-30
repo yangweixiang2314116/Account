@@ -45,7 +45,7 @@ public class AccountAllImageActivity  extends BaseActivity implements AdapterVie
 
         mContext = this;
         new PrepareTask().execute();
-        MobclickAgent.onEvent(mContext, "enter_sort");//TODO
+        MobclickAgent.onEvent(mContext, "enter_allimage");
     }
 
     @Override

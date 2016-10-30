@@ -349,6 +349,8 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 		poisLL.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				MobclickAgent.onEvent(mContext, "click_offline_position_locationlist");
 				PoiAdapter adapter = (PoiAdapter) poisLL.getAdapter();
 					if(adapter != null)
 					{
@@ -388,6 +390,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+				MobclickAgent.onEvent(mContext, "click_offline_position_searchlist");
 				if(mSearchAdapter != null)
 				{
 					//hide soft input
@@ -479,7 +482,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 		//开始定位
 		mLocClient.start();
 
-		MobclickAgent.onEvent(mContext, "enter_position");
+		MobclickAgent.onEvent(mContext, "enter_offline_position");
 	}
 
 	/**

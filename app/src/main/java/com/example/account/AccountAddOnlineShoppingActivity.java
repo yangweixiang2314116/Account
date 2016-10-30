@@ -122,7 +122,7 @@ public class AccountAddOnlineShoppingActivity extends BaseActivity {
         });
 
         init();
-        MobclickAgent.onEvent(mContext, "enter_online"); //TODO
+        MobclickAgent.onEvent(mContext, "enter_online_position");
     }
 
     public void init() {

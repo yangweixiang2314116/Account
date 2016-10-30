@@ -80,8 +80,7 @@ public class AccountSettingActivity extends BaseActivity implements
             }
         });
 
-        //TODO delete
-        //mRecommand.setVisibility(View.GONE);
+        mRecommand.setVisibility(View.GONE);
 
         mSuggestion.setOnClickListener(this);
         // mFocusUs.setOnClickListener(this);

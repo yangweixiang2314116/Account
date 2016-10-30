@@ -29,10 +29,61 @@ public class AccountSyncService extends Service {
 
     private AccountTotalActivity.OnProgressListener onProgressListener;
 
-    private Handler syncHandler = new Handler();
-
     private int mSyncStatus = Constants.ACCOUNT_SYNC_END;
 
+    private static final int SYNC_UP_TOTAL = 1;
+    private static final int SYNC_UP_FINISH_ITEM = 2;
+    private static final int SYNC_DOWN_FINISH = 3;
+
+    private int mSyncUpTotalCount = 0;
+    private boolean mbSyncDownFinish = true;
+    private Handler syncHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case SYNC_UP_TOTAL:
+                {
+                    Log.i(Constants.TAG, "------start to sync up-SYNC_UP_TOTAL --" + msg.arg1);
+                    mSyncUpTotalCount = msg.arg1;
+                    if(mSyncUpTotalCount == 0)
+                    {
+                        new SyncTask(false, true, syncHandler).execute();
+                    }
+                }
+                    break;
+                case SYNC_UP_FINISH_ITEM:
+                {
+                    mSyncUpTotalCount--;
+                    Log.i(Constants.TAG, "------start to sync up-SYNC_UP_FINISH_ITEM --" + mSyncUpTotalCount);
+
+                    if(mSyncUpTotalCount == 0)
+                    {
+                        new SyncTask(false, true, syncHandler).execute();
+                    }
+                }
+                    break;
+                case SYNC_DOWN_FINISH:
+                {
+                    Log.i(Constants.TAG, "------start to sync up-SYNC_DOWN_FINISH --" );
+                    mbSyncDownFinish = true;
+                    m_UpdateSyncStatus();
+                }
+                break;
+                default:
+                    break;
+            }
+        };
+    };
+
+    private void m_UpdateSyncStatus()
+    {
+        Log.i(Constants.TAG, "------m_UpdateSyncStatus  -mSyncUpTotalCount --" + mSyncUpTotalCount + "---mbSyncDownFinish-- "+mbSyncDownFinish);
+        if(mSyncUpTotalCount == 0 && mbSyncDownFinish)
+        {
+            Log.i(Constants.TAG, "------m_UpdateSyncStatus  -from --" + mSyncStatus + "---to--end ");
+            mSyncStatus = Constants.ACCOUNT_SYNC_END;
+            onProgressListener.onProgress(Constants.ACCOUNT_SYNC_END);
+        }
+    }
 
     public void setOnProgressListener(AccountTotalActivity.OnProgressListener onProgressListener) {
         this.onProgressListener = onProgressListener;
@@ -83,7 +134,7 @@ public class AccountSyncService extends Service {
                 onProgressListener.onProgress(Constants.ACCOUNT_SYNC_START);
                 mSyncStatus = Constants.ACCOUNT_SYNC_START;
             }
-            new SyncTask(true, true, syncHandler).execute();
+            new SyncTask(true, false, syncHandler).execute();
         }
 
         public AccountSyncService getService() {
@@ -125,12 +176,12 @@ public class AccountSyncService extends Service {
                     syncUp();
                 if (mSyncDown)
                     syncDown();
-                publishProgress(new Integer[]{Constants.ACCOUNT_SYNC_SUCCESS});
+                //publishProgress(new Integer[]{Constants.ACCOUNT_SYNC_SUCCESS});
             } catch (Exception e) {
                 publishProgress(new Integer[]{Constants.ACCOUNT_SYNC_ERROR});
                 return null;
             } finally {
-                publishProgress(new Integer[]{Constants.ACCOUNT_SYNC_END});
+                //publishProgress(new Integer[]{Constants.ACCOUNT_SYNC_END});
             }
             return null;
         }
@@ -163,6 +214,10 @@ public class AccountSyncService extends Service {
         int nTotalCount = mAccountSyncUpList.size();
        // final CountDownLatch latch = new CountDownLatch(nTotalCount);
         //Log.i(Constants.TAG, "------CountDownLatch -nTotalCount-" + latch.getCount());
+        Message upTotal = new Message();
+        upTotal.what = SYNC_UP_TOTAL;
+        upTotal.arg1 = nTotalCount;
+        mHandler.sendMessage(upTotal);
 
         for (int index = 0; index < mAccountSyncUpList.size(); index++) {
             m_CurrentItem = mAccountSyncUpList.get(index);
@@ -198,7 +253,6 @@ public class AccountSyncService extends Service {
 
     private void syncDown() {
 
-        final CountDownLatch syncDownLatch = new CountDownLatch(1);
         mHandler.post(new Runnable() {
 
             @Override
@@ -213,23 +267,13 @@ public class AccountSyncService extends Service {
                         Log.i(Constants.TAG, "---getDetailList--onSuccess--response---" + response);
                         new ProcessSyncDownTask(response).execute();
 
-                        if (syncDownLatch != null) {
-                            syncDownLatch.countDown();
-                            Log.i(Constants.TAG, "-----syncDownLatch count ---" + syncDownLatch.getCount());
-                        }
-
                     }
 
                     @Override
 
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
                         super.onFailure(statusCode, headers, throwable, response);
-                        Log.i(Constants.TAG, "---getDetailList--onFailure--responseString---" + response + "--statusCode--"+statusCode);
-
-                        if (syncDownLatch != null) {
-                            syncDownLatch.countDown();
-                            Log.i(Constants.TAG, "-----syncDownLatch count ---" + syncDownLatch.getCount());
-                        }
+                        Log.i(Constants.TAG, "---getDetailList--onFailure--responseString---" + response + "--statusCode--" + statusCode);
 
                         if(statusCode == 401)
                         {
@@ -240,17 +284,16 @@ public class AccountSyncService extends Service {
                         }
                     }
 
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_DOWN_FINISH---");
+                        syncHandler.sendEmptyMessage(SYNC_DOWN_FINISH);
+                    }
+
                 });
             }
         });
-
-
-        try {
-            syncDownLatch.await();
-        } catch (InterruptedException e) {
-            Log.i(Constants.TAG, "---syncDownLatch--Exception---" + e);
-            e.printStackTrace();
-        }
 
     }
 
@@ -417,6 +460,7 @@ private class ProcessSyncDownTask extends AsyncTask<Void, Void, Boolean> {
 
 public class AccountCreateRunable implements Runnable {
     private Account mItem = null;
+    private Handler mHandler = null;
 
     public AccountCreateRunable(Account item) {
         this.mItem = item;
@@ -441,7 +485,6 @@ public class AccountCreateRunable implements Runnable {
             Log.i(Constants.TAG, "---postAccountItem--onSuccess--response---" + response + "--statusCode--" + statusCode);
 
             new ProcessSyncUpTask(response, Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_ADD).execute();
-
         }
 
         @Override
@@ -463,6 +506,8 @@ public class AccountCreateRunable implements Runnable {
         @Override
         public void onFinish() {
             super.onFinish();
+            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
 
     }
@@ -513,6 +558,8 @@ public class AccountUpdateRunable implements Runnable {
         @Override
         public void onFinish() {
             super.onFinish();
+            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
     }
 }
@@ -557,6 +604,13 @@ public class AccountDeleteRunable implements Runnable {
                 Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
             }
 
+        }
+
+        @Override
+        public void onFinish() {
+            super.onFinish();
+            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
 
     }
