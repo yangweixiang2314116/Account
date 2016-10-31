@@ -115,6 +115,8 @@ public class AccountRestClient {
 
     public static void get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
         client.setTimeout(5000);
+		//client.setConnectTimeout(5000);
+		//client.setResponseTimeout(5000);
     	//Log.i(Constants.TAG, "--get getAbsoluteUrl--" + getAbsoluteUrl(url));
 		Log.i(Constants.TAG, "--get url--" + url);
     	//client.get(getAbsoluteUrl(url), params, responseHandler);

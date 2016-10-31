@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.example.account.AccountApiConnector;
 import com.example.account.AccountCommonUtil;
 import com.example.account.Constants;
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONObject;
 
@@ -23,15 +25,16 @@ public class UpdateManager {
 
     private boolean isShow = false;
 
+    private Handler mHandler = new Handler();;
+
     private ProgressDialog _waitDialog;
 
     private JsonHttpResponseHandler mCheckUpdateHandle = new JsonHttpResponseHandler() {
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             Log.i(Constants.TAG, "---getVersionInfo--onFailure--statusCode---" + statusCode);
-            Log.i(Constants.TAG, "---getVersionInfo--onFailure--responseString---" + response);
+            Log.i(Constants.TAG, "---getVersionInfo--onFailure--responseString---" + responseString);
 
             hideCheckDialog();
             if (isShow) {
@@ -72,12 +75,28 @@ public class UpdateManager {
         return haveNew;
     }
 
+    public class AccountGetVersionRunable implements Runnable {
+
+        public AccountGetVersionRunable() {
+
+        }
+
+        public void run() {
+            Log.i(Constants.TAG, "----getVersionInfo ---run----");
+
+            AccountApiConnector.instance(mContext).getVersionInfo(mCheckUpdateHandle);
+        }
+
+    }
     public void checkUpdate() {
         if (isShow) {
             showCheckDialog();
+            mHandler.postDelayed(new AccountGetVersionRunable(), 3000);
         }
-
-        AccountApiConnector.instance(mContext).getVersionInfo(mCheckUpdateHandle);
+        else {
+            mHandler.post(new AccountGetVersionRunable());
+            Log.i(Constants.TAG, "----checkUpdate ---end----");
+        }
     }
 
     private void onFinishCheck() {
@@ -87,7 +106,9 @@ public class UpdateManager {
             if (isShow) {
                 showLatestDialog();
             }
-            AccountCommonUtil.sendBroadcastForAccountStartSync(mContext);
+            else {
+                AccountCommonUtil.sendBroadcastForAccountStartSync(mContext);
+            }
         }
     }
 

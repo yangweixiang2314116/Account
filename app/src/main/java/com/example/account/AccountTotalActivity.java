@@ -193,7 +193,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                                 setRefreshActionButtonState(false);
                                 break;
                             case Constants.ACCOUNT_SYNC_START:
-                                CustomToast.showToast(AccountTotalActivity.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT);
+                                //CustomToast.showToast(AccountTotalActivity.this, getString(R.string.account_sync_service_start), Toast.LENGTH_SHORT);
                                 setRefreshActionButtonState(true);
                                 break;
                             case Constants.ACCOUNT_SYNC_END:

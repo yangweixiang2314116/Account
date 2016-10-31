@@ -161,6 +161,7 @@
 
             <RelativeLayout
                 android:id="@+id/update_version"
+                android:background="@drawable/account_list_item_selector_bg"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_item_height">
 
