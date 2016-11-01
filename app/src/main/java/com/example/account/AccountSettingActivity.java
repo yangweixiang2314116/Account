@@ -29,6 +29,7 @@ import android.widget.ToggleButton;
 
 import com.example.module.AccountRestClient;
 import com.example.module.BaseActivity;
+import com.example.module.DialogHelp;
 import com.example.module.NetworkUtils;
 import com.example.module.UpdateManager;
 import com.umeng.analytics.MobclickAgent;
@@ -60,7 +61,7 @@ public class AccountSettingActivity extends BaseActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
-        mRecommand = (RelativeLayout) findViewById(R.id.recommend);
+        //mRecommand = (RelativeLayout) findViewById(R.id.recommend);
         mSuggestion = findViewById(R.id.suggestion);
         //mFocusUs = findViewById(R.id.focus_us);
         //mCancelAuth = findViewById(R.id.cancel_auth);
@@ -72,15 +73,6 @@ public class AccountSettingActivity extends BaseActivity implements
 
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
-
-        mRecommand.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                m_ShowSettingUrlWindow();
-            }
-        });
-
-        mRecommand.setVisibility(View.GONE);
 
         mSuggestion.setOnClickListener(this);
         // mFocusUs.setOnClickListener(this);
@@ -189,36 +181,26 @@ public class AccountSettingActivity extends BaseActivity implements
                     new UpdateManager(AccountSettingActivity.this, true).checkUpdate();
                 }
             }, 2000);
-        }
-        else{
+        } else {
             m_ShowNetWorkMessageBox();
         }
 
     }
 
-    private boolean m_ShowNetWorkMessageBox()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    private boolean m_ShowNetWorkMessageBox() {
 
-        View messageContent = mLayoutInflater.inflate(
-                R.layout.dialog_content_info, null);
-        builder.setView(messageContent);
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getMessageDialog(mContext, getString(R.string.network_disconnect), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
 
-        TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
-        content.setText(getString(R.string.network_disconnect));
-
-        builder.setPositiveButton(R.string.give_up_sure,
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
-                        dialog.dismiss();
-                    }
-                })	.create().show();
         return true;
     }
 
+    /*
     private void m_ShowSettingUrlWindow() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
@@ -252,4 +234,5 @@ public class AccountSettingActivity extends BaseActivity implements
 
         builder.create().show();
     }
+    */
 }

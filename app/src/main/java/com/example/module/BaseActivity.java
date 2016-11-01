@@ -5,11 +5,12 @@ package com.example.module;
  */
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.account.Constants;
 
-public abstract class BaseActivity extends ActionBarActivity  {
+public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.i(Constants.TAG, "---BaseActivity--onDestroy---" );

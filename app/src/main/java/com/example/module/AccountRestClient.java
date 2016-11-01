@@ -24,7 +24,7 @@ import java.security.cert.CertificateException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
-		//private static   String mServerUrl = "http://192.168.1.140:8000/";
+		//private static   String mServerUrl = "http://192.168.1.100:8000/";
 		private static   String mServerUrl = "http://139.196.166.79/";
 
     private static AsyncHttpClient client = null;

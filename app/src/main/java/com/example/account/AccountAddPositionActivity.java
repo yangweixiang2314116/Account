@@ -4,7 +4,7 @@ package com.example.account;
 //public class AccountAddPositionActivity extends ActionBarActivity {
 
 	//private FlowLayout mHotFlowLayout;
-	
+
 	//private Intent  mIntent = null;
     //private Context mContext = null;
 
@@ -225,6 +225,7 @@ import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.example.module.BaseActivity;
+import com.example.module.DialogHelp;
 import com.example.module.NetworkUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -294,7 +295,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 		SDKInitializer.initialize(getApplicationContext());
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
-		setTheme(R.style.MIS_NO_ACTIONBAR);
+		//setTheme(R.style.MIS_NO_ACTIONBAR);
 		setContentView(R.layout.activity_account_add_position);
 		mLayoutInflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -304,7 +305,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 		mContext = this;
 
 		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		if(NetworkUtils.isNetworkAvailable(mContext)) {
 			initView();
@@ -314,32 +315,24 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 		}
 	}
 
-	private boolean m_ShowNetWorkMessageBox()
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+	private boolean m_ShowNetWorkMessageBox() {
 
-		View messageContent = mLayoutInflater.inflate(
-				R.layout.dialog_content_info, null);
-		builder.setView(messageContent);
+		android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getMessageDialog(mContext, getString(R.string.network_disconnect), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				getWindow().setSoftInputMode(
+						WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		TextView  content = (TextView)messageContent.findViewById(R.id.dialog_message_content);
-		content.setText(getString(R.string.network_disconnect));
+				finish();
+				overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+			}
+		});
+        dialog.setCancelable(false);
+		dialog.show();
 
-		builder.setPositiveButton(R.string.give_up_sure,
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog,
-										int which) {
-						getWindow().setSoftInputMode(
-								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-						finish();
-						overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
-					}
-				})	.create().show();
 		return true;
 	}
+
 	private void initView() {
 		mMapView = (MapView) findViewById(R.id.main_bdmap);
 		mBaiduMap = mMapView.getMap();

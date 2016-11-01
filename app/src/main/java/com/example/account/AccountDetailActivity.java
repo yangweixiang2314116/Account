@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import com.example.module.Account;
 import com.example.module.BaseActivity;
 import com.example.module.CategoryHistory;
+import com.example.module.DialogHelp;
 import com.example.module.ImageItem;
 import com.example.module.PoiItem;
 import com.umeng.analytics.MobclickAgent;
@@ -39,81 +40,79 @@ import android.widget.Toast;
 public class AccountDetailActivity extends BaseActivity {
 
 
-	private Account m_CurrentAccount = null;
+    private Account m_CurrentAccount = null;
     private LinearLayoutForListView m_AccountImageList = null;
-    private  ArrayList<ImageItem> mImageListDataSource = null;
+    private ArrayList<ImageItem> mImageListDataSource = null;
     private AccountDetailImageListAdapter m_DetailImageListAdapter = null;
-	private Button mEditButton = null;
-	private LayoutInflater mLayoutInflater = null;
-	private Context mContext;
+    private Button mEditButton = null;
+    private LayoutInflater mLayoutInflater = null;
+    private Context mContext;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setTheme(R.style.MIS_NO_ACTIONBAR);
+        //setTheme(R.style.MIS_NO_ACTIONBAR);
 
-		setContentView(R.layout.activity_account_detail);
+        setContentView(R.layout.activity_account_detail);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-		if(toolbar != null){
-			setSupportActionBar(toolbar);
-			Log.i(Constants.TAG, "------AccountDetailActivity----setSupportActionBar---" );
-		}
-		final ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			getSupportActionBar().setDisplayShowTitleEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			getSupportActionBar().setDisplayUseLogoEnabled(false);
-			getSupportActionBar().setDisplayShowHomeEnabled(false);
-			getSupportActionBar().setTitle(getString(R.string.cost_detail_title));
-			Log.i(Constants.TAG, "------AccountDetailActivity----ActionBar Setting---");
-		}
-		
-		Bundle bundle = getIntent().getExtras();
-		if (getIntent() != null ) {
-			Long id = getIntent().getLongExtra("id", 0);
-			Log.i(Constants.TAG, "------AccountDetailActivity----onCreate -id----"+id);
-			
-			m_CurrentAccount = Account.load(Account.class,id);
-			
-		}
-		else
-		{
-			Log.i(Constants.TAG, "------AccountDetailActivity----onCreate -bundle==null----");
-			return ;
-		}
+        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            Log.i(Constants.TAG, "------AccountDetailActivity----setSupportActionBar---");
+        }
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayUseLogoEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+            getSupportActionBar().setTitle(getString(R.string.cost_detail_title));
+            Log.i(Constants.TAG, "------AccountDetailActivity----ActionBar Setting---");
+        }
 
-		mContext = this;
+        Bundle bundle = getIntent().getExtras();
+        if (getIntent() != null) {
+            Long id = getIntent().getLongExtra("id", 0);
+            Log.i(Constants.TAG, "------AccountDetailActivity----onCreate -id----" + id);
 
-		m_InitAccountDetail();
+            m_CurrentAccount = Account.load(Account.class, id);
 
-		mEditButton = (Button) findViewById(R.id.account_edit);
-		mEditButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Bundle mBundle = new Bundle();
-				if (m_CurrentAccount == null) {
-					Log.i(Constants.TAG, "--m_CurrentAccount == null--");
-				}
-				Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
+        } else {
+            Log.i(Constants.TAG, "------AccountDetailActivity----onCreate -bundle==null----");
+            return;
+        }
 
-				mBundle.putLong("id", m_CurrentAccount.getId());
+        mContext = this;
 
-				Intent intent = new Intent(mContext, AccountStartActivity.class);
-				intent.putExtras(mBundle);
-				startActivity(intent);
-				finish();
-			}
-		});
-		MobclickAgent.onEvent(mContext, "enter_detail");
-		mLayoutInflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
-	}
+        m_InitAccountDetail();
+
+        mEditButton = (Button) findViewById(R.id.account_edit);
+        mEditButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle mBundle = new Bundle();
+                if (m_CurrentAccount == null) {
+                    Log.i(Constants.TAG, "--m_CurrentAccount == null--");
+                }
+                Log.i(Constants.TAG, "-m_CurrentAccount-id--" + m_CurrentAccount.getId());
+
+                mBundle.putLong("id", m_CurrentAccount.getId());
+
+                Intent intent = new Intent(mContext, AccountStartActivity.class);
+                intent.putExtras(mBundle);
+                startActivity(intent);
+                finish();
+            }
+        });
+        MobclickAgent.onEvent(mContext, "enter_detail");
+        mLayoutInflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Log.i(Constants.TAG, "------AccountTotalActivity----onCreate -----");
+    }
 
 	/*
-	@Override
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.account_detail, menu);
@@ -122,122 +121,111 @@ public class AccountDetailActivity extends BaseActivity {
 	}
 	*/
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		Log.i(Constants.TAG, "------onOptionsItemSelected--------");
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			break;
-		default:
-			break;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Log.i(Constants.TAG, "------onOptionsItemSelected--------");
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                break;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
-	
-	public boolean m_InitAccountDetail()
-	{
-		TextView total = (TextView)findViewById(R.id.detail_total_value);
-		
-		DecimalFormat df= new DecimalFormat("#,##0.00");
+        return super.onOptionsItemSelected(item);
+    }
 
-		String formatCost = df.format(m_CurrentAccount.Cost);
-		
-		total.setText(formatCost);
-		
-		TextView CurrentTimeText = (TextView) findViewById(R.id.detail_total_date);
-		String sCurrentDate = AccountCommonUtil.ConverDateToString(m_CurrentAccount.CreateTime);
-		CurrentTimeText.setText(sCurrentDate);
-		
-		
-		TextView Category = (TextView) findViewById(R.id.detail_category_value);
-		Category.setText(m_CurrentAccount.Category);
-	
-		TextView Brand = (TextView) findViewById(R.id.detail_brand_value);
-		Brand.setText(m_CurrentAccount.Brand);
+    public boolean m_InitAccountDetail() {
+        TextView total = (TextView) findViewById(R.id.detail_total_value);
 
-		TextView Position = (TextView) findViewById(R.id.detail_position_value);
-		Position.setText(m_CurrentAccount.Position);
-		
-		TextView Comments = (TextView) findViewById(R.id.detail_comments_value);
-		Comments.setText(m_CurrentAccount.Comments);
-		
-		m_AccountImageList = (LinearLayoutForListView) findViewById(R.id.account_detail_image_list);
-		
-		mImageListDataSource = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
-		m_DetailImageListAdapter = new AccountDetailImageListAdapter(this,mImageListDataSource);
-		m_AccountImageList.setAdapter(m_DetailImageListAdapter);
+        DecimalFormat df = new DecimalFormat("#,##0.00");
 
-		int count = m_DetailImageListAdapter.getCount();
+        String formatCost = df.format(m_CurrentAccount.Cost);
 
-		Log.i(Constants.TAG, "------bindLinearLayout--------"+count);
+        total.setText(formatCost);
 
-		m_AccountImageList.removeAllViews();
-		for (int i = 0; i < count; i++) {
-			final int currentIndex = i;
-			final View thumbnail = m_DetailImageListAdapter.getView(i, null, null);
-			thumbnail.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					ImageItem item = mImageListDataSource.get(currentIndex);
-					Log.i(Constants.TAG, "------currentIndex--------"+currentIndex);
-					Log.i(Constants.TAG, "------item.Path--------"+item.Path);
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setDataAndType(Uri.parse("file://" + item.Path), "image/*");
-					startActivity(intent);
-				}
-			});
+        TextView CurrentTimeText = (TextView) findViewById(R.id.detail_total_date);
+        String sCurrentDate = AccountCommonUtil.ConverDateToString(m_CurrentAccount.CreateTime);
+        CurrentTimeText.setText(sCurrentDate);
 
-			thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					final ImageItem item = mImageListDataSource.get(currentIndex);
-					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-					View messageContent = mLayoutInflater.inflate(R.layout.dialog_content_info, null);
-					builder.setView(messageContent);
+        TextView Category = (TextView) findViewById(R.id.detail_category_value);
+        Category.setText(m_CurrentAccount.Category);
 
-					TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-					content.setText(getString(R.string.confirm_to_delete_image));
-					builder.setPositiveButton(R.string.give_up_sure,
-							new DialogInterface.OnClickListener() {
+        TextView Brand = (TextView) findViewById(R.id.detail_brand_value);
+        Brand.setText(m_CurrentAccount.Brand);
 
-								@Override
-								public void onClick(DialogInterface dialog,
-													int which) {
-									item.delete();
+        TextView Position = (TextView) findViewById(R.id.detail_position_value);
+        Position.setText(m_CurrentAccount.Position);
 
-									//account need sync up
-									item.account.setNeedSyncUp();
-									item.account.save();
+        TextView Comments = (TextView) findViewById(R.id.detail_comments_value);
+        Comments.setText(m_CurrentAccount.Comments);
 
-									m_AccountImageList.removeView(thumbnail);
-									Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
-											.show();
+        m_AccountImageList = (LinearLayoutForListView) findViewById(R.id.account_detail_image_list);
 
-								}
-							}).setNegativeButton(R.string.give_up_cancel, null)
-							.create().show();
-					return false;
-				}
-			});
-			m_AccountImageList.addView(thumbnail, i);
-		}
-		
-		return true;
-	}
+        mImageListDataSource = (ArrayList<ImageItem>) m_CurrentAccount.Imageitems();
+        m_DetailImageListAdapter = new AccountDetailImageListAdapter(this, mImageListDataSource);
+        m_AccountImageList.setAdapter(m_DetailImageListAdapter);
 
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
-	}
+        int count = m_DetailImageListAdapter.getCount();
 
-	public void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	}
+        Log.i(Constants.TAG, "------bindLinearLayout--------" + count);
+
+        m_AccountImageList.removeAllViews();
+        for (int i = 0; i < count; i++) {
+            final int currentIndex = i;
+            final View thumbnail = m_DetailImageListAdapter.getView(i, null, null);
+            thumbnail.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageItem item = mImageListDataSource.get(currentIndex);
+                    Log.i(Constants.TAG, "------currentIndex--------" + currentIndex);
+                    Log.i(Constants.TAG, "------item.Path--------" + item.Path);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse("file://" + item.Path), "image/*");
+                    startActivity(intent);
+                }
+            });
+
+            thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    final ImageItem item = mImageListDataSource.get(currentIndex);
+
+                    android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete_image), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            item.delete();
+
+                            //account need sync up
+                            item.account.setNeedSyncUp();
+                            item.account.save();
+
+                            m_AccountImageList.removeView(thumbnail);
+                            Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+                    dialog.show();
+                    return false;
+                }
+            });
+            m_AccountImageList.addView(thumbnail, i);
+        }
+
+        return true;
+    }
+
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }

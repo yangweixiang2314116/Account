@@ -76,6 +76,7 @@ public class AccountDownloadService extends Service {
                     break;
                 case 1:
                     int rate = msg.arg1;
+                    Log.i(Constants.TAG, "---AccountDownloadService----rate---" + rate);
                     if (rate < 100) {
                         RemoteViews contentview = mNotification.contentView;
                         contentview.setTextViewText(R.id.tv_download_state, mTitle + "(" + rate
@@ -141,7 +142,7 @@ public class AccountDownloadService extends Service {
      */
     private void setUpNotification() {
         //TODO
-        int icon = R.mipmap.ic_notification;
+        int icon = R.mipmap.ic_launcher;
         CharSequence tickerText = "准备下载";
         long when = System.currentTimeMillis();
         mNotification = new Notification(icon, tickerText, when);

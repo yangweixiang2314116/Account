@@ -31,6 +31,7 @@ import com.example.module.Account;
 import com.example.module.AccountRestClient;
 import com.example.module.AppManager;
 import com.example.module.CustomToast;
+import com.example.module.DialogHelp;
 import com.example.module.DoubleClickExitHelper;
 import com.example.module.ImageItem;
 import com.example.module.NetworkUtils;
@@ -226,25 +227,22 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver---INTENT_NOTIFY_ACCOUNT_CHANGE");
                     //start load all account from DB
                     new PrepareTask().execute();
-                }else if(intent.getAction().equals(Constants.INTENT_NOTIFY_INVALID_TOKEN))
-                	{
+                } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_INVALID_TOKEN)) {
                     Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver---INTENT_NOTIFY_INVALID_TOKEN");
-                        if (AccountCommonUtil.IsLogin(mContext)) {
+                    if (AccountCommonUtil.IsLogin(mContext)) {
 
-                            AccountCommonUtil.SetLogin(mContext, false);
-                            TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
-                            userNameText.setText(getString(R.string.account_not_log_in));
-                            Toast.makeText(mContext, R.string.account_login_expire, Toast.LENGTH_SHORT).show();
-                        }
-				}
-                else if(intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)){
+                        AccountCommonUtil.SetLogin(mContext, false);
+                        TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
+                        userNameText.setText(getString(R.string.account_not_log_in));
+                        Toast.makeText(mContext, R.string.account_login_expire, Toast.LENGTH_SHORT).show();
+                    }
+                } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)) {
                     m_bIsServerNormal = true;
-                    Log.i(Constants.TAG, "------m_InitReceiver--server work status--m_bIsServerNormal----"+m_bIsServerNormal);
+                    Log.i(Constants.TAG, "------m_InitReceiver--server work status--m_bIsServerNormal----" + m_bIsServerNormal);
                     boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
-                    Log.i(Constants.TAG, "------m_InitReceiver----m_bConnected----"+m_bConnected+ "--bCanSync---"+bCanSync);
+                    Log.i(Constants.TAG, "------m_InitReceiver----m_bConnected----" + m_bConnected + "--bCanSync---" + bCanSync);
 
-                    if(m_bConnected && bCanSync)
-                    {
+                    if (m_bConnected && bCanSync) {
                         mBinder.startSync();
                     }
                 }
@@ -253,7 +251,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
-	     filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
+        filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
         filter.addAction(Constants.INTENT_NOTIFY_START_SYNC);
         registerReceiver(mReceiver, filter);
 
@@ -361,7 +359,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     }
 
     public void setRefreshActionButtonState(boolean refreshing) {
-        Log.i(Constants.TAG, "------setRefreshActionButtonState---refreshing-----"+refreshing);
+        Log.i(Constants.TAG, "------setRefreshActionButtonState---refreshing-----" + refreshing);
         if (m_OptionsMenu == null) {
             Log.i(Constants.TAG, "------setRefreshActionButtonState---m_OptionsMenu == null-----");
             return;
@@ -394,11 +392,12 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         //String formatCost = df.format(m_CurrentTotalCost);
 
         //m_TotalCostText.setText(formatCost);
-        m_TotalCostText.setFromAndEndNumber((float)0.0, m_CurrentTotalCost.floatValue());
+        m_TotalCostText.setFromAndEndNumber((float) 0.0, m_CurrentTotalCost.floatValue());
         m_TotalCostText.setDuration(1000);
         m_TotalCostText.start();
 
-        if(m_bFirstRefreshList && mDetailListDataSource.size() > 30 && AccountCommonUtil.IsLogin(mContext) == false) {
+        if (m_bFirstRefreshList && mDetailListDataSource.size() > Constants.ACCOUNT_FORCE_LOGIN_MAX &&
+                AccountCommonUtil.IsLogin(mContext) == false) {
             m_ShowForceLoginPoup();
             m_bFirstRefreshList = false;
         }
@@ -417,7 +416,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         //String formatCost = df.format(m_CurrentTotalCost);
 
         //m_TotalCostText.setText(formatCost);
-
 
 
         return;
@@ -793,91 +791,52 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         Log.i(Constants.TAG, "------onItemLongClick--------" + current.getId());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MobclickAgent.onEvent(mContext, "delete_account");
+                m_DetailListAdapter.removeItem(current);
+                m_DetailListAdapter.updateUI();
 
-        View messageContent = mLayoutInflater.inflate(R.layout.dialog_content_info, null);
-        builder.setView(messageContent);
+                current.setNeedSyncDelete();
+                current.save();
 
-        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-        content.setText(getString(R.string.confirm_to_delete));
-        builder.setPositiveButton(R.string.give_up_sure,
-                new DialogInterface.OnClickListener() {
+                //delete images of this account
+                ImageItem.deleteAll(current);
 
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
+                //update total cost
+                double oldCost = m_CurrentTotalCost;
+                m_CurrentTotalCost -= current.Cost;
+                m_UpdateTotalCost(oldCost, m_CurrentTotalCost);
+                Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+        dialog.show();
 
-                        MobclickAgent.onEvent(mContext, "delete_account");
-                        m_DetailListAdapter.removeItem(current);
-                        m_DetailListAdapter.updateUI();
-
-                        current.setNeedSyncDelete();
-                        current.save();
-
-                        //delete images of this account
-                        ImageItem.deleteAll(current);
-
-                        //update total cost
-                        double oldCost = m_CurrentTotalCost;
-                        m_CurrentTotalCost -= current.Cost;
-                        m_UpdateTotalCost(oldCost, m_CurrentTotalCost);
-                        Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
-                                .show();
-
-                    }
-                }).setNegativeButton(R.string.give_up_cancel, null)
-                .create().show();
     }
 
     private void m_ShowQuestionLoginPoup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-        View messageContent = mLayoutInflater.inflate(
-                R.layout.dialog_content_info, null);
-        builder.setView(messageContent);
-
-        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-        content.setText(getString(R.string.account_login_notice_body));
-
-        builder.setCancelable(false);
-        builder.setPositiveButton(R.string.account_login_go_now, new DialogInterface.OnClickListener() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_login_notice_body), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 m_ShowSMSLoginPoup();
-                dialog.dismiss();
+                dialogInterface.dismiss();
             }
         });
-
-        builder.setNegativeButton(R.string.account_login_wait, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
+        dialog.show();
     }
 
     private void m_ShowForceLoginPoup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-        View messageContent = mLayoutInflater.inflate(
-                R.layout.dialog_content_info, null);
-        builder.setView(messageContent);
-
-        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-        content.setText(getString(R.string.account_force_login_body));
-
-        builder.setCancelable(false);
-        builder.setPositiveButton(R.string.account_login_go_now, new DialogInterface.OnClickListener() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_force_login_body), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 m_ShowSMSLoginPoup();
-                dialog.dismiss();
+                dialogInterface.dismiss();
             }
         });
-
-        builder.create().show();
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     private void m_ShowSMSLoginPoup() {
@@ -937,7 +896,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     AccountRestClient.SetClientToken(token);
 
                     AccountCommonUtil.SetToken(mContext, token);
-					AccountCommonUtil.SetLogin(mContext, true);
+                    AccountCommonUtil.SetLogin(mContext, true);
 
                     if (AccountCommonUtil.GetUserProfileId(mContext) == 0) {
                         m_ProcessUserInfoContent();
@@ -998,18 +957,18 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 if (AccountCommonUtil.IsOnlyWifi(mContext)) {
                     if (NetworkUtils.isWifiConnected(mContext)) {
-                        if(m_bIsServerNormal) {
+                        if (m_bIsServerNormal) {
                             mBinder.startSync();
-                        }else{
+                        } else {
                             Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    if(m_bIsServerNormal) {
+                    if (m_bIsServerNormal) {
                         mBinder.startSync();
-                    }else{
+                    } else {
                         Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -1070,7 +1029,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-                return mDoubleClickExit.onKeyDown(keyCode, event);
+            return mDoubleClickExit.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -1079,13 +1038,14 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         if (NetworkUtils.isNetworkAvailable(mContext)) {
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-                new UpdateManager(AccountTotalActivity.this, false).checkUpdate();
-            }
-        }, 2000);
-    }}
+                @Override
+                public void run() {
+                    new UpdateManager(AccountTotalActivity.this, false).checkUpdate();
+                }
+            }, 2000);
+        }
+    }
 }

@@ -45,6 +45,7 @@ public class DialogHelp {
         AlertDialog.Builder builder = getDialog(context);
         builder.setMessage(message);
         builder.setPositiveButton("确定", onClickListener);
+
         return builder;
     }
 

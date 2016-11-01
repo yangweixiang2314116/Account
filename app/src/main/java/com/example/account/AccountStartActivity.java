@@ -8,6 +8,7 @@ import com.activeandroid.ActiveAndroid;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.example.module.Account;
 import com.example.module.BaseActivity;
+import com.example.module.DialogHelp;
 import com.example.module.ImageItem;
 import com.example.module.MoreInfoItem;
 import com.example.module.PoiItem;
@@ -81,7 +82,7 @@ public class AccountStartActivity extends BaseActivity {
 
         overridePendingTransition(R.anim.push_up, R.anim.push_down);
 
-        setTheme(R.style.MIS_NO_ACTIONBAR);
+        //setTheme(R.style.MIS_NO_ACTIONBAR);
 
         setContentView(R.layout.activity_account_start);
 
@@ -301,32 +302,19 @@ public class AccountStartActivity extends BaseActivity {
     }
 
     private boolean m_ShowQuitMessageBox() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-        View messageContent = mLayoutInflater.inflate(
-                R.layout.dialog_content_info, null);
-        builder.setView(messageContent);
-
-        TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-        content.setText(getString(R.string.give_up_edit));
-
-        builder.setPositiveButton(R.string.give_up_sure,
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
-                        if(AccountCommonUtil.IsQuickStart(mContext))
-                        {
-                            Intent mIntent = new Intent();
-                            mIntent.setClass(mContext, AccountTotalActivity.class);
-                            startActivity(mIntent);
-                        }
-                        finish();
-                        overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
-                    }
-                }).setNegativeButton(R.string.give_up_cancel, null)
-                .create().show();
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.give_up_edit), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (AccountCommonUtil.IsQuickStart(mContext)) {
+                    Intent mIntent = new Intent();
+                    mIntent.setClass(mContext, AccountTotalActivity.class);
+                    startActivity(mIntent);
+                }
+                finish();
+                overridePendingTransition(R.anim.out_push_up, R.anim.out_push_down);
+            }
+        });
+        dialog.show();
         return true;
     }
 
@@ -677,27 +665,16 @@ public class AccountStartActivity extends BaseActivity {
                 @Override
                 public boolean onLongClick(View v) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete_image), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            m_ImageContents.removeView(commentItem);
+                            m_LatestImageList.remove(nCurrentIndex);
+                            m_bImageListChange = true;
+                        }
+                    });
+                    dialog.show();
 
-                    View messageContent = mLayoutInflater.inflate(
-                            R.layout.dialog_content_info, null);
-                    builder.setView(messageContent);
-
-                    TextView content = (TextView) messageContent.findViewById(R.id.dialog_message_content);
-                    content.setText(getString(R.string.confirm_to_delete_image));
-
-                    builder.setPositiveButton(R.string.give_up_sure,
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    m_ImageContents.removeView(commentItem);
-                                    m_LatestImageList.remove(nCurrentIndex);
-                                    m_bImageListChange = true;
-                                }
-                            }).setNegativeButton(R.string.give_up_cancel, null)
-                            .create().show();
                     return false;
                 }
             });

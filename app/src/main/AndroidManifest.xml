@@ -81,10 +81,12 @@
         <activity
             android:name="com.example.account.AccountStartActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/start_input_title" >
         </activity>
         <activity
             android:name="com.example.account.AccountDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/cost_detail_title" >
         </activity>
         <activity
@@ -94,6 +96,7 @@
 
         <activity
             android:name="com.example.account.AccountAddPositionActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_position_app_name" >
         </activity>
 
