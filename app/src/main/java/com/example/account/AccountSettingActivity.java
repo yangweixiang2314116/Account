@@ -25,7 +25,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
+
 
 import com.example.module.AccountRestClient;
 import com.example.module.BaseActivity;
@@ -33,12 +33,13 @@ import com.example.module.DialogHelp;
 import com.example.module.NetworkUtils;
 import com.example.module.UpdateManager;
 import com.umeng.analytics.MobclickAgent;
+import com.zcw.togglebutton.ToggleButton;
 
 /**
  * Created by Administrator on 2016/6/21.
  */
 public class AccountSettingActivity extends BaseActivity implements
-        OnClickListener, OnCheckedChangeListener {
+        OnClickListener {
 
     private SharedPreferences mSharedPreferences;
 
@@ -70,21 +71,49 @@ public class AccountSettingActivity extends BaseActivity implements
 
         mSwitchOnlyWifi = (ToggleButton) findViewById(R.id.switch_wifi);
         mSwitchQuickAdd = (ToggleButton) findViewById(R.id.switch_quick_add);
+        mSwitchOnlyWifi.toggle();
+        mSwitchQuickAdd.toggle();
+
+        mSwitchOnlyWifi.setOnToggleChanged(new ToggleButton.OnToggleChanged(){
+            @Override
+            public void onToggle(boolean on) {
+                mSharedPreferences.edit().putBoolean("only_wifi", on)
+                        .apply();
+            }
+        });
+
+        mSwitchQuickAdd.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                mSharedPreferences.edit().putBoolean("quick_add", on).apply();
+            }
+        });
 
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
 
         mSuggestion.setOnClickListener(this);
         // mFocusUs.setOnClickListener(this);
-        mSwitchOnlyWifi.setOnCheckedChangeListener(this);
-        mSwitchQuickAdd.setOnCheckedChangeListener(this);
         //mCancelAuth.setOnClickListener(this);
         mRateForUs.setOnClickListener(this);
         mUpdateVersion.setOnClickListener(this);
 
-        mSwitchOnlyWifi.setChecked(mSharedPreferences.getBoolean("only_wifi",
-                true));
-        mSwitchQuickAdd.setChecked(mSharedPreferences.getBoolean("quick_add", false));
+        boolean  bOnlyWifi =  mSharedPreferences.getBoolean("only_wifi",
+                true);
+
+        boolean bQuickAdd = mSharedPreferences.getBoolean("quick_add", false);
+        if(bOnlyWifi)
+        {
+            mSwitchOnlyWifi.setToggleOn();
+        }else{
+            mSwitchOnlyWifi.setToggleOff();
+        }
+        if(bQuickAdd)
+        {
+            mSwitchQuickAdd.setToggleOn();
+        }else{
+            mSwitchQuickAdd.setToggleOff();
+        }
 
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -96,22 +125,6 @@ public class AccountSettingActivity extends BaseActivity implements
         }
 
         MobclickAgent.onEvent(mContext, "enter_setting");
-    }
-
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.switch_wifi:
-                mSharedPreferences.edit().putBoolean("only_wifi", isChecked)
-                        .apply();
-                break;
-            case R.id.switch_quick_add:
-                mSharedPreferences.edit().putBoolean("quick_add", isChecked).apply();
-                break;
-            default:
-                break;
-        }
     }
 
     @Override

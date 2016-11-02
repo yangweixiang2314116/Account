@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -27,23 +28,27 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/only_for_wifi"/>
+                    android:text="@string/only_for_wifi" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_item_line"/>
+                    android:background="@color/setting_item_line" />
 
-                <ToggleButton
+                <com.zcw.togglebutton.ToggleButton
                     android:id="@+id/switch_wifi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
                     android:layout_alignParentRight="true"
-                    android:textOn=""
-                    android:textOff=""
-                    android:background="@drawable/radio_button_background"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    toggle:tbBorderWidth="1px"
+                    toggle:tbOffBorderColor="#dadbda"
+                    toggle:tbOffColor="#fff"
+                    toggle:tbOnColor="#4dd865"
+                    toggle:tbSpotColor="#fff">
+
+                </com.zcw.togglebutton.ToggleButton>
             </RelativeLayout>
 
             <RelativeLayout
@@ -57,24 +62,27 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/quick_add"/>
+                    android:text="@string/quick_add" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_item_line"/>
+                    android:background="@color/setting_item_line" />
 
-                <ToggleButton
+                <com.zcw.togglebutton.ToggleButton
                     android:id="@+id/switch_quick_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
                     android:layout_alignParentRight="true"
-                    android:textOn=""
-                    android:textOff=""
-                    android:background="@drawable/radio_button_background"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    toggle:tbBorderWidth="1px"
+                    toggle:tbOffBorderColor="#dadbda"
+                    toggle:tbOffColor="#fff"
+                    toggle:tbOnColor="#4dd865"
+                    toggle:tbSpotColor="#fff">
 
+                </com.zcw.togglebutton.ToggleButton>
             </RelativeLayout>
 
             <RelativeLayout
@@ -90,13 +98,13 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/recommend_to_friend"/>
+                    android:text="@string/recommend_to_friend" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_item_line"/>
+                    android:background="@color/setting_item_line" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -112,7 +120,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/rate_for_us"/>
+                    android:text="@string/rate_for_us" />
 
                 <ImageView
                     android:layout_width="@dimen/setting_arrow"
@@ -120,13 +128,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@null"
-                    android:src="@mipmap/right_chevron"/>
+                    android:src="@mipmap/right_chevron" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_item_line"/>
+                    android:background="@color/setting_item_line" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -142,7 +150,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/suggestion"/>
+                    android:text="@string/suggestion" />
 
                 <ImageView
                     android:layout_width="@dimen/setting_arrow"
@@ -150,20 +158,20 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@null"
-                    android:src="@mipmap/right_chevron"/>
+                    android:src="@mipmap/right_chevron" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_item_line"/>
+                    android:background="@color/setting_item_line" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/update_version"
-                android:background="@drawable/account_list_item_selector_bg"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/setting_item_height">
+                android:layout_height="@dimen/setting_item_height"
+                android:background="@drawable/account_list_item_selector_bg">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -171,13 +179,13 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/update_version"/>
+                    android:text="@string/update_version" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_item_line"/>
+                    android:background="@color/setting_item_line" />
 
             </RelativeLayout>
         </LinearLayout>
