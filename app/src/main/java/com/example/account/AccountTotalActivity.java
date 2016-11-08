@@ -1,5 +1,8 @@
 package com.example.account;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.IntentFilter;
@@ -7,16 +10,20 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.activeandroid.ActiveAndroid;
 import com.baidu.location.BDLocation;
@@ -102,6 +109,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private boolean m_bFirstRefreshList = true;
     private boolean m_bIsServerNormal = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
+    public static final long DAY = 1000L * 60 * 60 * 24;
     /**
      * 定位端
      */
@@ -400,6 +408,24 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 AccountCommonUtil.IsLogin(mContext) == false) {
             m_ShowForceLoginPoup();
             m_bFirstRefreshList = false;
+        }
+
+        if (m_bFirstRefreshList && (mDetailListDataSource.size() % 10 == 0) &&
+                AccountCommonUtil.IsRate(mContext) == false) {
+            m_ShowRatePoup();
+            m_bFirstRefreshList = false;
+        }
+
+        if (m_bFirstRefreshList) {
+            m_bFirstRefreshList = false;
+        } else {
+            //try to sync
+            boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
+            Log.i(Constants.TAG, "------m_InitalTotalAccountList----m_bConnected----" + m_bConnected + "--bCanSync---" + bCanSync);
+
+            if (m_bConnected && bCanSync) {
+                mBinder.startSync();
+            }
         }
 
     }
@@ -827,6 +853,27 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         dialog.show();
     }
 
+    private void m_ShowRatePoup() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_rate_notice_body), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Uri uri = Uri.parse("market://details?id="
+                        + mContext.getPackageName());
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                try {
+                    startActivity(goToMarket);
+                    //TODO
+                    //MobclickAgent.onEvent(mContext, "rate");
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(mContext, R.string.can_not_open_market,
+                            Toast.LENGTH_SHORT).show();
+                }
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     private void m_ShowForceLoginPoup() {
         android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_force_login_body), new DialogInterface.OnClickListener() {
             @Override
@@ -1047,5 +1094,58 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 }
             }, 2000);
         }
+    }
+
+    //每天提醒用户记账
+    private void StartNotification() {
+        int nHour = -1;
+        int nMinute = -1;
+        Intent intent = new Intent(AccountTotalActivity.this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(AccountTotalActivity.this, 0, intent, 0);
+
+        long firstTime = SystemClock.elapsedRealtime();    // 开机之后到现在的运行时间(包括睡眠时间)
+        long systemTime = System.currentTimeMillis();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        // 这里时区需要设置一下，不然会有8个小时的时间差
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        if (nHour == -1 && nMinute == -1) {
+            nHour = calendar.get(Calendar.HOUR_OF_DAY);
+            nMinute = calendar.get(Calendar.MINUTE);
+        }
+        calendar.set(Calendar.MINUTE, nMinute);
+        calendar.set(Calendar.HOUR_OF_DAY, nHour);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        // 选择的定时时间
+        long selectTime = calendar.getTimeInMillis();
+        // 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
+        if (systemTime > selectTime) {
+            Toast.makeText(AccountTotalActivity.this, "设置的时间小于当前时间", Toast.LENGTH_SHORT).show();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            selectTime = calendar.getTimeInMillis();
+        }
+        // 计算现在时间到设定时间的时间差
+        long time = selectTime - systemTime;
+        firstTime += time;
+        // 进行闹铃注册
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                firstTime, DAY, sender);
+        Log.i(Constants.TAG, "time ==== " + time + ", selectTime ===== "
+                + selectTime + ", systemTime ==== " + systemTime + ", firstTime === " + firstTime);
+
+    }
+
+    private void StopNotification() {
+        Intent intent = new Intent(AccountTotalActivity.this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(AccountTotalActivity.this,
+                0, intent, 0);
+
+        // 取消闹铃
+        AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+        am.cancel(sender);
+        Log.i(Constants.TAG, "---StopNotification done-----");
     }
 }

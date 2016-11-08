@@ -101,7 +101,23 @@ public class AccountCommonUtil {
                 .apply();
         return true;
     }
-		
+
+    public static boolean IsRate(Context context) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        return pSharedPreferences.getBoolean(
+                "is_rate", false);
+    }
+
+    public static boolean SetRate(Context context, boolean rate) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        pSharedPreferences.edit().putBoolean("is_rate", rate)
+                .apply();
+        return true;
+    }
 
     public static boolean IsFirstEnter(Context context) {
         SharedPreferences pSharedPreferences = PreferenceManager

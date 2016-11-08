@@ -82,6 +82,7 @@
     <string name="account_login_go_now">马上登陆</string>
     <string name="account_login_notice_body">亲，这个功能需要登陆后才能使用哦。</string>
     <string name="account_force_login_body">亲，登陆后可以同步数据到云端，以免丢失。</string>
+    <string name="account_rate_notice_body">亲，去帮我们打个分吧。</string>
     <!--Login poup -->
 
     <!--serach activity-->

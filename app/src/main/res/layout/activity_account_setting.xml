@@ -45,7 +45,7 @@
                     toggle:tbBorderWidth="1px"
                     toggle:tbOffBorderColor="#dadbda"
                     toggle:tbOffColor="#fff"
-                    toggle:tbOnColor="#4dd865"
+                    toggle:tbOnColor="@color/fa_colorPrimary"
                     toggle:tbSpotColor="#fff">
 
                 </com.zcw.togglebutton.ToggleButton>
@@ -79,7 +79,7 @@
                     toggle:tbBorderWidth="1px"
                     toggle:tbOffBorderColor="#dadbda"
                     toggle:tbOffColor="#fff"
-                    toggle:tbOnColor="#4dd865"
+                    toggle:tbOnColor="@color/fa_colorPrimary"
                     toggle:tbSpotColor="#fff">
 
                 </com.zcw.togglebutton.ToggleButton>

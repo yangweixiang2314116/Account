@@ -154,6 +154,7 @@
         <service android:name="com.example.account.AccountSyncService" android:exported="false" />
         <service android:name="com.example.account.AccountDownloadService" android:exported="false" />
 
+        <receiver android:name="com.example.account.AlarmReceiver" android:process=":remote"></receiver>
     </application>
 
 </manifest>

@@ -140,6 +140,7 @@ public class AccountSettingActivity extends BaseActivity implements
                 Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
                 try {
                     startActivity(goToMarket);
+                    //TODO
                     //MobclickAgent.onEvent(mContext, "rate");
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(mContext, R.string.can_not_open_market,
