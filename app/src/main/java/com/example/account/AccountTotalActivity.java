@@ -109,7 +109,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private boolean m_bFirstRefreshList = true;
     private boolean m_bIsServerNormal = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
-    public static final long DAY = 1000L * 60 * 60 * 24;
+    public static final long DAY = 1000L * 60 * 60 *24;
+
     /**
      * 定位端
      */
@@ -162,6 +163,11 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         new PrepareTask().execute();
 
         checkUpdate();
+
+        boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
+        if (mFirst) {
+            StartNotification();
+        }
     }
 
     private void m_InitActionBar() {
@@ -253,6 +259,10 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     if (m_bConnected && bCanSync) {
                         mBinder.startSync();
                     }
+                }else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_ON)) {
+                    StartNotification();
+                }else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_OFF)) {
+                    StopNotification();
                 }
             }
         };
@@ -261,6 +271,9 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         filter.addAction(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
         filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
         filter.addAction(Constants.INTENT_NOTIFY_START_SYNC);
+        filter.addAction(Constants.INTENT_NOTIFY_NOTIFICATION_ON);
+        filter.addAction(Constants.INTENT_NOTIFY_NOTIFICATION_OFF);
+
         registerReceiver(mReceiver, filter);
 
         return;
@@ -857,6 +870,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_rate_notice_body), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
+                AccountCommonUtil.SetRate(mContext, true);
                 Uri uri = Uri.parse("market://details?id="
                         + mContext.getPackageName());
                 Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -1098,6 +1113,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
     //每天提醒用户记账
     private void StartNotification() {
+        Log.i(Constants.TAG, "---StartNotification start-----");
         int nHour = -1;
         int nMinute = -1;
         Intent intent = new Intent(AccountTotalActivity.this, AlarmReceiver.class);
@@ -1122,7 +1138,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         long selectTime = calendar.getTimeInMillis();
         // 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
         if (systemTime > selectTime) {
-            Toast.makeText(AccountTotalActivity.this, "设置的时间小于当前时间", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AccountTotalActivity.this, "设置的时间小于当前时间", Toast.LENGTH_SHORT).show();
             calendar.add(Calendar.DAY_OF_MONTH, 1);
             selectTime = calendar.getTimeInMillis();
         }
@@ -1135,17 +1151,20 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 firstTime, DAY, sender);
         Log.i(Constants.TAG, "time ==== " + time + ", selectTime ===== "
                 + selectTime + ", systemTime ==== " + systemTime + ", firstTime === " + firstTime);
-
+        mSharedPreferences.edit().putBoolean("notification_switch", true).apply();
     }
 
     private void StopNotification() {
+        Log.i(Constants.TAG, "---StopNotification start-----");
         Intent intent = new Intent(AccountTotalActivity.this, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(AccountTotalActivity.this,
                 0, intent, 0);
 
         // 取消闹铃
-        AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.cancel(sender);
-        Log.i(Constants.TAG, "---StopNotification done-----");
+
+        mSharedPreferences.edit().putBoolean("notification_switch", false).apply();
+
     }
 }

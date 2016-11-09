@@ -123,6 +123,7 @@
     <!--setting -->
     <string name="only_for_wifi">只在WIFI下同步</string>
     <string name="quick_add">启动后直接记账</string>
+    <string name="notification_switch">通知</string>
     <string name="suggestion">意见反馈</string>
     <string name="recommend_to_friend">设置服务端地址</string>
     <string name="update_version">检测更新</string>

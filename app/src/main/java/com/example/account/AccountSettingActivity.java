@@ -48,6 +48,8 @@ public class AccountSettingActivity extends BaseActivity implements
     private View mUpdateVersion;
     private ToggleButton mSwitchOnlyWifi;
     private ToggleButton mSwitchQuickAdd;
+    private ToggleButton mSwitchNotification;
+
     private RelativeLayout mRecommand;
     private LayoutInflater mLayoutInflater = null;
     private Context mContext;
@@ -56,25 +58,24 @@ public class AccountSettingActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        //ShareSDK.initSDK(mContext);
         setContentView(R.layout.activity_account_setting);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
-        //mRecommand = (RelativeLayout) findViewById(R.id.recommend);
+
         mSuggestion = findViewById(R.id.suggestion);
-        //mFocusUs = findViewById(R.id.focus_us);
-        //mCancelAuth = findViewById(R.id.cancel_auth);
         mRateForUs = findViewById(R.id.rate_for_us);
         mUpdateVersion = findViewById(R.id.update_version);
 
         mSwitchOnlyWifi = (ToggleButton) findViewById(R.id.switch_wifi);
         mSwitchQuickAdd = (ToggleButton) findViewById(R.id.switch_quick_add);
+        mSwitchNotification = (ToggleButton) findViewById(R.id.notification_switch);
         mSwitchOnlyWifi.toggle();
         mSwitchQuickAdd.toggle();
+        mSwitchNotification.toggle();
 
-        mSwitchOnlyWifi.setOnToggleChanged(new ToggleButton.OnToggleChanged(){
+        mSwitchOnlyWifi.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
                 mSharedPreferences.edit().putBoolean("only_wifi", on)
@@ -89,12 +90,24 @@ public class AccountSettingActivity extends BaseActivity implements
             }
         });
 
+        mSwitchNotification.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                mSharedPreferences.edit().putBoolean("notification_switch", on).apply();
+                Intent newIntent = null;
+                if(on) {
+                    newIntent = new Intent(Constants.INTENT_NOTIFY_NOTIFICATION_ON);
+                }else{
+                    newIntent = new Intent(Constants.INTENT_NOTIFY_NOTIFICATION_OFF);
+                }
+                mContext.sendBroadcast(newIntent);
+            }
+        });
+
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
 
         mSuggestion.setOnClickListener(this);
-        // mFocusUs.setOnClickListener(this);
-        //mCancelAuth.setOnClickListener(this);
         mRateForUs.setOnClickListener(this);
         mUpdateVersion.setOnClickListener(this);
 
@@ -102,6 +115,8 @@ public class AccountSettingActivity extends BaseActivity implements
                 true);
 
         boolean bQuickAdd = mSharedPreferences.getBoolean("quick_add", false);
+
+        boolean bNotification = mSharedPreferences.getBoolean("notification_switch", false);
         if(bOnlyWifi)
         {
             mSwitchOnlyWifi.setToggleOn();
@@ -113,6 +128,13 @@ public class AccountSettingActivity extends BaseActivity implements
             mSwitchQuickAdd.setToggleOn();
         }else{
             mSwitchQuickAdd.setToggleOff();
+        }
+
+        if(bNotification)
+        {
+            mSwitchNotification.setToggleOn();
+        }else{
+            mSwitchNotification.setToggleOff();
         }
 
         mLayoutInflater = (LayoutInflater) mContext

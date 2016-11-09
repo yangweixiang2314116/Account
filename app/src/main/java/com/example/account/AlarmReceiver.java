@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -18,30 +20,22 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(Constants.TAG, "--AlarmReceiver --onReceive start-----");
         mNotificationManager = (NotificationManager) context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-        //TODO
-        int icon = R.mipmap.ic_launcher;
-        CharSequence tickerText = "记录一下今天的装修支出吧";
-        long when = System.currentTimeMillis();
-        Notification  mNotification = new Notification(icon, tickerText, when);
 
-        // 放置在"正在运行"栏目中
-        mNotification.flags = Notification.FLAG_ONGOING_EVENT;
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
-        /*
-        RemoteViews contentView = new RemoteViews(context.getPackageName(),
-                R.layout.download_notification_show);
-        contentView.setTextViewText(R.id.tv_download_state, mTitle);
-        // 指定个性化视图
-        mNotification.contentView = contentView;
+        Intent newIntent = new Intent(context, AccountTotalActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intent = new Intent(this, AccountTotalActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle("记录一下今天的装修支出吧")
+                .setContentText("点击开始记账")
+                .setAutoCancel(true)
+                .setContentIntent(contentIntent);
 
-        // 指定内容意图
-        mNotification.contentIntent = contentIntent;
-        */
-        mNotificationManager.notify(NOTIFY_ID, mNotification);
+        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
     }
 }

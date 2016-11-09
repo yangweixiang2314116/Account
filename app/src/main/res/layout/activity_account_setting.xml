@@ -86,11 +86,9 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/recommend"
+                android:id="@+id/notification_on_off"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/setting_item_height"
-                android:background="@drawable/account_list_item_selector_bg"
-                android:clickable="true">
+                android:layout_height="@dimen/setting_item_height">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -98,13 +96,27 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/setting_text_padding_left"
-                    android:text="@string/recommend_to_friend" />
+                    android:text="@string/notification_switch" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/seprate_line"
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_item_line" />
+
+                <com.zcw.togglebutton.ToggleButton
+                    android:id="@+id/notification_switch"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    toggle:tbBorderWidth="1px"
+                    toggle:tbOffBorderColor="#dadbda"
+                    toggle:tbOffColor="#fff"
+                    toggle:tbOnColor="@color/fa_colorPrimary"
+                    toggle:tbSpotColor="#fff">
+
+                </com.zcw.togglebutton.ToggleButton>
             </RelativeLayout>
 
             <RelativeLayout
