@@ -252,13 +252,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     }
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)) {
                     m_bIsServerNormal = true;
-                    Log.i(Constants.TAG, "------m_InitReceiver--server work status--m_bIsServerNormal----" + m_bIsServerNormal);
-                    boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
-                    Log.i(Constants.TAG, "------m_InitReceiver----m_bConnected----" + m_bConnected + "--bCanSync---" + bCanSync);
-
-                    if (m_bConnected && bCanSync) {
-                        mBinder.startSync();
-                    }
+                    m_ProcessSyncAction(true);
                 }else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_ON)) {
                     StartNotification();
                 }else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_OFF)) {
@@ -360,7 +354,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
             break;
             case R.id.total_account_sync: {
                 Log.i(Constants.TAG, "-------start to sync-------");
-                m_ProcessSyncAction();
+                m_ProcessSyncAction(false);
             }
             break;
 
@@ -423,7 +417,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
             m_bFirstRefreshList = false;
         }
 
-        if (m_bFirstRefreshList && (mDetailListDataSource.size() % 10 == 0) &&
+        if (m_bFirstRefreshList && (mDetailListDataSource.size() % 10 == 0 && mDetailListDataSource.size() != 0) &&
                 AccountCommonUtil.IsRate(mContext) == false) {
             m_ShowRatePoup();
             m_bFirstRefreshList = false;
@@ -432,13 +426,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         if (m_bFirstRefreshList) {
             m_bFirstRefreshList = false;
         } else {
-            //try to sync
-            boolean bCanSync = AccountCommonUtil.CanSyncNow(mContext);
-            Log.i(Constants.TAG, "------m_InitalTotalAccountList----m_bConnected----" + m_bConnected + "--bCanSync---" + bCanSync);
-
-            if (m_bConnected && bCanSync) {
-                mBinder.startSync();
-            }
+            m_ProcessSyncAction(true);
         }
 
     }
@@ -580,7 +568,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SYNC: {
                         Log.i(Constants.TAG, "-------start to sync-------");
-                        m_ProcessSyncAction();
+                        m_ProcessSyncAction(false);
                     }
                     break;
                     case Constants.ACCOUNT_SLIDEING_MENU_SEARCH: {
@@ -849,6 +837,9 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 m_UpdateTotalCost(oldCost, m_CurrentTotalCost);
                 Toast.makeText(mContext, R.string.give_up_success, Toast.LENGTH_SHORT)
                         .show();
+
+                //sync with server
+                m_ProcessSyncAction(true);
             }
         });
         dialog.show();
@@ -1014,7 +1005,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         return "";
     }
 
-    public boolean m_ProcessSyncAction() {
+    public boolean m_ProcessSyncAction(boolean auto) {
         if (AccountCommonUtil.IsLogin(mContext)) {
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 if (AccountCommonUtil.IsOnlyWifi(mContext)) {
@@ -1022,22 +1013,42 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         if (m_bIsServerNormal) {
                             mBinder.startSync();
                         } else {
+                            if(auto)
+                            {
+                                return false;
+                            }
                             Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        if(auto)
+                        {
+                            return false;
+                        }
                         Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     if (m_bIsServerNormal) {
                         mBinder.startSync();
                     } else {
+                        if(auto)
+                        {
+                            return false;
+                        }
                         Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
                     }
                 }
             } else {
+                if(auto)
+                {
+                    return false;
+                }
                 Toast.makeText(mContext, R.string.network_disconnect, Toast.LENGTH_SHORT).show();
             }
         } else {
+            if(auto)
+            {
+                return false;
+            }
             MobclickAgent.onEvent(mContext, "slidemenu_enter_login");
             m_ShowQuestionLoginPoup();
         }
@@ -1167,4 +1178,5 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         mSharedPreferences.edit().putBoolean("notification_switch", false).apply();
 
     }
+
 }

@@ -177,7 +177,7 @@ public class AccountApiConnector {
                     Bitmap bitmapDate = BitmapUtils.decodeSampledBitmapFromFd(ImagePath, 480, 800);
                     //change bitmap data to string data
                     String imageDate = BitmapUtils.BitmapToString(bitmapDate);
-
+                    Log.i(Constants.TAG, "--post account item imageDate size --" + imageDate.length());
                     params.put(key, imageDate);
                 } else {
                     // TODO Auto-generated catch block
