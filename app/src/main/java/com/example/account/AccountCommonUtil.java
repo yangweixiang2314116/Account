@@ -230,6 +230,15 @@ public class AccountCommonUtil {
                 "guide_area", "");
     }
 
+    public static String GetUserName(Context context) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        return pSharedPreferences.getString(
+                "user_name", "");
+    }
+
+
     public static boolean SetGudieArea(Context context, String area) {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);

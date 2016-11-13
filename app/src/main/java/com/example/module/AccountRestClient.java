@@ -25,7 +25,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 public class AccountRestClient {
 		//private static   String mServerUrl = "http://192.168.1.100:8000/";
-		private static   String mServerUrl = "http://139.196.166.79/";
+		private static   String mServerUrl = "https://139.196.166.79/";
 
     private static AsyncHttpClient client = null;
 	private static String TokenPre = " Token ";
@@ -33,7 +33,7 @@ public class AccountRestClient {
 	private static Context mContext = null;
 
 	private static AccountRestClient mInstance;
-	private static final String KEY_PASS = "pw12306";
+	private static final String KEY_PASS = "QAasTG";
 
 	private AccountRestClient() {
 	}
@@ -58,7 +58,7 @@ public class AccountRestClient {
 	{
 		Log.i(Constants.TAG, "-AccountRestClient -- Init--start-");
 
-		/*
+
 		KeyStore localTrustStore = null;
 		MySSLSocketFactory sslFactory = null;
 		try {
@@ -67,7 +67,7 @@ public class AccountRestClient {
 			Log.i(Constants.TAG, "--KeyStoreException-" + e);
 			e.printStackTrace();
 		}
-		InputStream input = context.getResources().openRawResource(R.raw.cert12306);
+		InputStream input = context.getResources().openRawResource(R.raw.zxjz);
 		try {
 			try {
 				localTrustStore.load(input, KEY_PASS.toCharArray());
@@ -101,7 +101,6 @@ public class AccountRestClient {
 
 		Log.i(Constants.TAG, "--setSSLSocketFactory--");
 		client.setSSLSocketFactory(sslFactory);
-		*/
 
 		if(AccountCommonUtil.IsLogin(mContext))
 		{

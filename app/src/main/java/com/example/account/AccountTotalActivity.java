@@ -912,12 +912,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                             mSharedPreferences.edit().putString("user_name", phone)
                                     .apply();
 
-                            Log.i(Constants.TAG, "------login user name --------" + phone);
-                            TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
-
-                            String repalceResult = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
-                            userNameText.setText(repalceResult);
-
                             // 提交用户信息到服务端获取TOKEN
                             if (AccountCommonUtil.IsSupportSync(mContext)) {
                                 m_RegisterUser(country, phone);
@@ -947,6 +941,13 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 try {
                     token = response.getString("token");
                     AccountRestClient.SetClientToken(token);
+
+                    String user = AccountCommonUtil.GetUserName(mContext);
+                    Log.i(Constants.TAG, "------login user name --------" + user);
+                    TextView userNameText = (TextView) findViewById(R.id.total_user_namel);
+
+                    String repalceResult = user.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+                    userNameText.setText(repalceResult);
 
                     AccountCommonUtil.SetToken(mContext, token);
                     AccountCommonUtil.SetLogin(mContext, true);
@@ -1013,18 +1014,26 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         if (m_bIsServerNormal) {
                             mBinder.startSync();
                         } else {
+                            //retry to check server normal
+                            checkUpdate();
+                            /*
                             if(auto)
                             {
                                 return false;
                             }
                             Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
+                            */
                         }
                     } else {
+                        //retry to check server normal
+                        checkUpdate();
+                        /*
                         if(auto)
                         {
                             return false;
                         }
                         Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
+                        */
                     }
                 } else {
                     if (m_bIsServerNormal) {
