@@ -208,6 +208,7 @@ public class AccountApiConnector {
         String url = "jz/details/" + item.AccountId + "/";
         RequestParams params = new RequestParams();
 
+        params.put("local_id", item.getId());
         params.put("price", item.Cost);
         //TODO request by server
         params.put("tag", item.Category);

@@ -1025,6 +1025,18 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                             */
                         }
                     } else {
+
+                        if(auto)
+                        {
+                            return false;
+                        }
+                        Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    if (m_bIsServerNormal) {
+                        mBinder.startSync();
+                    } else {
                         //retry to check server normal
                         checkUpdate();
                         /*
@@ -1032,18 +1044,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         {
                             return false;
                         }
-                        Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
-                        */
-                    }
-                } else {
-                    if (m_bIsServerNormal) {
-                        mBinder.startSync();
-                    } else {
-                        if(auto)
-                        {
-                            return false;
-                        }
                         Toast.makeText(mContext, R.string.server_abnormal, Toast.LENGTH_SHORT).show();
+                        */
                     }
                 }
             } else {
