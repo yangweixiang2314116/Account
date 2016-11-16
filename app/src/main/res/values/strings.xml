@@ -41,6 +41,7 @@
     <string name="add_category_app_name">买的啥</string>
     <string name="add_category_app_lable">买的啥: </string>
     <string name="recent_label_text">最近使用</string>
+    <string name="near_label_text">附近</string>
     <string name="add_new_category_hint">输入新的标签，如地板</string>
     <!--ADD Category -->
 

@@ -2,73 +2,113 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/tag_activity_background_color">
 
-    <LinearLayout
+    <!-- Must be last for right layering display -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="@color/actionbar_background_color">
 
-        <RelativeLayout
-            android:id="@+id/main_top_RL"
+        <FrameLayout
+            android:id="@+id/toolbar_container"
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_height="wrap_content">
 
-            <com.baidu.mapapi.map.MapView
-                android:id="@+id/main_bdmap"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/position_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="true"></com.baidu.mapapi.map.MapView>
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:background="@color/actionbar_background_color" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@android:color/transparent"
-                android:src="@mipmap/baidumap_ico_poi_on" />
-        </RelativeLayout>
+            <com.miguelcatalan.materialsearchview.MaterialSearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/account_recently_offline_position_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbarlayout"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/position_history_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/recent_label_text"
+            android:textColor="@color/more_info_text_color"
+            android:textSize="16sp" />
+
+        <com.example.account.FlowLayout
+            android:id="@+id/position_history_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/position_history_label"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/clear_position_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/position_history_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="@string/account_search_clear_history"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/account_location_position_list_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/account_recently_offline_position_part"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/position_near_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/near_label_text"
+            android:textColor="@color/more_info_text_color"
+            android:textSize="16sp" />
 
         <ListView
             android:id="@+id/main_pois"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"></ListView>
-    </LinearLayout>
+            android:layout_below="@id/position_near_label"
+            />
+    </RelativeLayout>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/main_search_pois"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/main_search_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/add_new_position_hint"
-                android:padding = "10dp"
-                android:textSize="18sp"
-                android:background="@null"
-                android:cursorVisible="false"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:textColor="@color/content_text_color"/>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/main_search_pois"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#ffcccccc"
-            android:visibility="gone"></ListView>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_below="@id/appbarlayout"
+        android:background="#ffcccccc"
+        android:visibility="gone"></ListView>
 
 
 </RelativeLayout>
