@@ -1,5 +1,7 @@
 package com.example.module;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -7,6 +9,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.baidu.mapapi.search.core.PoiInfo;
+import com.example.account.Constants;
 
 @Table(name = "PoiItems")
 public class PoiItem extends Model {
@@ -57,9 +60,18 @@ public class PoiItem extends Model {
         this.account = account;
     }
 
+
     public static PoiItem build(PoiInfo object, Account account) {
+        Log.i(Constants.TAG, "--PoiInfo---");
         return new PoiItem(object.name, object.uid, object.address, object.city, object.phoneNum,
                 object.location.latitude, object.location.longitude, object.location.latitudeE6, object.location.longitudeE6,account);
+    }
+
+
+    public static PoiItem build(OfflineHistory object, Account account) {
+        Log.i(Constants.TAG, "--buildFromOffline---");
+        return new PoiItem(object.name, object.uid, object.address, object.city, object.phoneNum,
+                object.latitude, object.longitude, object.latitudeE6, object.longitudeE6,account);
     }
 
     public static PoiItem GetPoiItem(Account account)

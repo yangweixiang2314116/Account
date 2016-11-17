@@ -11,6 +11,7 @@ import com.example.module.BaseActivity;
 import com.example.module.DialogHelp;
 import com.example.module.ImageItem;
 import com.example.module.MoreInfoItem;
+import com.example.module.OfflineHistory;
 import com.example.module.PoiItem;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
@@ -68,6 +69,7 @@ public class AccountStartActivity extends BaseActivity {
     private String m_LatestBrand = "";
     private String m_LatestPosition = "";
     private PoiInfo m_LatestPoi = null;
+    private OfflineHistory m_LatestOffline = null;
     private PoiItem m_CurrentPoi = null;
     private Double m_LatestCost;
     private ArrayList<String> m_LatestImageList = new ArrayList<String>();
@@ -111,8 +113,7 @@ public class AccountStartActivity extends BaseActivity {
                 m_SaveAccount();
                 //notify data change
                 AccountCommonUtil.sendBroadcastForAccountDataChange(mContext);
-                if(AccountCommonUtil.IsQuickStart(mContext))
-                {
+                if (AccountCommonUtil.IsQuickStart(mContext)) {
                     Intent mIntent = new Intent();
                     mIntent.setClass(mContext, AccountTotalActivity.class);
                     startActivity(mIntent);
@@ -163,6 +164,7 @@ public class AccountStartActivity extends BaseActivity {
     }
 
     private Handler mHandler = new Handler();
+
     private boolean m_InitCommentsText() {
         m_CommentsText = (EditText) findViewById(R.id.account_add_comments);
         /*
@@ -233,7 +235,7 @@ public class AccountStartActivity extends BaseActivity {
                         m_LatestCreateTime = AccountCommonUtil.ConverStringToDateWithoutTime(m_CurrentTimeText.getText().toString());
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH) ).show();
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
         return true;
@@ -334,7 +336,7 @@ public class AccountStartActivity extends BaseActivity {
 
             m_CommentsText.clearFocus();
             m_InputEditText.requestFocus();
-        }else{
+        } else {
             m_InputEditText.requestFocus();
         }
 
@@ -461,7 +463,7 @@ public class AccountStartActivity extends BaseActivity {
                 }
             });
 
-            if(item.itemValue.equals("") == false) {
+            if (item.itemValue.equals("") == false) {
                 ImageView check = (ImageView) InfoItem
                         .findViewById(R.id.more_info_check);
                 check.setImageResource(R.mipmap.checkbox_checked);
@@ -557,17 +559,33 @@ public class AccountStartActivity extends BaseActivity {
                     if (data != null) {
                         Bundle bundle = data.getExtras();
                         PoiInfo poi = bundle.getParcelable("poi");
-                        Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + poi);
-                        m_LatestPoi = poi;
-                        m_LatestPosition = poi.name;
+                        if (poi != null) {
+                            Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + poi);
+                            m_LatestPoi = poi;
+                            m_LatestPosition = poi.name;
+                            m_LatestOffline = null;
+                        }
+
+                        OfflineHistory offline = bundle.getParcelable("offline");
+                        if (offline != null) {
+                            Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + offline);
+                            Log.i(Constants.TAG, "----position-result-" + offline.name + "----"+offline.address);
+                            m_LatestOffline = offline;
+                            m_LatestPosition = offline.name;
+                            m_LatestPoi = null;
+                        }
+                        else
+                        {
+                            Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--offline == null-" );
+                        }
+
                         m_bPoiInfoChange = true;
                         m_UpdateMoreInfoList(Constants.ACCOUNT_MORE_INFO_POSITION, m_LatestPosition);
                     }
                 }
                 break;
 
-                case Constants.ACCOUNT_MORE_INFO_SHOPPING_ONLINE:
-                {
+                case Constants.ACCOUNT_MORE_INFO_SHOPPING_ONLINE: {
                     if (data != null) {
                         String online = data.getStringExtra("online");
                         Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_SHOPPING_ONLINE--online--" + online);
@@ -577,10 +595,11 @@ public class AccountStartActivity extends BaseActivity {
                         //Log.i(Constants.TAG, "--ACCOUNT id --" + m_CurrentAccount.getId());
 
                         //PoiItem item = PoiItem.GetPoiItem(m_CurrentAccount);
-                        if(m_CurrentAccount.getId() != null) {
+                        if (m_CurrentAccount.getId() != null) {
                             PoiItem.delete(m_CurrentAccount);
                         }
                         m_LatestPoi = null;
+                        m_LatestOffline = null;
 
                         m_UpdateMoreInfoList(Constants.ACCOUNT_MORE_INFO_POSITION, m_LatestPosition);
                     }
@@ -622,12 +641,10 @@ public class AccountStartActivity extends BaseActivity {
             }
 
             for (int index = 0; index < dataList.size(); index++) {
-                if(dataList.get(index).Path.equals(""))
-                {
+                if (dataList.get(index).Path.equals("")) {
                     //do not display thumbnail when local image path lost
                     //m_LatestImageList.add(dataList.get(index).ServerPath);
-                }
-                else {
+                } else {
                     m_LatestImageList.add(dataList.get(index).Path);
                 }
             }
@@ -657,9 +674,9 @@ public class AccountStartActivity extends BaseActivity {
             Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_IMAGE --DecoderImagePath--" + DecoderImagePath);
 
             Picasso.with(mContext)
-            		.load(DecoderImagePath)
+                    .load(DecoderImagePath)
                     .fit()
-            		.into(ImageItem);
+                    .into(ImageItem);
 
             commentItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -709,28 +726,29 @@ public class AccountStartActivity extends BaseActivity {
             Log.i(Constants.TAG, "--m_bImageListChange ---" + m_bImageListChange);
             if (m_bImageListChange) {
                 m_CurrentAccount.ImageListChange = 1;
-            }else{
+            } else {
                 m_CurrentAccount.ImageListChange = 0;
             }
 
             m_CurrentAccount.save();
             Log.i(Constants.TAG, "--m_CurrentAccount save id ---" + m_CurrentAccount.getId());
-
-            if(m_LatestPoi != null) {
+            if (m_bPoiInfoChange) {
+            if (m_LatestPoi != null || m_LatestOffline != null) {
                 //delete old poi info
                 if (PoiItem.GetPoiItem(m_CurrentAccount) != null) {
                     PoiItem.delete(m_CurrentAccount);
                 }
                 //add new poi info
-                PoiItem poi = PoiItem.build(m_LatestPoi, m_CurrentAccount);
-                poi.save();
-            }
-            if (m_bPoiInfoChange) {
-                PoiItem.delete(m_CurrentAccount);
+                PoiItem newPoi = null;
+                if (m_LatestPoi != null) {
+                    newPoi = PoiItem.build(m_LatestPoi, m_CurrentAccount);
+                } else {
+                    Log.i(Constants.TAG, "--m_LatestOffline---" + m_LatestOffline.uid);
+                    newPoi = PoiItem.build(m_LatestOffline, m_CurrentAccount);
+                }
+                newPoi.save();
+            }}
 
-                PoiItem item = PoiItem.build(m_LatestPoi, m_CurrentAccount);
-                item.save();
-            }
 
             if (m_bImageListChange) {
 
@@ -781,9 +799,9 @@ public class AccountStartActivity extends BaseActivity {
                 R.layout.dialog_shopping_type, null);
         builder.setView(messageContent);
         builder.create();
-        final AlertDialog dialog =builder.show();
+        final AlertDialog dialog = builder.show();
 
-        Button  online = (Button)messageContent.findViewById(R.id.dialog_shopping_online);
+        Button online = (Button) messageContent.findViewById(R.id.dialog_shopping_online);
         online.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -797,7 +815,7 @@ public class AccountStartActivity extends BaseActivity {
             }
         });
 
-        Button  offline = (Button)messageContent.findViewById(R.id.dialog_shopping_offline);
+        Button offline = (Button) messageContent.findViewById(R.id.dialog_shopping_offline);
         offline.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

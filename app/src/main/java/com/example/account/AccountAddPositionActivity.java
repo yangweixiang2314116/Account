@@ -57,14 +57,19 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.example.module.BaseActivity;
 import com.example.module.DialogHelp;
 import com.example.module.NetworkUtils;
+import com.example.module.OfflineHistory;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountAddPositionActivity extends BaseActivity implements BDLocationListener, OnGetGeoCoderResultListener, OnScrollListener {
 
     private MaterialSearchView mSearchView;
+    private FlowLayout mOfflineHistoryLayout;
+    protected ArrayList<OfflineHistory> mOfflineHistoryDataSource = new ArrayList<OfflineHistory>();
+    private RelativeLayout mOfflineRecentlyRL;
 
     private ListView poisLL;
 
@@ -137,6 +142,9 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mInitSearchView();
+
+        mInitOfflineHistory();
+
         if (NetworkUtils.isNetworkAvailable(mContext)) {
             initView();
         } else {
@@ -180,6 +188,8 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
                     Log.i(Constants.TAG, "--post account item address--" + poi.address);
                     Log.i(Constants.TAG, "--post account item uid--" + poi.uid);
 
+                    mSavePoiItem(poi);
+
                     Bundle data = new Bundle();
                     data.putParcelable("poi", poi);
                     mIntent.putExtras(data);
@@ -204,6 +214,8 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
                 MobclickAgent.onEvent(mContext, "click_offline_position_searchlist");
                 if (mSearchAdapter != null) {
                     PoiInfo poi = (PoiInfo) mSearchAdapter.getItem(position);
+
+                    mSavePoiItem(poi);
                     Bundle data = new Bundle();
                     data.putParcelable("poi", poi);
                     mIntent.putExtras(data);
@@ -496,6 +508,92 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         mSearchView.setMenuItem(item);
 
         return true;
+    }
+
+    private  void  mInitOfflineHistory()
+    {
+        TextView clearOnlineButton  = (TextView) findViewById(R.id.clear_position_history);
+
+        mOfflineHistoryLayout = (FlowLayout) findViewById(R.id.position_history_content);
+
+        mOfflineRecentlyRL = (RelativeLayout) findViewById(R.id.account_recently_offline_position_part);
+
+        Log.i(Constants.TAG, "------setOnClickListener---clear_brand_history--");
+        clearOnlineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(Constants.TAG, "------enter into onClick---clearCategoryButton--");
+                OfflineHistory.deleteAll();
+                Toast.makeText(mContext, getString(R.string.accout_search_clear_history_success), Toast.LENGTH_SHORT).show();
+                mOfflineHistoryLayout.setVisibility(View.GONE);
+                mOfflineRecentlyRL.setVisibility(View.GONE);
+            }
+        });
+
+        mOfflineHistoryDataSource = (ArrayList<OfflineHistory>) OfflineHistory.GetHistoryItems();
+
+        Log.i(Constants.TAG, "------mOfflineHistoryDataSource.size()--------" + mOfflineHistoryDataSource.size());
+
+        if (mOfflineHistoryDataSource.size() > 0) {
+            mOfflineHistoryLayout.setVisibility(View.VISIBLE);
+            for (int index = 0; index < mOfflineHistoryDataSource.size(); index++) {
+                addTextView(mOfflineHistoryDataSource.get(index));
+            }
+        } else {
+            mOfflineHistoryLayout.setVisibility(View.GONE);
+            mOfflineRecentlyRL.setVisibility(View.GONE);
+        }
+    }
+
+    public void addTextView(OfflineHistory item) {
+
+        TextView offlineTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mOfflineHistoryLayout, false);
+        offlineTag.setText(item.name);
+        offlineTag.setTag(item);
+        offlineTag.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                TextView offItem = (TextView) v;
+                OfflineHistory chose = (OfflineHistory)offItem.getTag();
+                if(null == chose)
+                {
+                    Log.i(Constants.TAG, "------null == chose--------");
+                    return ;
+                }
+                Log.i(Constants.TAG, "------addTextView--------" + chose.name);
+                Bundle data = new Bundle();
+                data.putParcelable("offline", chose);
+                mIntent.putExtras(data);
+
+                setResult(Activity.RESULT_OK, mIntent);
+
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                finish();
+                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+
+            }
+        });
+
+        mOfflineHistoryLayout.addView(offlineTag);
+    }
+
+    private void mSavePoiItem(PoiInfo poi)
+    {
+        if (false == OfflineHistory.IsExistOfflineContent(poi)) {
+
+            OfflineHistory item = OfflineHistory.Build(poi);
+            item.save();
+            Log.i(Constants.TAG, "------mCurOffLineContent save on DB success--------" + poi.name);
+        } else {
+            Log.i(Constants.TAG, "------mCurOffLineContent already on DB--------" + poi.name);
+            OfflineHistory item = OfflineHistory.GetOfflineitemByContent(poi);
+            item.lastUseTime = System.currentTimeMillis();
+            item.save();
+        }
     }
 
     private void mInitSearchView()
