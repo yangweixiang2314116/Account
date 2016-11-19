@@ -1,13 +1,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/tag_activity_background_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Must be last for right layering display -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="@color/actionbar_background_color">
+
+        <FrameLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/search_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:background="@color/actionbar_background_color" />
+
+            <com.miguelcatalan.materialsearchview.MaterialSearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/account_search_result_part"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/appbarlayout"
+        android:layout_marginTop="10dp"
         android:padding="10dp"
         android:background="@android:color/white" >
 
@@ -34,7 +65,7 @@
     <ListView
         android:id="@+id/account_search_result_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop ="20dp"
         android:divider="?android:attr/listDivider"
         android:dividerHeight="1px" />
@@ -44,7 +75,8 @@
         android:id="@+id/account_search_history_part"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/appbarlayout"
+        android:layout_marginTop="10dp"
         android:padding="10dp"
         android:background="@android:color/white" >
 
@@ -58,33 +90,51 @@
             android:layout_marginBottom="10dp"
             android:textSize="16sp" />
 
-        <ListView
-            android:id="@+id/account_search_history_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop ="20dp"
-            android:divider="?android:attr/listDivider"
-            android:dividerHeight="1px" />
-
-        <View
-            android:id="@+id/search_history_list_bottom_line"
+        <com.example.account.FlowLayout
+            android:id="@+id/search_history_content"
             android:layout_width="wrap_content"
-            android:layout_height="1px"
-            android:layout_below="@id/account_search_history_list"
-            android:layout_marginBottom="10dp"
-            android:background="?android:attr/listDivider" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/total_search_history_label"
+            android:layout_marginBottom="10dp" />
 
-
-        <TextView
+         <TextView
             android:id="@+id/clear_search_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_below="@id/search_history_list_bottom_line"
+            android:layout_below="@id/search_history_content"
             android:text="@string/account_search_clear_history"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp" />
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/account_guess_search_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/account_search_history_part"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/guess_search_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/account_guess_search_text"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp" />
+
+        <com.example.account.FlowLayout
+            android:id="@+id/guess_search_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/guess_search_label"
+            android:layout_marginBottom="10dp" />
+
+    </RelativeLayout>
 </RelativeLayout>

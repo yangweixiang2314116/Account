@@ -1,26 +1,19 @@
 package com.example.account;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar.LayoutParams;
-import android.support.v7.widget.SearchView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -29,10 +22,13 @@ import android.widget.Toast;
 
 import com.example.module.Account;
 import com.example.module.BaseActivity;
+import com.example.module.BrandHistory;
+import com.example.module.CategoryHistory;
+import com.example.module.OfflineHistory;
+import com.example.module.OnlineHistory;
 import com.example.module.SearchHistory;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.umeng.analytics.MobclickAgent;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +40,13 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
 
     private Intent mIntent = null;
     private Context mContext = null;
-    private SearchView  mSearchView  = null;
+    private MaterialSearchView mSearchView;
     private String mCurSearchContent = "";
-    private SearchView.SearchAutoComplete mEdit = null;
+    private FlowLayout mGuessSearchFlowLayout = null;
+    private RelativeLayout mGuessSearchLayout = null;
 
-    private ListView m_SearchHistorytList = null;
+    private FlowLayout mSearchHistoryFlowLayout = null;
+
     protected ArrayList<SearchHistory> mSearchHistoryDataSource = new ArrayList<SearchHistory>();
     private RelativeLayout mSearchHistoryLayout = null;
 
@@ -64,38 +62,142 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
         mContext = this;
         mIntent = getIntent();
 
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-
-       // getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP
-       //         | ActionBar.DISPLAY_SHOW_CUSTOM ) ;
-
+        setTheme(R.style.MIS_NO_ACTIONBAR);
         setContentView(R.layout.activity_account_search);
 
-        m_InitSearchView();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.search_toolbar);
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+        }
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayUseLogoEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+            getSupportActionBar().setTitle(getString(R.string.account_search));
+        }
+
+        mInitSearchView();
 
         getWindow() . setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) ;
 
         m_SearchAccountList = (ListView) findViewById(R.id.account_search_result_list);
 
-        m_SearchHistorytList = (ListView) findViewById(R.id.account_search_history_list);
+        //m_SearchHistorytList = (ListView) findViewById(R.id.account_search_history_list);
 
         mSearchResultLayout = (RelativeLayout)findViewById(R.id.account_search_result_part);
 
         mSearchHistoryLayout = (RelativeLayout)findViewById(R.id.account_search_history_part);
 
+        mSearchHistoryFlowLayout = (FlowLayout) findViewById(R.id.search_history_content);
+
         mShowSearchHistoryList();
         mHideSearchResultContent();
-
+        mShowGuessSearchList();
         MobclickAgent.onEvent(mContext, "enter_search");
 
         Log.i(Constants.TAG, "------enter into AccountSearchActivity----onCreate--end--");
 
+    }
+
+    private void mShowGuessSearchList()
+    {
+        mGuessSearchFlowLayout = (FlowLayout)findViewById(R.id.guess_search_content);
+        mGuessSearchLayout = (RelativeLayout)findViewById(R.id.account_guess_search_part);
+
+        ArrayList<String> guessList = new ArrayList<String>();
+        ArrayList<BrandHistory>  recentlyBrand =  (ArrayList<BrandHistory>) BrandHistory.GetHistoryItemsForSearch();
+        for(int index = 0 ; index < recentlyBrand.size(); index++){
+            guessList.add(recentlyBrand.get(index).Content);
+        }
+
+        ArrayList<CategoryHistory>  recentlyCategory =  (ArrayList<CategoryHistory>) CategoryHistory.GetHistoryItemsForSearch();
+        for(int index = 0 ; index < recentlyCategory.size(); index++){
+            guessList.add(recentlyCategory.get(index).Content);
+        }
+
+        ArrayList<OnlineHistory>  recentlyOnline =  (ArrayList<OnlineHistory>) OnlineHistory.GetHistoryItemsForSearch();
+        for(int index = 0 ; index < recentlyOnline.size(); index++){
+            guessList.add(recentlyOnline.get(index).Content);
+        }
+
+        ArrayList<OfflineHistory>  recentlyOffline =  (ArrayList<OfflineHistory>) OfflineHistory.GetHistoryItemsForSearch();
+        for(int index = 0 ; index < recentlyOffline.size(); index++){
+            guessList.add(recentlyOffline.get(index).name);
+        }
+
+        if(guessList.size() > 0)
+        {
+            for(int index = 0 ; index < guessList.size(); index++){
+                addTextView(guessList.get(index));
+            }
+        }
+        else
+        {
+            mGuessSearchFlowLayout.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    public void addTextViewRecently(String tvName) {
+
+        TextView recentlyTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mSearchHistoryFlowLayout, false);
+        recentlyTag.setText(tvName);
+        recentlyTag.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                TextView tag = (TextView)v;
+
+                String current = tag.getText().toString();
+                Log.i(Constants.TAG, "----search--" + current);
+
+                if(mSearchView != null)
+                {
+                    mSearchView.setQuery(current, false);
+                }
+                mCurSearchContent = current;
+                mSearchView.clearFocus();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                new PrepareSearchTask(mCurSearchContent).execute();
+            }
+
+        });
+
+        mSearchHistoryFlowLayout.addView(recentlyTag);
+    }
+
+
+    public void addTextView(String tvName) {
+
+        TextView categoryTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mGuessSearchFlowLayout, false);
+        categoryTag.setText(tvName);
+        categoryTag.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                TextView tag = (TextView)v;
+
+                String current = tag.getText().toString();
+                Log.i(Constants.TAG, "----search--" + current);
+
+                if(mSearchView != null)
+                {
+                    mSearchView.setQuery(current, false);
+                    mCurSearchContent = current;
+                }
+                mSearchView.clearFocus();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                new PrepareSearchTask(mCurSearchContent).execute();
+            }
+
+        });
+
+        mGuessSearchFlowLayout.addView(categoryTag);
     }
 
     private void mShowSearchHistoryList()
@@ -107,7 +209,12 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
         if(mSearchHistoryDataSource.size() > 0)
         {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
+            mSearchHistoryFlowLayout.removeAllViews();
+            for(int index = 0 ; index < mSearchHistoryDataSource.size(); index++){
+                addTextViewRecently(mSearchHistoryDataSource.get(index).Content);
+            }
 
+            /*
             List<HashMap<String,Object>> data = new ArrayList<HashMap<String,Object>>();
             for(int index = 0 ; index < mSearchHistoryDataSource.size(); index++){
                 HashMap<String,Object>map = new HashMap<String,Object>();
@@ -130,6 +237,7 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
                     new PrepareSearchTask(mCurSearchContent).execute();
                 }
             });
+            */
 
             TextView   clearSearchButton  = (TextView) findViewById(R.id.clear_search_history);
 
@@ -146,7 +254,7 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
         }
         else
         {
-             m_SearchHistorytList.setAdapter(null);
+             //m_SearchHistorytList.setAdapter(null);
             mSearchHistoryLayout.setVisibility(View.GONE);
         }
     }
@@ -154,95 +262,6 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
     private void mHideSearchHistoryList()
     {
         mSearchHistoryLayout.setVisibility(View.GONE);
-    }
-
-    private void m_InitSearchView()
-    {
-        LayoutInflater inflater = ( LayoutInflater ) getSystemService ( Context . LAYOUT_INFLATER_SERVICE ) ;
-
-        View customActionBarView = inflater . inflate ( R . layout . search_view_title , null ) ;
-
-        mSearchView = (SearchView) customActionBarView . findViewById ( R .id.search_view ) ;
-
-        mSearchView.setVisibility(View.VISIBLE);
-        mSearchView.setIconifiedByDefault(true);
-        mSearchView.setIconified(false);
-        mSearchView.setQueryHint(getString(R.string.account_search_hint));
-        if (Build.VERSION.SDK_INT >= 14) {
-            // when edittest is empty, don't show cancal button
-            mSearchView.onActionViewExpanded();
-        }
-
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                return false;
-            }
-        });
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(mContext, "onQueryTextSubmit--"+query, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Toast.makeText(mContext, "text change", Toast.LENGTH_SHORT).show();
-
-                if (newText != null && newText.length() > 0) {
-                    //show search result
-                    mCurSearchContent = newText;
-                    new PrepareSearchTask(newText).execute();
-                } else {
-                    // show search history
-                    mHideSearchResultContent();
-                    mShowSearchHistoryList();
-                }
-                return false;
-            }
-        });
-
-        LayoutParams params = new LayoutParams( LayoutParams. WRAP_CONTENT ,
-                LayoutParams. WRAP_CONTENT , Gravity . CENTER_VERTICAL
-                | Gravity. RIGHT ) ;
-
-        getSupportActionBar(). setCustomView(customActionBarView, params) ;
-
-        m_ChangeSearchViewDefaultStyle();
-    }
-
-    private void m_ChangeSearchViewDefaultStyle()
-    {
-        try {
-            Class<?> argClass=mSearchView.getClass();
-
-            Field mQueryTextView = argClass.getDeclaredField("mQueryTextView");
-            mQueryTextView.setAccessible(true);
-            Class<?> mTextViewClass = mQueryTextView.get(mSearchView).getClass().getSuperclass().getSuperclass().getSuperclass();
-
-            Field mCursorDrawableRes = mTextViewClass.getDeclaredField("mCursorDrawableRes");
-
-            mCursorDrawableRes.setAccessible(true);
-
-            mCursorDrawableRes.set(mQueryTextView.get(mSearchView), R.drawable.color_cursor);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //mEdit = (SearchView.SearchAutoComplete) mSearchView.findViewById(R.id.search_src_text);
-
-        //mEdit.setCu   textCursorDrawable
-        //mEdit.setTextColor(getResources().getColor(R.color.white_color));
-        //mEdit.setHintTextColor(getResources().getColor(R.color.list_line_color));
-
-        LinearLayout  inputLine   = (LinearLayout) mSearchView.findViewById(R.id.search_plate);
-        inputLine.setBackgroundColor(Color.WHITE);
-
-        //ImageView icTip = (ImageView) mSearchView.findViewById(R.id.search_button);
-        //icTip.setImageResource(R.mipmap.ic_search);
-
-        //ImageView  CloseButton  = (ImageView) mSearchView.findViewById(R.id.search_close_btn);
-        //CloseButton.setImageResource(R.mipmap.abc_ic_clear_mtrl_alpha);
     }
 
     private void mHideSearchResultContent()
@@ -253,13 +272,8 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
     private void mShowSearchResultContent()
     {
         mHideSearchHistoryList();
+        mGuessSearchLayout.setVisibility(View.INVISIBLE);
         mSearchResultLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-       //getMenuInflater().inflate(R.menu.account_add_category, menu);
-        return true;
     }
 
     @SuppressLint("NewApi")
@@ -352,6 +366,17 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        mSearchView.setMenuItem(item);
+
+        return true;
+    }
+
+
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
@@ -360,5 +385,56 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    private void mInitSearchView()
+    {
+        mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+        mSearchView.setVoiceSearch(false);
+        mSearchView.setCursorDrawable(R.drawable.color_cursor);
+        mSearchView.setEllipsize(true);
+        mSearchView.setHint(getString(R.string.account_search_hint));
+        mSearchView.setHintTextColor(getResources().getColor(R.color.more_info_text_color));
+        mSearchView.showSearch();
+        //mSearchView.setBackgroundColor(getResources().getColor(R.color.actionbar_background_color));
+        //mSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(Constants.TAG, "------onQueryTextSubmit-----");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                Log.i(Constants.TAG, "------onQueryTextChange-----"+newText);
+                if (newText != null && newText.length() > 0) {
+                    //show search result
+                    mCurSearchContent = newText;
+                    new PrepareSearchTask(newText).execute();
+                } else {
+                    // show search history
+                    mHideSearchResultContent();
+                    mShowSearchHistoryList();
+                    mGuessSearchLayout.setVisibility(View.VISIBLE);
+                }
+                return false;
+            }
+        });
+
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+                Log.i(Constants.TAG, "------onSearchViewShown-----");
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+                Log.i(Constants.TAG, "------onSearchViewClosed-----");
+            }
+        });
     }
 }

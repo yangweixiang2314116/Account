@@ -82,16 +82,17 @@ public class OfflineHistory extends Model implements Parcelable {
         this.lastUseTime = in.readLong();
     }
 
-    public static Creator<OfflineHistory> CREATOR = new Creator<OfflineHistory>() {
-        public OfflineHistory createFromParcel(Parcel source) {
-            return new OfflineHistory(source);
+    public static final Creator<OfflineHistory> CREATOR = new Creator<OfflineHistory>() {
+        @Override
+        public OfflineHistory createFromParcel(Parcel parcel) {
+            return new OfflineHistory(parcel);
         }
 
+        @Override
         public OfflineHistory[] newArray(int size) {
             return new OfflineHistory[size];
         }
     };
-
 
     public static List<OfflineHistory> GetHistoryItems()
     {
@@ -99,6 +100,15 @@ public class OfflineHistory extends Model implements Parcelable {
                 .from(OfflineHistory.class)
                 .limit(20)
                 .orderBy("lastUseTime desc")
+                .execute();
+    }
+
+    public static List<OfflineHistory> GetHistoryItemsForSearch()
+    {
+        return new Select()
+                .from(OfflineHistory.class)
+                .limit(5)
+                .orderBy("LastUseTime desc")
                 .execute();
     }
 

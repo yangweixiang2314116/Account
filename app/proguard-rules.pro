@@ -48,6 +48,9 @@
 -keep class me.relex.circleindicator.** {*;}
 -dontwarn me.relex.circleindicator.**
 
+-keep class com.miguelcatalan.materialsearchview.** {*;}
+-dontwarn com.miguelcatalan.materialsearchview.**
+
 -keep class com.mob.** {*;}
 -dontwarn com.mob.**
 

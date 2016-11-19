@@ -29,6 +29,15 @@ public class CategoryHistory extends Model {
                 .execute();
     }
 
+    public static List<CategoryHistory> GetHistoryItemsForSearch()
+    {
+        return new Select()
+                .from(CategoryHistory.class)
+                .limit(5)
+                .orderBy("LastUseTime desc")
+                .execute();
+    }
+
     public static boolean IsExistCategoryContent(String  item)
     {
         return new Select().from(CategoryHistory.class).where("Content == ? ", item).executeSingle() != null;

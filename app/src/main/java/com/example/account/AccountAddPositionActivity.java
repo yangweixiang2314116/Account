@@ -2,33 +2,22 @@ package com.example.account;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -103,6 +92,8 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
     private Boolean mUpdating = false;
     private boolean mIsEnd = false;
     private PoiSearchAdapter mSearchAdapter = null;
+    private Button mSearchPositionButton = null;
+    private RelativeLayout mSearchPositionRL = null;
 
     private Intent mIntent = null;
     private Context mContext = null;
@@ -141,6 +132,19 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        mSearchPositionButton = (Button) findViewById(R.id.search_postion_button);
+        mSearchPositionRL = (RelativeLayout) findViewById(R.id.account_search_button_part);
+
+        mSearchPositionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    if(mSearchView.isSearchOpen() == false)
+                    {
+                        mSearchView.showSearch(true);
+                        mSearchPositionRL.setVisibility(View.GONE);
+                    }
+            }
+        });
         mInitSearchView();
 
         mInitOfflineHistory();
@@ -602,6 +606,8 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         mSearchView.setVoiceSearch(false);
         mSearchView.setCursorDrawable(R.drawable.color_cursor);
         mSearchView.setEllipsize(true);
+        mSearchView.setHint(getString(R.string.add_new_position_hint));
+        mSearchView.setHintTextColor(getResources().getColor(R.color.more_info_text_color));
         //mSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -624,12 +630,14 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
             public void onSearchViewShown() {
                 //Do some magic
                 Log.i(Constants.TAG, "------onSearchViewShown-----");
+                mSearchPositionRL.setVisibility(View.GONE);
             }
 
             @Override
             public void onSearchViewClosed() {
                 //Do some magic
                 Log.i(Constants.TAG, "------onSearchViewClosed-----");
+                mSearchPositionRL.setVisibility(View.VISIBLE);
             }
         });
     }

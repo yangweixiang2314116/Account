@@ -82,7 +82,8 @@ public class AccountFeedbackActivity extends BaseActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
-                        Log.i(Constants.TAG, "---postFeedback--onSuccess--response---" + response);
+                        Log.i(Constants.TAG, "---postFeedback--onS" +
+                                "uccess--response---" + response);
 
                         Toast.makeText(mContext, R.string.account_feedback_thanks, Toast.LENGTH_SHORT)
                                 .show();

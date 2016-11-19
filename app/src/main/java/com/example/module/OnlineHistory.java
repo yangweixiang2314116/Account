@@ -30,6 +30,16 @@ public class OnlineHistory extends Model {
                 .execute();
     }
 
+    public static List<OnlineHistory> GetHistoryItemsForSearch()
+    {
+        return new Select()
+                .from(OnlineHistory.class)
+                .limit(5)
+                .orderBy("LastUseTime desc")
+                .execute();
+    }
+
+
     public static boolean IsExistOnlineContent(String  item)
     {
         return new Select().from(OnlineHistory.class).where("Content == ? ", item).executeSingle() != null;

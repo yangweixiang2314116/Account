@@ -29,6 +29,15 @@ public class BrandHistory extends Model {
                 .execute();
     }
 
+    public static List<BrandHistory> GetHistoryItemsForSearch()
+    {
+        return new Select()
+                .from(BrandHistory.class)
+                .limit(5)
+                .orderBy("LastUseTime desc")
+                .execute();
+    }
+
     public static boolean IsExistBrandContent(String  item)
     {
         return new Select().from(BrandHistory.class).where("Content == ? ", item).executeSingle() != null;

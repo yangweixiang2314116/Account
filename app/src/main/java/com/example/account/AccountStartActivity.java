@@ -558,14 +558,22 @@ public class AccountStartActivity extends BaseActivity {
                 case Constants.ACCOUNT_MORE_INFO_POSITION: {
                     if (data != null) {
                         Bundle bundle = data.getExtras();
-                        PoiInfo poi = bundle.getParcelable("poi");
-                        if (poi != null) {
-                            Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + poi);
-                            m_LatestPoi = poi;
-                            m_LatestPosition = poi.name;
-                            m_LatestOffline = null;
+                        boolean bPoi = bundle.containsKey("poi");
+                        boolean boffline = bundle.containsKey("offline");
+                        if(bPoi) {
+                            Log.i(Constants.TAG, "--start get poi-----");
+                            PoiInfo poi = bundle.getParcelable("poi");
+                            if (poi != null) {
+                                Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + poi);
+                                m_LatestPoi = poi;
+                                m_LatestPosition = poi.name;
+                                m_LatestOffline = null;
+                            }
                         }
 
+                        if(boffline)
+                        {
+                        Log.i(Constants.TAG, "--start get offline-----");
                         OfflineHistory offline = bundle.getParcelable("offline");
                         if (offline != null) {
                             Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--position-result-" + offline);
@@ -577,6 +585,7 @@ public class AccountStartActivity extends BaseActivity {
                         else
                         {
                             Log.i(Constants.TAG, "--ACCOUNT_MORE_INFO_POSITION--offline == null-" );
+                        }
                         }
 
                         m_bPoiInfoChange = true;

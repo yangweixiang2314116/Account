@@ -397,7 +397,17 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         m_TotalAllAccountList.setAdapter(m_DetailListAdapter);
         m_TotalAllAccountList.setOnItemClickListener(AccountTotalActivity.this);
         m_TotalAllAccountList.setOnItemLongClickListener(AccountTotalActivity.this);
+        m_TotalAllAccountList.setOnMenuStateChangeListener(new SwipeMenuListView.OnMenuStateChangeListener() {
+            @Override
+            public void onMenuOpen(int position) {
+                m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+            }
 
+            @Override
+            public void onMenuClose(int position) {
+                m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+            }
+        });
 //        m_DetailListAdapter.updateUI();
 
         m_TotalCostText = (NumberScrollTextView) findViewById(R.id.total_value);
@@ -464,7 +474,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         m_Menu = new SlidingMenu(this);
         m_Menu.setMode(SlidingMenu.LEFT);
 
-        // m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        m_Menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         m_Menu.setShadowWidthRes(R.dimen.shadow_width);
 //        menu.setShadowDrawable(R.drawable.shadow);
 

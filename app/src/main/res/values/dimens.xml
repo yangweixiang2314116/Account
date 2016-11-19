@@ -4,7 +4,7 @@
     <dimen name="detail_others_value_left">40dp</dimen>
 
     <!-- Slide Menu-->
-    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="slidingmenu_offset">120dp</dimen>
     <dimen name="shadow_width">15dp</dimen>
     <!-- Slide Menu-->
 

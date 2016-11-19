@@ -93,6 +93,8 @@
     <string name="account_search_recently">最近搜索</string>
     <string name="account_search_clear_history">清空历史搜索</string>
     <string name="accout_search_clear_history_success">删除成功</string>
+    <string name="account_guess_search_text">您可能搜</string>
+    <string name="account_search_position_text">搜索位置</string>
     <!--serach activity -->
 
     <!--Sync service  -->
