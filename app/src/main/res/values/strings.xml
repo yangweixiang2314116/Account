@@ -4,6 +4,10 @@
     <!--Common -->
     <string name="btn_name_ok">确认</string>
     <string name="btn_name_cancel">取消</string>
+    <string name="btn_name_like"> 喜欢</string>
+    <string name="btn_name_dislike">不喜欢</string>
+    <string name="btn_name_quit">算了</string>
+    <string name="btn_name_rightnow">马上</string>
     <!--Common-->
 
     <string name="action_sync">Sync</string>
@@ -63,8 +67,8 @@
 
     <!--Slide Menu-->
     <string name="account_not_log_in">立即登陆</string>
-    <string name="account_sort_desc">按金额由大到小显示</string>
-    <string name="account_sort_asc">按金额由小到大显示</string>
+    <string name="account_sort_desc">金额从高到低</string>
+    <string name="account_sort_asc">金额从低到高</string>
     <string name="account_browser_picture">所有图片</string>
     <string name="account_sort_sync">同步</string>
     <string name="account_search">搜索</string>
@@ -82,8 +86,11 @@
     <string name="account_login_wait">下次再说</string>
     <string name="account_login_go_now">马上登陆</string>
     <string name="account_login_notice_body">亲，这个功能需要登陆后才能使用哦。</string>
+    <string name="account_login_feedback_body">亲，您未登陆，您的吐槽我们收不到啊。先登录吧。</string>
+    <string name="account_like_unlike_body">亲，喜欢我们提供的功能吗？</string>
     <string name="account_force_login_body">亲，登陆后可以同步数据到云端，以免丢失。</string>
-    <string name="account_rate_notice_body">亲，去帮我们打个分吧。</string>
+    <string name="account_rate_notice_body">亲，帮我们打个分吧。</string>
+    <string name="account_feedback_notice_body">亲，用得不爽啊，吐槽一下吧。</string>
     <!--Login poup -->
 
     <!--serach activity-->
@@ -115,9 +122,10 @@
     <string name="account_my_user_info_unknow">"未知"</string>
 
     <!--feed back -->
-    <string name="account_feedback_thanks">非常感谢您的宝贵意见</string>
+    <string name="account_feedback_thanks">非常感谢您的宝贵意见, 我们将努力完善。</string>
     <string name="account_feedback_empty">_(:з」∠)_</string>
-    <string name="account_feedback_failed">提交失败</string>
+    <string name="account_feedback_failed">提交反馈失败，请检查一下网络</string>
+    <string name="account_userprofile_failed">提交用户属性失败，请检查一下网络</string>
     <string name="account_feedback_success">提交成功</string>
     <string name="hint_suggesion">给我们提意见</string>
     <string name="send">发送</string>
@@ -136,6 +144,6 @@
 
     <string name="down_state">正在下载：%s</string>
     <string name="tip_double_click_exit">再按一次返回键退出程序</string>
-    <string name="accout_empty_prepare_start">这里空空如也，开始记账吧</string>
+    <string name="accout_empty_prepare_start">这里空空如也，点击+按钮开始记账吧</string>
     <string name="accout_empty_image_start">这里空空如也，开始在记账中添加图片吧</string>
 </resources>

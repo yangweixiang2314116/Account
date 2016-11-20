@@ -58,9 +58,10 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
     private MaterialSearchView mSearchView;
     private FlowLayout mOfflineHistoryLayout;
     protected ArrayList<OfflineHistory> mOfflineHistoryDataSource = new ArrayList<OfflineHistory>();
-    private RelativeLayout mOfflineRecentlyRL;
+    private RelativeLayout mOfflineRecentlyRL = null;
 
     private ListView poisLL;
+    private RelativeLayout mPositionNearRL = null;
 
     /**
      * 定位端
@@ -106,11 +107,11 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         SDKInitializer.initialize(getApplicationContext());
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
-        setTheme(R.style.MIS_NO_ACTIONBAR);
+        //setTheme(R.style.MIS_NO_ACTIONBAR);
         setContentView(R.layout.activity_account_add_position);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.position_toolbar);
-        if(toolbar != null){
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
         final ActionBar actionBar = getSupportActionBar();
@@ -138,11 +139,10 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         mSearchPositionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if(mSearchView.isSearchOpen() == false)
-                    {
-                        mSearchView.showSearch(true);
-                        mSearchPositionRL.setVisibility(View.GONE);
-                    }
+                if (mSearchView.isSearchOpen() == false) {
+                    mSearchView.showSearch(true);
+                    mSearchPositionRL.setVisibility(View.GONE);
+                }
             }
         });
         mInitSearchView();
@@ -294,6 +294,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 
         //如果bdLocation为空或mapView销毁后不再处理新数据接收的位置
         if (bdLocation == null) {
+            Log.i(Constants.TAG, "------onReceiveLocation---- bdLocation == null-----");
             return;
         }
 
@@ -341,9 +342,12 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 
         List<PoiInfo> poiInfos = reverseGeoCodeResult.getPoiList();
         PoiAdapter poiAdapter = new PoiAdapter(AccountAddPositionActivity.this, poiInfos);
-        Log.i(Constants.TAG, "------ onGetReverseGeoCodeResult---size--"+poiInfos.size());
+        Log.i(Constants.TAG, "------ onGetReverseGeoCodeResult---size--" + poiInfos.size());
         poisLL.setAdapter(poiAdapter);
         poisLL.requestFocus();
+
+        mPositionNearRL = (RelativeLayout) findViewById(R.id.account_location_position_list_part);
+        mPositionNearRL.setVisibility(View.VISIBLE);
 
         if (mLocClient.isStarted()) {
             Log.i(Constants.TAG, "------AccountAddPositionActivity---- stop-----");
@@ -353,6 +357,12 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 
     private void m_TriggerSearchData() {
         Log.i(Constants.TAG, "------m_TriggerSearchData mKeyWords-----" + mKeyWords + "--mCurrentPageNumber--" + mCurrentPageNumber);
+
+        if (mKeyWords == null || city == null) {
+            Log.i(Constants.TAG, "------m_TriggerSearchData mKeyWords-----" + mKeyWords + "--city--" + city);
+            m_ShowNetWorkMessageBox();
+            return;
+        }
 
         //创建PoiSearch实例
         PoiSearch poiSearch = PoiSearch.newInstance();
@@ -385,7 +395,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
 
                 List<PoiInfo> poiInfos = poiResult.getAllPoi();
                 if (poiInfos != null && poiInfos.size() > 0) {
-                    Log.i(Constants.TAG, "------mSearchAdapter----I poiInfos.size()-----"+ poiInfos.size());
+                    Log.i(Constants.TAG, "------mSearchAdapter----I poiInfos.size()-----" + poiInfos.size());
                     if (mSearchAdapter != null) {
                         Log.i(Constants.TAG, "------AccountAddPositionActivity----AddNewPOI !!!!-----");
                         mSearchAdapter.AddNewPOI(poiInfos);
@@ -514,9 +524,8 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         return true;
     }
 
-    private  void  mInitOfflineHistory()
-    {
-        TextView clearOnlineButton  = (TextView) findViewById(R.id.clear_position_history);
+    private void mInitOfflineHistory() {
+        TextView clearOnlineButton = (TextView) findViewById(R.id.clear_position_history);
 
         mOfflineHistoryLayout = (FlowLayout) findViewById(R.id.position_history_content);
 
@@ -560,11 +569,10 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 TextView offItem = (TextView) v;
-                OfflineHistory chose = (OfflineHistory)offItem.getTag();
-                if(null == chose)
-                {
+                OfflineHistory chose = (OfflineHistory) offItem.getTag();
+                if (null == chose) {
                     Log.i(Constants.TAG, "------null == chose--------");
-                    return ;
+                    return;
                 }
                 Log.i(Constants.TAG, "------addTextView--------" + chose.name);
                 Bundle data = new Bundle();
@@ -585,8 +593,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         mOfflineHistoryLayout.addView(offlineTag);
     }
 
-    private void mSavePoiItem(PoiInfo poi)
-    {
+    private void mSavePoiItem(PoiInfo poi) {
         if (false == OfflineHistory.IsExistOfflineContent(poi)) {
 
             OfflineHistory item = OfflineHistory.Build(poi);
@@ -600,8 +607,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
         }
     }
 
-    private void mInitSearchView()
-    {
+    private void mInitSearchView() {
         mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
         mSearchView.setVoiceSearch(false);
         mSearchView.setCursorDrawable(R.drawable.color_cursor);
@@ -619,7 +625,7 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
-                Log.i(Constants.TAG, "------onQueryTextChange-----"+newText);
+                Log.i(Constants.TAG, "------onQueryTextChange-----" + newText);
                 m_RequestSearchData(newText);
                 return false;
             }

@@ -1,9 +1,23 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/white">
+
+
+    <LinearLayout
+        android:id="@+id/guide_area_chose"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <com.example.account.WheelView
+            android:id="@+id/wheel_view_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/chose_your_style"
@@ -12,15 +26,8 @@
         android:gravity="center"
         android:text="@string/account_guide_chose_area"
         android:textColor="@android:color/tab_indicator_text"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="60dp"
+        android:layout_above="@id/guide_area_chose"
+        android:layout_marginBottom="30dp"
         android:textSize="24sp" />
 
-    <com.example.account.WheelView
-        android:id="@+id/wheel_view_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        />
-
-</LinearLayout>
+</RelativeLayout>

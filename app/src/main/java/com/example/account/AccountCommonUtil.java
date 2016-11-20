@@ -102,19 +102,20 @@ public class AccountCommonUtil {
         return true;
     }
 
-    public static boolean IsRate(Context context) {
+    public static boolean IsShowLikePopup(Context context) {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
         return pSharedPreferences.getBoolean(
-                "is_rate", false);
+                "is_like", false);
     }
 
-    public static boolean SetRate(Context context, boolean rate) {
+    //like popup just show one time
+    public static boolean SetShowLikePopup(Context context, boolean show) {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
-        pSharedPreferences.edit().putBoolean("is_rate", rate)
+        pSharedPreferences.edit().putBoolean("is_like", show)
                 .apply();
         return true;
     }

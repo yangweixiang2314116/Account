@@ -1,8 +1,23 @@
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@android:color/white">
+
+
+    <GridView
+        android:id="@+id/style_grideview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:columnWidth="60dp"
+        android:verticalSpacing="20dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_centerInParent="true"
+        ></GridView>
 
     <TextView
         android:id="@+id/chose_your_style"
@@ -11,19 +26,8 @@
         android:gravity="center"
         android:text="@string/account_guide_chose_style"
         android:textColor="@android:color/tab_indicator_text"
-        android:layout_marginTop="80dp"
+        android:layout_above="@id/style_grideview"
+        android:layout_marginBottom="30dp"
         android:textSize="24sp" />
 
-    <GridView
-        android:id="@+id/style_grideview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:columnWidth="80dp"
-        android:verticalSpacing="20dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"
-        android:layout_marginTop="200dp"
-        ></GridView>
-
-</FrameLayout>
+</RelativeLayout>

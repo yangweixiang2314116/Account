@@ -61,6 +61,22 @@ public class DialogHelp {
         return builder;
     }
 
+    public static AlertDialog.Builder getSelfDefineConfirmDialog(Context context, String message, String positive, String negative, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = getDialog(context);
+        builder.setMessage(Html.fromHtml(message));
+        builder.setPositiveButton(positive, onClickListener);
+        builder.setNegativeButton(negative, null);
+        return builder;
+    }
+
+    public static AlertDialog.Builder getSelfDefineConfirmDialog(Context context, String message, String positive, String negative, DialogInterface.OnClickListener onOkClickListener, DialogInterface.OnClickListener onCancleClickListener) {
+        AlertDialog.Builder builder = getDialog(context);
+        builder.setMessage(Html.fromHtml(message));
+        builder.setPositiveButton(positive, onOkClickListener);
+        builder.setNegativeButton(negative, onCancleClickListener);
+        return builder;
+    }
+
     public static AlertDialog.Builder getConfirmDialog(Context context, String message, DialogInterface.OnClickListener onOkClickListener, DialogInterface.OnClickListener onCancleClickListener) {
         AlertDialog.Builder builder = getDialog(context);
         builder.setMessage(message);

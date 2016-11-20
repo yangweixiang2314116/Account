@@ -3,6 +3,7 @@ package com.example.account;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import cz.msebera.android.httpclient.Header;
 
 import com.example.module.BaseActivity;
+import com.example.module.DialogHelp;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 import org.json.JSONException;
@@ -61,8 +63,8 @@ public class AccountFeedbackActivity extends BaseActivity {
                 getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-                finish();
-                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+                //finish();
+                //overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
             }
         });
         MobclickAgent.onEvent(mContext, "enter_feedback");
@@ -84,10 +86,7 @@ public class AccountFeedbackActivity extends BaseActivity {
                         // If the response is JSONObject instead of expected JSONArray
                         Log.i(Constants.TAG, "---postFeedback--onS" +
                                 "uccess--response---" + response);
-
-                        Toast.makeText(mContext, R.string.account_feedback_thanks, Toast.LENGTH_SHORT)
-                                .show();
-                        finish();
+                        m_ShowFeedBackResultMessageBox(getString(R.string.account_feedback_thanks));
                     }
 
                     @Override
@@ -95,7 +94,7 @@ public class AccountFeedbackActivity extends BaseActivity {
                         super.onFailure(statusCode, headers, responseString, throwable);
                         Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
                         Log.i(Constants.TAG, "---postUserInfo--onFailure--responseString---" + responseString);
-                        Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
+                        m_ShowFeedBackResultMessageBox(getString(R.string.account_feedback_failed));
                     }
 
                     @Override
@@ -135,6 +134,24 @@ public class AccountFeedbackActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean m_ShowFeedBackResultMessageBox(String result) {
+
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getMessageDialog(mContext, result, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                finish();
+                overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
+            }
+        });
+        dialog.setCancelable(false);
+        dialog.show();
+
+        return true;
     }
 }
 

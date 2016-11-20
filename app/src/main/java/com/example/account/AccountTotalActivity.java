@@ -96,6 +96,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private Context mContext = null;
     private NumberScrollTextView m_TotalCostText = null;
     private TextView m_CurrentTimeText = null;
+    private TextView m_noAccountText = null;
     private Double m_CurrentTotalCost = 0.0;
     private Menu m_OptionsMenu = null;
     private AccountSyncService.AccountSyncServiceBinder mBinder = null;
@@ -109,7 +110,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private boolean m_bFirstRefreshList = true;
     private boolean m_bIsServerNormal = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
-    public static final long DAY = 1000L * 60 * 60 *24;
+    public static final long DAY = 1000L * 60 * 60 * 24;
 
     /**
      * 定位端
@@ -253,9 +254,9 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)) {
                     m_bIsServerNormal = true;
                     m_ProcessSyncAction(true);
-                }else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_ON)) {
+                } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_ON)) {
                     StartNotification();
-                }else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_OFF)) {
+                } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_OFF)) {
                     StopNotification();
                 }
             }
@@ -393,6 +394,13 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
     private void m_InitalTotalAccountList() {
 
+        TextView m_noAccountText = (TextView) findViewById(R.id.account_empty_no_account);
+        if (mDetailListDataSource.size() > 0) {
+            m_noAccountText.setVisibility(View.INVISIBLE);
+        } else {
+            m_noAccountText.setVisibility(View.VISIBLE);
+        }
+
         m_DetailListAdapter = new AccountTotalDetailListAdapter(this, mDetailListDataSource);
         m_TotalAllAccountList.setAdapter(m_DetailListAdapter);
         m_TotalAllAccountList.setOnItemClickListener(AccountTotalActivity.this);
@@ -427,9 +435,9 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
             m_bFirstRefreshList = false;
         }
 
-        if (m_bFirstRefreshList && (mDetailListDataSource.size() % 10 == 0 && mDetailListDataSource.size() != 0) &&
-                AccountCommonUtil.IsRate(mContext) == false) {
-            m_ShowRatePoup();
+        if (mDetailListDataSource.size() > Constants.ACCOUNT_FORCE_LOGIN_MAX*2  &&
+                AccountCommonUtil.IsShowLikePopup(mContext) == false) {
+            m_ShoRequestLikePopup();
             m_bFirstRefreshList = false;
         }
 
@@ -601,7 +609,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
                             startActivity(intent);
                         } else {
-                            m_ShowQuestionLoginPoup();
+                            m_ShowLoginForFeedBackPoup();
                         }
                     }
                     break;
@@ -856,6 +864,21 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
     }
 
+    private void m_ShowLoginForFeedBackPoup() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getSelfDefineConfirmDialog(mContext,
+                getString(R.string.account_login_feedback_body),
+                getString(R.string.btn_name_rightnow),
+                getString(R.string.btn_name_quit),
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                m_ShowSMSLoginPoup();
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     private void m_ShowQuestionLoginPoup() {
         android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_login_notice_body), new DialogInterface.OnClickListener() {
             @Override
@@ -867,26 +890,85 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         dialog.show();
     }
 
-    private void m_ShowRatePoup() {
-        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.account_rate_notice_body), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
 
-                AccountCommonUtil.SetRate(mContext, true);
-                Uri uri = Uri.parse("market://details?id="
-                        + mContext.getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                try {
-                    startActivity(goToMarket);
-                    //TODO
-                    //MobclickAgent.onEvent(mContext, "rate");
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(mContext, R.string.can_not_open_market,
-                            Toast.LENGTH_SHORT).show();
+    private void m_ShoRequestLikePopup() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getSelfDefineConfirmDialog(mContext,
+                getString(R.string.account_like_unlike_body),
+                getString(R.string.btn_name_like),
+                getString(R.string.btn_name_dislike),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        m_ShowRatePoup();
+                        dialogInterface.dismiss();
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        m_ShowFeedBackPoup();
+                        dialogInterface.dismiss();
+                    }
                 }
-                dialogInterface.dismiss();
-            }
-        });
+        );
+        dialog.setCancelable(false);
+        dialog.show();
+
+        //like popup just show one time
+        AccountCommonUtil.SetShowLikePopup(mContext, true);
+
+    }
+
+    private void m_ShowFeedBackPoup() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getSelfDefineConfirmDialog(mContext,
+                getString(R.string.account_feedback_notice_body),
+                getString(R.string.btn_name_rightnow),
+                getString(R.string.btn_name_quit),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        if (AccountCommonUtil.IsLogin(mContext)) {
+                            MobclickAgent.onEvent(mContext, "slidemenu_enter_feedback");
+                            Intent intent = new Intent();
+                            intent.setClass(mContext, AccountFeedbackActivity.class);
+
+                            Log.i(Constants.TAG, "------enter into AccountFeedbackActivity--------");
+
+                            startActivity(intent);
+                        } else {
+                            m_ShowLoginForFeedBackPoup();
+                        }
+                        dialogInterface.dismiss();
+                    }
+                });
+        dialog.show();
+    }
+
+
+    private void m_ShowRatePoup() {
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getSelfDefineConfirmDialog(mContext,
+                getString(R.string.account_rate_notice_body),
+                getString(R.string.btn_name_rightnow),
+                getString(R.string.btn_name_quit),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Uri uri = Uri.parse("market://details?id="
+                                + mContext.getPackageName());
+                        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                        try {
+                            startActivity(goToMarket);
+                            //TODO
+                            //MobclickAgent.onEvent(mContext, "rate");
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(mContext, R.string.can_not_open_market,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        dialogInterface.dismiss();
+                    }
+                });
         dialog.show();
     }
 
@@ -1017,8 +1099,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     }
 
     public boolean m_ProcessSyncAction(boolean auto) {
-        if (AccountCommonUtil.IsLogin(mContext)) {
-            if (NetworkUtils.isNetworkAvailable(mContext)) {
+        if (NetworkUtils.isNetworkAvailable(mContext)) {
+            if (AccountCommonUtil.IsLogin(mContext)) {
                 if (AccountCommonUtil.IsOnlyWifi(mContext)) {
                     if (NetworkUtils.isWifiConnected(mContext)) {
                         if (m_bIsServerNormal) {
@@ -1036,8 +1118,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         }
                     } else {
 
-                        if(auto)
-                        {
+                        if (auto) {
                             return false;
                         }
                         Toast.makeText(mContext, R.string.wifi_network_disconnect, Toast.LENGTH_SHORT).show();
@@ -1059,19 +1140,17 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     }
                 }
             } else {
-                if(auto)
-                {
+                if (auto) {
                     return false;
                 }
-                Toast.makeText(mContext, R.string.network_disconnect, Toast.LENGTH_SHORT).show();
+                MobclickAgent.onEvent(mContext, "slidemenu_enter_login");
+                m_ShowQuestionLoginPoup();
             }
         } else {
-            if(auto)
-            {
+            if (auto) {
                 return false;
             }
-            MobclickAgent.onEvent(mContext, "slidemenu_enter_login");
-            m_ShowQuestionLoginPoup();
+            Toast.makeText(mContext, R.string.network_disconnect, Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -1106,7 +1185,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                         super.onFailure(statusCode, headers, responseString, throwable);
                         Log.i(Constants.TAG, "---postUserInfo--onFailure--statusCode---" + statusCode);
                         Log.i(Constants.TAG, "---postUserInfo--onFailure--responseString---" + responseString);
-                        Toast.makeText(mContext, R.string.account_feedback_failed, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.account_userprofile_failed, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
