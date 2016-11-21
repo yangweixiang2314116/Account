@@ -48,15 +48,21 @@ public class AccountGuideBudgetFragment extends Fragment {
         mResources = this.getResources();
         TypedArray infoItems = mResources.obtainTypedArray(R.array.guide_chose_budget_text);
 
+        String  budgetselected = AccountCommonUtil.GetGudieBudget(mParent);
+        int  focusIndex = 0;
         mWheelListDataSource.clear();
         for(int i=0;i<infoItems.length() ;i++){
             mWheelListDataSource.add( infoItems.getString(i));
+            if(budgetselected.equals(infoItems.getString(i)))
+            {
+                focusIndex = i;
+            }
         }
 
         infoItems.recycle();
 
         wheel.setOffset(2);
-        wheel.setSeletion(8);
+        wheel.setSeletion(focusIndex);
         wheel.setItems(mWheelListDataSource);
         wheel.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
             @Override
@@ -80,15 +86,15 @@ public class AccountGuideBudgetFragment extends Fragment {
                 }
                 else
                 {
-                    if(AccountCommonUtil.GetGudieArea(mParent).equals("") == false)
+                    if(AccountCommonUtil.GetGudieArea(mParent).equals("") == true)
                     {
                         Toast.makeText(mParent, R.string.account_guide_not_chose_area, Toast.LENGTH_SHORT).show();
                     }
-                    else if (AccountCommonUtil.GetGudieStyle(mParent).equals("") == false)
+                    else if (AccountCommonUtil.GetGudieStyle(mParent).equals("") == true)
                     {
                         Toast.makeText(mParent, R.string.account_guide_not_chose_style, Toast.LENGTH_SHORT).show();
                     }
-                    else if (AccountCommonUtil.GetGudieBudget(mParent).equals("") == false)
+                    else if (AccountCommonUtil.GetGudieBudget(mParent).equals("") == true)
                     {
                         Toast.makeText(mParent, R.string.account_guide_not_chose_budget, Toast.LENGTH_SHORT).show();
                     }
@@ -100,7 +106,7 @@ public class AccountGuideBudgetFragment extends Fragment {
             }
         });
 
-        start.setEnabled(false);
+        start.setSelected(false);
 
         m_UpdateStartButton();
         return view;
@@ -115,13 +121,13 @@ public class AccountGuideBudgetFragment extends Fragment {
     {
         if(CheckConfigReady())
         {
-            start.setEnabled(true);
+            start.setSelected(true);
             Log.d(Constants.TAG, "setEnabled  start button");
         }
         else
         {
             Log.d(Constants.TAG, "set DisEnabled  start button" );
-            start.setEnabled(false);
+            start.setSelected(false);
         }
     }
 

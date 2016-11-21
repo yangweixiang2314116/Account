@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -35,6 +36,8 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
     private List<Map<String, Object>> data_list  = new ArrayList<Map<String, Object>>();
     private SimpleAdapter sim_adapter;
     private Activity  mParent = null;
+    private int mFocusIndex = -1;
+    //private Handler mHandler = new Handler();
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -55,17 +58,41 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
         gview.setAdapter(sim_adapter);
         gview.setOnItemClickListener((AdapterView.OnItemClickListener) this);
         gview.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        if(mFocusIndex != -1)
+        {
+            Log.i(Constants.TAG, "-------setSelection----mFocusIndex--------"+mFocusIndex);
+            /*
+            mHandler.post(new Runnable() {
+                public void run() {
+                    gview.setSelection(mFocusIndex);
+                }
+
+            });
+            */
+            /*
+            gview.setSelection(mFocusIndex);
+            gview.requestFocus();
+
+            gview.setItemChecked(mFocusIndex, true);
+            */
+        }
         return view;
     }
 
     public List<Map<String, Object>> getData(){
         TypedArray infoItems = mResources.obtainTypedArray(R.array.guide_chose_style);
 
+        String  styleselected = AccountCommonUtil.GetGudieStyle(mParent);
+
         data_list.clear();
         for(int i=0;i<infoItems.length() ;i++){
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("text", infoItems.getString(i));
             data_list.add(map);
+            if(styleselected.equals(infoItems.getString(i)))
+            {
+                mFocusIndex = i;
+            }
         }
 
         return data_list;

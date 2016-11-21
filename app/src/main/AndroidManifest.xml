@@ -133,6 +133,7 @@
 
         <activity
             android:name="com.example.account.AccountFeedbackActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/account_comment" >
         </activity>
 

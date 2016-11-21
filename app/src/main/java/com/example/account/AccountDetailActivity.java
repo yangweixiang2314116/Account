@@ -190,6 +190,7 @@ public class AccountDetailActivity extends BaseActivity {
                 }
             });
 
+            /*
             thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -213,6 +214,7 @@ public class AccountDetailActivity extends BaseActivity {
                     return false;
                 }
             });
+            */
             m_AccountImageList.addView(thumbnail, i);
         }
 

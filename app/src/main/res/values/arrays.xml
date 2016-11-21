@@ -54,6 +54,7 @@
 
 
     <string-array name="guide_chose_budget_text">
+        <item>"0万"</item>
         <item>"3万"</item>
         <item>"4万"</item>
         <item>"5万"</item>
@@ -86,6 +87,7 @@
     </string-array>
 
     <string-array name="guide_chose_area_text">
+        <item>"0㎡"</item>
         <item>"40㎡以下"</item>
         <item>"40~50㎡"</item>
         <item>"50~60㎡"</item>

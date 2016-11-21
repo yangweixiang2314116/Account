@@ -39,8 +39,16 @@ public class AccountGuideAreaFragment extends Fragment {
         TypedArray areaItems = mResources.obtainTypedArray(R.array.guide_chose_area_text);
 
         mWheelListDataSource.clear();
+
+        String  areaselected = AccountCommonUtil.GetGudieArea(mParent);
+        int  focusIndex = 0;
+
         for(int i=0;i<areaItems.length() ;i++){
             mWheelListDataSource.add( areaItems.getString(i));
+            if(areaselected.equals(areaItems.getString(i)))
+            {
+                focusIndex = i;
+            }
         }
 
         Log.d(Constants.TAG, "onCreateView: prepare data source !");
@@ -48,7 +56,7 @@ public class AccountGuideAreaFragment extends Fragment {
         wheelArea.setOffset(2);
         Log.d(Constants.TAG, "onCreateView: setOffset !");
 
-        wheelArea.setSeletion(5);
+        wheelArea.setSeletion(focusIndex);
         Log.d(Constants.TAG, "onCreateView: setSeletion !");
 
         wheelArea.setItems(mWheelListDataSource);

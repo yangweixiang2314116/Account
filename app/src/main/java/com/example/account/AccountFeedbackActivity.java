@@ -36,7 +36,7 @@ public class AccountFeedbackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
-        setTheme(R.style.MIS_NO_ACTIONBAR);
+        //setTheme(R.style.MIS_NO_ACTIONBAR);
 
         setContentView(R.layout.activity_account_feedback);
 
@@ -59,12 +59,10 @@ public class AccountFeedbackActivity extends BaseActivity {
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //hide soft input
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mFeedback.getWindowToken(), 0);
                 m_ProcessFeedBackContent();
-                getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-                //finish();
-                //overridePendingTransition(R.anim.in_stable, R.anim.out_push_left_to_right);
             }
         });
         MobclickAgent.onEvent(mContext, "enter_feedback");
