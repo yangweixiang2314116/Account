@@ -144,6 +144,7 @@
 
         <activity
             android:name="com.example.account.AccountUserInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/account_setting" >
         </activity>
 

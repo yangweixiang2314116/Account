@@ -206,6 +206,25 @@ public class AccountCommonUtil {
         return true;
     }
 
+    public static String GetGudieCompany(Context context) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        return pSharedPreferences.getString(
+                "guide_company", "");
+    }
+
+    public static boolean SetGudieCompany(Context context, String company) {
+        SharedPreferences pSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        Log.d(Constants.TAG, "----SetGudieCompany----"+company);
+
+        pSharedPreferences.edit().putString("guide_company", company)
+                .apply();
+        return true;
+    }
+
     public static String GetGudieBudget(Context context) {
         SharedPreferences pSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);

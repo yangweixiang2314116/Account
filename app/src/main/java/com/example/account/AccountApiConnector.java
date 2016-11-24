@@ -319,11 +319,12 @@ public class AccountApiConnector {
         AccountRestClient.instance(mcontext).post(url, params, handler);
     }
 
-    public void updateUserInfo(String city, String style, String budget, String area, JsonHttpResponseHandler handler) {
+    public void updateUserInfo(String city, String style, String budget, String area, String company, JsonHttpResponseHandler handler) {
         Log.i(Constants.TAG, "-start to -updateUserInfo--city--" + city);
         Log.i(Constants.TAG, "-start to -updateUserInfo--style--" + style);
         Log.i(Constants.TAG, "-start to -updateUserInfo--budget--" + budget);
         Log.i(Constants.TAG, "-start to -updateUserInfo--area--" + area);
+        Log.i(Constants.TAG, "-start to -updateUserInfo--company--" + company);
 
         long profileId = AccountCommonUtil.GetUserProfileId(mcontext);
         String url = "jz/user-profiles/" + profileId + "/";
@@ -334,6 +335,7 @@ public class AccountApiConnector {
         params.put("decoration_style", style);
         params.put("budget", budget);
         params.put("house_area", area);
+        params.put("company", company);
 
         AccountRestClient.instance(mcontext).put(url, params, handler);
     }

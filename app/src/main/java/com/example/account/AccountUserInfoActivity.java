@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -60,18 +61,20 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
     private String mStyle = "";
     private String mBudget = "";
     private String mArea = "";
+    private String mCompany = "";
 
     public static final int ACCOUNT_USER_INFO_CITY = 0;
     public static final int ACCOUNT_USER_INFO_STYLE = 1;
     public static final int ACCOUNT_USER_INFO_BUGET = 2;
     public static final int ACCOUNT_USER_INFO_AREA = 3;
+    public static final int ACCOUNT_USER_INFO_COMPANY= 4;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
-        setTheme(R.style.MIS_NO_ACTIONBAR);
+        //setTheme(R.style.MIS_NO_ACTIONBAR);
         setContentView(R.layout.activity_account_my_user_info);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_info_toolbar);
@@ -150,6 +153,13 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
                     mArea = AccountCommonUtil.GetGudieArea(mContext);
                     value = mArea;
                     break;
+                case ACCOUNT_USER_INFO_COMPANY:
+                    mCompany = AccountCommonUtil.GetGudieCompany(mContext);
+                    if(mCompany.equals("") == false)
+                    {
+                        value = mCompany;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -196,6 +206,10 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
             Toast.makeText(mContext, R.string.account_user_city_cannot_change, Toast.LENGTH_SHORT).show();
             //do nothing
         }
+        else if (position == ACCOUNT_USER_INFO_COMPANY){
+            Log.i(Constants.TAG, "---onItemClick----ACCOUNT_USER_INFO_COMPANY---");
+            m_ShowGuideCompany();
+        }
         else {
             m_ShowWheelPopup(position);
         }
@@ -204,7 +218,7 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
     public boolean m_ProcessUserInfoContent() {
         Log.i(Constants.TAG, "---m_ProcessUserInfoContent-----");
         AccountApiConnector.instance(mContext).updateUserInfo(mCity,
-                mStyle, mBudget, mArea, new JsonHttpResponseHandler() {
+                mStyle, mBudget, mArea, mCompany, new JsonHttpResponseHandler() {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -359,5 +373,39 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
         }
 
         return 0;
+    }
+
+    private void m_ShowGuideCompany() {
+
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
+        //AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        final View messageContent = mLayoutInflater.inflate(
+                R.layout.dialog_setting_url, null);
+        builder.setView(messageContent);
+        builder.setTitle(R.string.setting_company);
+
+        builder.setPositiveButton(R.string.btn_name_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText content = (EditText) messageContent.findViewById(R.id.account_setting_url);
+
+                Log.i(Constants.TAG, "-----account_company-------" + content.getText().toString());
+
+                AccountCommonUtil.SetGudieCompany(mContext, content.getText().toString());
+
+                m_UpdateUserInfoList(ACCOUNT_USER_INFO_COMPANY, content.getText().toString());
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.btn_name_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
     }
 }

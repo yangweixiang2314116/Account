@@ -35,7 +35,7 @@ public class AccountAPIInfo
 		 Cost = item.Cost;
 		Category = item.Category;
 		 Brand = item.Brand;
-		//Position = item.Position;
+		Position = item.Position;
 		 Comments =item.Comments ;
 		CreateTime = item.CreateTime;
 		UpdatedTime = item.UpdatedTime;
@@ -75,7 +75,7 @@ public class AccountAPIInfo
 			item.Category = response.isNull("tag") ? "":response.getString("tag");
 			item.Brand = response.isNull("brand") ? "":response.getString("brand");
 			item.Comments = response.isNull("note") ? "":response.getString("note");
-			item.Position = response.isNull("addr") ? "":response.getString("addr");
+			item.Position = response.isNull("buy_place_name") ? "":response.getString("buy_place_name");
 			
 			String modify = response.getString("modified");
 			String created = response.getString("created");

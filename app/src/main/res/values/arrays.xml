@@ -4,7 +4,7 @@
     <string-array name="hot_label_history_text">
         <item>"橱柜"</item>
         <item>"衣柜"</item>
-        <item>"鞋柜"</item>
+        <item>"装修公司"</item>
         <item>"冰箱"</item>
         <item>"抽油烟机"</item>
         <item>"电视机"</item>
@@ -50,6 +50,7 @@
         <item>"装修风格"</item>
         <item>"装修预算"</item>
         <item>"房屋面积"</item>
+        <item>"装修公司"</item>
     </string-array>
 
 

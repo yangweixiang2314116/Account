@@ -12,7 +12,7 @@
         android:layout_centerVertical="true"
         android:gravity="top|left"
         android:singleLine="true"
-        android:hint="输入地址, 如: http://192.168.1.107:8000/"
+        android:hint="@string/input_company_name"
         android:padding = "10dp"
         android:textSize="16sp"
         android:background="@null"

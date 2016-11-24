@@ -34,7 +34,7 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
     private Resources mResources = null;
     private GridView gview = null;
     private List<Map<String, Object>> data_list  = new ArrayList<Map<String, Object>>();
-    private SimpleAdapter sim_adapter;
+    private AccountGuideStyleAdapter sim_adapter;
     private Activity  mParent = null;
     private int mFocusIndex = -1;
     //private Handler mHandler = new Handler();
@@ -54,27 +54,14 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
 
         String [] from ={"text"};
         int [] to = {R.id.guide_style_text};
-        sim_adapter = new SimpleAdapter(mParent, data_list, R.layout.guide_gridview_item, from, to);
+        sim_adapter = new AccountGuideStyleAdapter(mParent, data_list, R.layout.guide_gridview_item, from, to);
         gview.setAdapter(sim_adapter);
         gview.setOnItemClickListener((AdapterView.OnItemClickListener) this);
         gview.setSelector(new ColorDrawable(Color.TRANSPARENT));
         if(mFocusIndex != -1)
         {
             Log.i(Constants.TAG, "-------setSelection----mFocusIndex--------"+mFocusIndex);
-            /*
-            mHandler.post(new Runnable() {
-                public void run() {
-                    gview.setSelection(mFocusIndex);
-                }
-
-            });
-            */
-            /*
-            gview.setSelection(mFocusIndex);
-            gview.requestFocus();
-
-            gview.setItemChecked(mFocusIndex, true);
-            */
+            sim_adapter.setSelectedPosition(mFocusIndex);
         }
         return view;
     }
@@ -102,14 +89,18 @@ public class AccountGuideStyleFragment extends Fragment  implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        view.setSelected(true);
+        //view.setSelected(true);
         TextView styleText =  ((TextView) view.findViewById(R.id.guide_style_text));
-        styleText.setSelected(true);
+        //styleText.setSelected(true);
+
         String sStyle  = styleText.getText().toString();
 
         Log.i(Constants.TAG, "-------onItemClick----style--------"+sStyle);
 
         AccountCommonUtil.SetGudieStyle(mParent,sStyle);
+
+        sim_adapter.setSelectedPosition(position);
+        sim_adapter.notifyDataSetChanged();
 
     }
 

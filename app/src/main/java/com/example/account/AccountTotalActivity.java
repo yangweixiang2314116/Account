@@ -110,7 +110,8 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     private boolean m_bFirstRefreshList = true;
     private boolean m_bIsServerNormal = false;
     protected ArrayList<Account> mDetailListDataSource = new ArrayList<Account>();
-    public static final long DAY = 1000L * 60 * 60 * 24;
+   //public static final long DAY = 1000L * 60 * 60 * 24;//TODO
+    public static final long DAY = 1000L * 60 * 60 * 3;//TODO
 
     /**
      * 定位端
@@ -242,6 +243,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver---INTENT_NOTIFY_ACCOUNT_CHANGE");
                     //start load all account from DB
                     new PrepareTask().execute();
+
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_INVALID_TOKEN)) {
                     Log.i(Constants.TAG, "The AccountTotalActivity---->m_InitReceiver---INTENT_NOTIFY_INVALID_TOKEN");
                     if (AccountCommonUtil.IsLogin(mContext)) {
@@ -299,6 +301,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
     protected void onResume() {
         super.onResume();
         Log.i(Constants.TAG, "The AccountTotalActivity---->onResume");
+        m_ProcessSyncAction(true);
         MobclickAgent.onResume(this);
     }
 
@@ -444,7 +447,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         if (m_bFirstRefreshList) {
             m_bFirstRefreshList = false;
         } else {
-            m_ProcessSyncAction(true);
+            //m_ProcessSyncAction(true);
         }
 
     }

@@ -440,6 +440,7 @@ private class ProcessSyncDownTask extends AsyncTask<Void, Void, Boolean> {
             }
 
             if (nSyncDownChangedItem > 0) {
+                Log.i(Constants.TAG, "------ProcessSyncDownTask  nSyncDownChangedItem---" + nSyncDownChangedItem);
                 AccountCommonUtil.sendBroadcastForAccountDataChange(AccountSyncService.this);
             }
             bResult = true;
