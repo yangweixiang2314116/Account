@@ -1,6 +1,7 @@
 package com.example.account;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -11,11 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.module.Account;
+import com.example.module.DialogHelp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,15 +91,18 @@ public class AccountGuideBudgetFragment extends Fragment {
                 {
                     if(AccountCommonUtil.GetGudieArea(mParent).equals("") == true)
                     {
-                        Toast.makeText(mParent, R.string.account_guide_not_chose_area, Toast.LENGTH_SHORT).show();
+                        m_ShowDisableButtonMessageBox(getString(R.string.account_guide_not_chose_area));
+                        //Toast.makeText(mParent, R.string.account_guide_not_chose_area, Toast.LENGTH_SHORT).show();
                     }
                     else if (AccountCommonUtil.GetGudieStyle(mParent).equals("") == true)
                     {
-                        Toast.makeText(mParent, R.string.account_guide_not_chose_style, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mParent, R.string.account_guide_not_chose_style, Toast.LENGTH_SHORT).show();
+                        m_ShowDisableButtonMessageBox(getString(R.string.account_guide_not_chose_style));
                     }
                     else if (AccountCommonUtil.GetGudieBudget(mParent).equals("") == true)
                     {
-                        Toast.makeText(mParent, R.string.account_guide_not_chose_budget, Toast.LENGTH_SHORT).show();
+                        m_ShowDisableButtonMessageBox(getString(R.string.account_guide_not_chose_budget));
+                        //Toast.makeText(mParent, R.string.account_guide_not_chose_budget, Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
@@ -146,6 +152,19 @@ public class AccountGuideBudgetFragment extends Fragment {
          }
 
         Log.d(Constants.TAG, "CheckConfigReady   ready, update button " );
+
+        return true;
+    }
+
+    private boolean m_ShowDisableButtonMessageBox(String reason) {
+
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getMessageDialog(mParent, reason, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
 
         return true;
     }

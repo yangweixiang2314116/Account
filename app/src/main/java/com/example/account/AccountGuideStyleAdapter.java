@@ -25,7 +25,7 @@ public class AccountGuideStyleAdapter extends SimpleAdapter {
     }
 
 
-    private int selectedPosition = 0;// 选中的位置
+    private int selectedPosition = -1;// 选中的位置
     public void setSelectedPosition(int position) {
 
         selectedPosition = position;

@@ -206,7 +206,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
                         switch (progress) {
                             case Constants.ACCOUNT_SYNC_ERROR:
-                                CustomToast.showToast(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT);
+                                //CustomToast.showToast(AccountTotalActivity.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT);
                                 setRefreshActionButtonState(false);
                                 break;
                             case Constants.ACCOUNT_SYNC_START:
@@ -214,7 +214,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                                 setRefreshActionButtonState(true);
                                 break;
                             case Constants.ACCOUNT_SYNC_END:
-                                CustomToast.showToast(AccountTotalActivity.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT);
+                                //CustomToast.showToast(AccountTotalActivity.this, getString(R.string.account_sync_service_success), Toast.LENGTH_SHORT);
                                 setRefreshActionButtonState(false);
                                 break;
                         }
@@ -255,7 +255,7 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                     }
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)) {
                     m_bIsServerNormal = true;
-                    m_ProcessSyncAction(true);
+                    //m_ProcessSyncAction(true);
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_ON)) {
                     StartNotification();
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_OFF)) {
