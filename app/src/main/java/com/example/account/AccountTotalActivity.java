@@ -166,10 +166,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
 
         checkUpdate();
 
-        boolean mFirst = AccountCommonUtil.IsFirstEnter(this);
-        if (mFirst) {
-            StartNotification();
-        }
     }
 
     private void m_InitActionBar() {
@@ -256,10 +252,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_START_SYNC)) {
                     m_bIsServerNormal = true;
                     //m_ProcessSyncAction(true);
-                } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_ON)) {
-                    StartNotification();
-                } else if (intent.getAction().equals(Constants.INTENT_NOTIFY_NOTIFICATION_OFF)) {
-                    StopNotification();
                 }
             }
         };
@@ -268,8 +260,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
         filter.addAction(Constants.INTENT_NOTIFY_ACCOUNT_CHANGE);
         filter.addAction(Constants.INTENT_NOTIFY_INVALID_TOKEN);
         filter.addAction(Constants.INTENT_NOTIFY_START_SYNC);
-        filter.addAction(Constants.INTENT_NOTIFY_NOTIFICATION_ON);
-        filter.addAction(Constants.INTENT_NOTIFY_NOTIFICATION_OFF);
 
         registerReceiver(mReceiver, filter);
 
@@ -1223,63 +1213,6 @@ public class AccountTotalActivity extends AppCompatActivity implements AdapterVi
                 }
             }, 2000);
         }
-    }
-
-    //每天提醒用户记账
-    private void StartNotification() {
-        Log.i(Constants.TAG, "---StartNotification start-----");
-        int nHour = -1;
-        int nMinute = -1;
-        Intent intent = new Intent(AccountTotalActivity.this, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(AccountTotalActivity.this, 0, intent, 0);
-
-        long firstTime = SystemClock.elapsedRealtime();    // 开机之后到现在的运行时间(包括睡眠时间)
-        long systemTime = System.currentTimeMillis();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        // 这里时区需要设置一下，不然会有8个小时的时间差
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        if (nHour == -1 && nMinute == -1) {
-            nHour = calendar.get(Calendar.HOUR_OF_DAY);
-            nMinute = calendar.get(Calendar.MINUTE);
-        }
-        calendar.set(Calendar.MINUTE, nMinute);
-        calendar.set(Calendar.HOUR_OF_DAY, nHour);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        // 选择的定时时间
-        long selectTime = calendar.getTimeInMillis();
-        // 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
-        if (systemTime > selectTime) {
-            //Toast.makeText(AccountTotalActivity.this, "设置的时间小于当前时间", Toast.LENGTH_SHORT).show();
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-            selectTime = calendar.getTimeInMillis();
-        }
-        // 计算现在时间到设定时间的时间差
-        long time = selectTime - systemTime;
-        firstTime += time;
-        // 进行闹铃注册
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                firstTime, DAY, sender);
-        Log.i(Constants.TAG, "time ==== " + time + ", selectTime ===== "
-                + selectTime + ", systemTime ==== " + systemTime + ", firstTime === " + firstTime);
-        mSharedPreferences.edit().putBoolean("notification_switch", true).apply();
-    }
-
-    private void StopNotification() {
-        Log.i(Constants.TAG, "---StopNotification start-----");
-        Intent intent = new Intent(AccountTotalActivity.this, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(AccountTotalActivity.this,
-                0, intent, 0);
-
-        // 取消闹铃
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-        am.cancel(sender);
-
-        mSharedPreferences.edit().putBoolean("notification_switch", false).apply();
-
     }
 
 }

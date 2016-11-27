@@ -183,10 +183,20 @@ public class AccountDetailActivity extends BaseActivity {
                 public void onClick(View v) {
                     ImageItem item = mImageListDataSource.get(currentIndex);
                     Log.i(Constants.TAG, "------currentIndex--------" + currentIndex);
-                    Log.i(Constants.TAG, "------item.Path--------" + item.Path);
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse("file://" + item.Path), "image/*");
-                    startActivity(intent);
+
+                    if(item.Path.equals("") == false) {
+                        Log.i(Constants.TAG, "------item.Path--------" + item.Path);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse("file://" + item.Path), "image/*");
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Log.i(Constants.TAG, "------item.ServerPath--------" + item.ServerPath);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(item.ServerPath), "image/*");
+                        startActivity(intent);
+                    }
                 }
             });
 

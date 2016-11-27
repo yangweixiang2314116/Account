@@ -33,6 +33,8 @@ import com.example.module.DialogHelp;
 import com.example.module.NetworkUtils;
 import com.example.module.UpdateManager;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.IUmengCallback;
+import com.umeng.message.PushAgent;
 import com.zcw.togglebutton.ToggleButton;
 
 /**
@@ -94,13 +96,33 @@ public class AccountSettingActivity extends BaseActivity implements
             @Override
             public void onToggle(boolean on) {
                 mSharedPreferences.edit().putBoolean("notification_switch", on).apply();
-                Intent newIntent = null;
+                PushAgent mPushAgent = PushAgent.getInstance(mContext);
                 if(on) {
-                    newIntent = new Intent(Constants.INTENT_NOTIFY_NOTIFICATION_ON);
+                    mPushAgent.enable(new IUmengCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.i(Constants.TAG, "-----notification - enable success-------");
+                        }
+
+                        @Override
+                        public void onFailure(String s, String s1) {
+                            Log.i(Constants.TAG, "-----notification - enable onFailure-------");
+                        }
+                    });
                 }else{
-                    newIntent = new Intent(Constants.INTENT_NOTIFY_NOTIFICATION_OFF);
+                    mPushAgent.disable(new IUmengCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.i(Constants.TAG, "-----notification - disable success-------");
+                        }
+
+                        @Override
+                        public void onFailure(String s, String s1) {
+                            Log.i(Constants.TAG, "-----notification - disable onFailure-------");
+                        }
+                    });
                 }
-                mContext.sendBroadcast(newIntent);
+
             }
         });
 

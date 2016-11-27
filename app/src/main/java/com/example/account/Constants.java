@@ -57,8 +57,7 @@ public class Constants {
     public static final String INTENT_NOTIFY_ACCOUNT_CHANGE = "com.example.account.DATA_UPDATE";
     public static final String INTENT_NOTIFY_INVALID_TOKEN = "com.example.account.INVALID_TOKEN";
     public static final String INTENT_NOTIFY_START_SYNC = "com.example.account.START_SYNC";
-    public static final String INTENT_NOTIFY_NOTIFICATION_ON = "com.example.account.NOTIFICATION_ON";
-    public static final String INTENT_NOTIFY_NOTIFICATION_OFF = "com.example.account.NOTIFICATION_OFF";
+
 
     public static final int ACCOUNT_SYNC_ERROR = 0;
     public static final int ACCOUNT_SYNC_START = 1;
