@@ -311,18 +311,18 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
                                         int which) {
                         switch (mWheelType) {
                             case ACCOUNT_USER_INFO_AREA:
-                                //AccountCommonUtil.SetGudieArea(mContext, mWheelChange);
+                                AccountCommonUtil.SetGudieArea(mContext, mWheelChange);
                                 mArea = mWheelChange;
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
                                 break;
                             case ACCOUNT_USER_INFO_BUGET:
-                                //AccountCommonUtil.SetGudieBudget(mContext, mWheelChange);
+                                AccountCommonUtil.SetGudieBudget(mContext, mWheelChange);
                                 mBudget = mWheelChange;
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
                                 break;
                             case ACCOUNT_USER_INFO_STYLE:
                                 mStyle = mWheelChange;
-                                //AccountCommonUtil.SetGudieStyle(mContext, mWheelChange);
+                                AccountCommonUtil.SetGudieStyle(mContext, mWheelChange);
                                 m_UpdateUserInfoList(mWheelType, mWheelChange);
                                 break;
                             default:
@@ -336,10 +336,28 @@ public class AccountUserInfoActivity extends BaseActivity implements AdapterView
     }
 
     private boolean m_UpdateUserInfoList(int index, String value) {
+
+        Log.d(Constants.TAG, "m_UpdateUserInfoList: index !"+index+ "--value--"+value);
+
+        /*
         View InfoItem = mInfoList.getChildAt(index);
         TextView itemValue = (TextView) InfoItem
                 .findViewById(R.id.user_info_item_value);
+        Log.d(Constants.TAG, "TextView itemValue !"+itemValue.getText());
         itemValue.setText(value);
+        InfoItem.invalidate();
+        Log.d(Constants.TAG, "TextView itemValue !"+itemValue.getText());
+        */
+
+        getData();
+        String[] from = {"label", "value"};
+        int[] to = {R.id.user_info_item_label, R.id.user_info_item_value};
+        mAdapter = new SimpleAdapter(mContext, mDataList, R.layout.activity_account_user_info_list_item, from, to);
+
+        mInfoList.setAdapter(mAdapter);
+        mInfoList.setOnItemClickListener((AdapterView.OnItemClickListener) this);
+        mAdapter.notifyDataSetChanged();
+
 
         return true;
     }
