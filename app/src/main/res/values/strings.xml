@@ -33,7 +33,9 @@
     <string name="image_selector_app_name">选择图片</string>
 
     <string name="confirm_to_delete">确定要删除这条记录吗？</string>
+    <string name="confirm_to_delete_recently_use">确定要删除这条最近使用的记录吗？</string>
     <string name="network_disconnect">网络不可用, 请连接网络再试。</string>
+    <string name="contact_detail">微信：51装修记账(kengdiedezhuangxiu)\nQQ: 2805287586 \n邮箱： 2805287586@qq.com</string>
     <string name="server_abnormal">服务器异常，我们正在抢修</string>
     <string name="wifi_network_disconnect">WIFI网络不可用, 请连接WIFI再试或者在setting中改变设置。</string>
     <string name="give_up_edit">退出此次编辑？</string>
@@ -136,6 +138,7 @@
     <string name="quick_add">启动后直接记账</string>
     <string name="notification_switch">通知</string>
     <string name="suggestion">意见反馈</string>
+    <string name="contact">联系我们</string>
     <string name="recommend_to_friend">设置服务端地址</string>
     <string name="input_company_name">输入装修公司名称，如星艺装饰</string>
     <string name="setting_company">设置装修公司</string>

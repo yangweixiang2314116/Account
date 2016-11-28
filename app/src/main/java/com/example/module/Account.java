@@ -381,7 +381,7 @@ public class Account extends Model implements Parcelable {
 		Log.i(Constants.TAG, "--buildDownLoad --data.AccountId--" + data.AccountId);
 		Account item = new Account(data.AccountId,data.Cost,data.Category,data.Brand,data.Position,
 				data.Comments, data.CreateTime,data.UpdatedTime);
-		item.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_NOTHING;
+		item.SyncStatus = Constants.ACCOUNT_ITEM_ACTION_NEED_SYNC_UP;
 		item.save();
 
 		Log.i(Constants.TAG, "--buildDownLoad --add .Account on DB --" + item.getId());

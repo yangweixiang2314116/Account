@@ -590,9 +590,40 @@ public class AccountAddPositionActivity extends BaseActivity implements BDLocati
             }
         });
 
+        offlineTag.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                TextView offItem = (TextView) v;
+                OfflineHistory chose = (OfflineHistory) offItem.getTag();
+                if (null == chose) {
+                    Log.i(Constants.TAG, "------null == chose--------");
+                    return false;
+                }
+                m_ShowDeletePoup(chose, offItem);
+                return false;
+            }
+        });
+
         mOfflineHistoryLayout.addView(offlineTag);
     }
 
+    private void m_ShowDeletePoup(OfflineHistory chose , TextView view) {
+        final OfflineHistory itemDelete = chose;
+        final TextView itemView = view;
+
+        Log.i(Constants.TAG, "------m_ShowDeletePoup--------" + itemDelete.name);
+
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete_recently_use), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                itemDelete.delete();
+                mOfflineHistoryLayout.removeView(itemView);
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
     private void mSavePoiItem(PoiInfo poi) {
         if (false == OfflineHistory.IsExistOfflineContent(poi)) {
 

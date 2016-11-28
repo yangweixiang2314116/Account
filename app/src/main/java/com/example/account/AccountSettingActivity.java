@@ -46,6 +46,7 @@ public class AccountSettingActivity extends BaseActivity implements
     private SharedPreferences mSharedPreferences;
 
     private View mSuggestion;
+    private View mContact;
     private View mRateForUs;
     private View mUpdateVersion;
     private ToggleButton mSwitchOnlyWifi;
@@ -66,6 +67,7 @@ public class AccountSettingActivity extends BaseActivity implements
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
+        mContact = findViewById(R.id.contact);
         mSuggestion = findViewById(R.id.suggestion);
         mRateForUs = findViewById(R.id.rate_for_us);
         mUpdateVersion = findViewById(R.id.update_version);
@@ -130,6 +132,8 @@ public class AccountSettingActivity extends BaseActivity implements
                 .getDefaultSharedPreferences(this);
 
         mSuggestion.setOnClickListener(this);
+        mContact.setOnClickListener(this);
+
         mRateForUs.setOnClickListener(this);
         mUpdateVersion.setOnClickListener(this);
 
@@ -138,7 +142,7 @@ public class AccountSettingActivity extends BaseActivity implements
 
         boolean bQuickAdd = mSharedPreferences.getBoolean("quick_add", false);
 
-        boolean bNotification = mSharedPreferences.getBoolean("notification_switch", false);
+        boolean bNotification = mSharedPreferences.getBoolean("notification_switch", true);
         if(bOnlyWifi)
         {
             mSwitchOnlyWifi.setToggleOn();
@@ -174,6 +178,11 @@ public class AccountSettingActivity extends BaseActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.contact:
+                {
+                    m_ShowContactMessageBox();
+                }
+                break;
             case R.id.suggestion:
                 Intent intent = new Intent(mContext, AccountFeedbackActivity.class);
                 startActivity(intent);
@@ -253,6 +262,20 @@ public class AccountSettingActivity extends BaseActivity implements
                 dialogInterface.dismiss();
             }
         });
+        dialog.show();
+
+        return true;
+    }
+
+    private boolean m_ShowContactMessageBox() {
+
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getMessageDialog(mContext, getString(R.string.contact_detail), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.setTitle(getString(R.string.contact));
         dialog.show();
 
         return true;
