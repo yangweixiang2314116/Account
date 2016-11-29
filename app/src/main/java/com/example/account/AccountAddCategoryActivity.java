@@ -9,7 +9,9 @@ import org.json.JSONObject;
 import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
 import com.example.module.BaseActivity;
+import com.example.module.BrandHistory;
 import com.example.module.CategoryHistory;
+import com.example.module.DialogHelp;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 
@@ -59,7 +61,7 @@ public class AccountAddCategoryActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
-		setTheme(R.style.MIS_NO_ACTIONBAR);
+		//setTheme(R.style.MIS_NO_ACTIONBAR);
 
 		setContentView(R.layout.activity_account_add_category);
 
@@ -166,7 +168,7 @@ public class AccountAddCategoryActivity extends BaseActivity {
 		if(mCategoryHistoryDataSource.size() > 0) {
 			mCategoryHistoryLayout.setVisibility(View.VISIBLE);
 			for (int index = 0; index < mCategoryHistoryDataSource.size(); index++ ) {
-				addTextView(mCategoryHistoryDataSource.get(index).Content);
+				addTextView(mCategoryHistoryDataSource.get(index));
 			}
 		}
 		else
@@ -204,10 +206,11 @@ public class AccountAddCategoryActivity extends BaseActivity {
        	*/
 	}
 
-	public void addTextView(String tvName) {
+	public void addTextView(CategoryHistory category) {
 
 		TextView categoryTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
-		categoryTag.setText(tvName);
+		categoryTag.setText(category.Content);
+		categoryTag.setTag(category);
 		categoryTag.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -237,9 +240,39 @@ public class AccountAddCategoryActivity extends BaseActivity {
 			
 		});
 
+		categoryTag.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				TextView offItem = (TextView) v;
+				CategoryHistory chose = (CategoryHistory) offItem.getTag();
+				if (null == chose) {
+					Log.i(Constants.TAG, "------null == chose--------");
+					return false;
+				}
+				m_ShowDeletePoup(chose, offItem);
+				return false;
+			}
+		});
+
 		mHotFlowLayout.addView(categoryTag);
 	}
 
+	private void m_ShowDeletePoup(CategoryHistory chose , TextView view) {
+		final CategoryHistory itemDelete = chose;
+		final TextView itemView = view;
+
+		Log.i(Constants.TAG, "------m_ShowDeletePoup--------" + itemDelete.Content);
+
+		android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete_recently_use), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				itemDelete.delete();
+				mHotFlowLayout.removeView(itemView);
+				dialogInterface.dismiss();
+			}
+		});
+		dialog.show();
+	}
 	/*
 	private class TagInfo
 	{

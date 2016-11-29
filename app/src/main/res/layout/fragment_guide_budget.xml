@@ -38,8 +38,8 @@
         android:gravity="center"
         android:text="@string/account_guide_start_use"
         android:textColor="@android:color/white"
-        android:layout_below="@id/guide_budget_chose"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
         android:layout_centerHorizontal="true"
         android:textSize="20sp" />
 

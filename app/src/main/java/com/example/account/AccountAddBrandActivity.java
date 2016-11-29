@@ -10,6 +10,7 @@ import com.example.module.Account;
 import com.example.module.AccountAPIInfo;
 import com.example.module.BaseActivity;
 import com.example.module.BrandHistory;
+import com.example.module.DialogHelp;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
@@ -59,7 +60,7 @@ public class AccountAddBrandActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		overridePendingTransition(R.anim.in_push_right_to_left, R.anim.in_stable);
-		setTheme(R.style.MIS_NO_ACTIONBAR);
+		//setTheme(R.style.MIS_NO_ACTIONBAR);
 		setContentView(R.layout.activity_account_add_brand);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.brand_toolbar);
@@ -168,7 +169,7 @@ public class AccountAddBrandActivity extends BaseActivity {
 		if (mBrandHistoryDataSource.size() > 0) {
 			mBrandHistoryLayout.setVisibility(View.VISIBLE);
 			for (int index = 0; index < mBrandHistoryDataSource.size(); index++) {
-				addTextView(mBrandHistoryDataSource.get(index).Content);
+				addTextView(mBrandHistoryDataSource.get(index));
 			}
 		} else {
 			mBrandHistoryLayout.setVisibility(View.INVISIBLE);
@@ -214,10 +215,11 @@ public class AccountAddBrandActivity extends BaseActivity {
 	}
 	*/
 
-	public void addTextView(String tvName) {
+	public void addTextView(BrandHistory Branditem) {
 
 		TextView brandTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mHotFlowLayout, false);
-		brandTag.setText(tvName);
+		brandTag.setText(Branditem.Content);
+		brandTag.setTag(Branditem);
 		brandTag.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -249,7 +251,39 @@ public class AccountAddBrandActivity extends BaseActivity {
 			}
 		});
 
+		brandTag.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				TextView offItem = (TextView) v;
+				BrandHistory chose = (BrandHistory) offItem.getTag();
+				if (null == chose) {
+					Log.i(Constants.TAG, "------null == chose--------");
+					return false;
+				}
+				m_ShowDeletePoup(chose, offItem);
+				return false;
+			}
+		});
+
 		mHotFlowLayout.addView(brandTag);
+	}
+
+	private void m_ShowDeletePoup(BrandHistory chose , TextView view) {
+		final BrandHistory itemDelete = chose;
+		final TextView itemView = view;
+
+		Log.i(Constants.TAG, "------m_ShowDeletePoup--------" + itemDelete.Content);
+
+		android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete_recently_use), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				itemDelete.delete();
+				mHotFlowLayout.removeView(itemView);
+				dialogInterface.dismiss();
+			}
+		});
+		dialog.show();
+
 	}
 
 	@SuppressLint("NewApi")

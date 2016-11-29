@@ -95,6 +95,7 @@
         </activity>
         <activity
             android:name="com.example.account.AccountAddCategoryActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_category_app_name" >
         </activity>
 
@@ -106,11 +107,13 @@
 
         <activity
             android:name="com.example.account.AccountAddOnlineShoppingActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_position_app_name" >
         </activity>
 
         <activity
             android:name="com.example.account.AccountAddBrandActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_brand_app_name" >
         </activity>
 
@@ -132,6 +135,7 @@
 
         <activity
             android:name="com.example.account.AccountSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/account_search" >
         </activity>
 

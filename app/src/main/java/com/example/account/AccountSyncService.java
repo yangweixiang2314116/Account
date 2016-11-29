@@ -373,6 +373,8 @@ private class ProcessSyncUpTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(result);
         Log.i(Constants.TAG, "----ProcessSyncUpTask--doInBackground----");
 
+        syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+        Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
     }
 }
 
@@ -501,14 +503,15 @@ public class AccountCreateRunable implements Runnable {
             }else {
                 Toast.makeText(AccountSyncService.this, R.string.account_sync_service_error, Toast.LENGTH_SHORT).show();
             }
+
+            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
 
 
         @Override
         public void onFinish() {
             super.onFinish();
-            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
-            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
 
     }
@@ -546,6 +549,9 @@ public class AccountUpdateRunable implements Runnable {
             Log.i(Constants.TAG, "---updateAccountItem--onFailure--statusCode---" + statusCode);
             Log.i(Constants.TAG, "---updateAccountItem--onFailure--responseString---" + responseString);
 
+            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
+
             if(statusCode == 401)
             {
                 AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
@@ -559,8 +565,6 @@ public class AccountUpdateRunable implements Runnable {
         @Override
         public void onFinish() {
             super.onFinish();
-            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
-            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
     }
 }
@@ -597,6 +601,9 @@ public class AccountDeleteRunable implements Runnable {
             Log.i(Constants.TAG, "---deleteAccountItem--onFailure--statusCode---" + statusCode);
             Log.i(Constants.TAG, "---deleteAccountItem--onFailure--responseString---" + responseString);
 
+            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
+            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
+
             if(statusCode == 401)
             {
                 AccountCommonUtil.sendBroadcastForAccountInvalidToken(AccountSyncService.this);
@@ -610,8 +617,6 @@ public class AccountDeleteRunable implements Runnable {
         @Override
         public void onFinish() {
             super.onFinish();
-            syncHandler.sendEmptyMessage(SYNC_UP_FINISH_ITEM);
-            Log.i(Constants.TAG, "---sendEmptyMessage--SYNC_UP_FINISH_ITEM---");
         }
 
     }

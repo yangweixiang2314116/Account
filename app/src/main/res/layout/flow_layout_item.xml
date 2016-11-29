@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:padding="10dp"
-    android:background="@color/tag_activity_background_color"
+    android:background="@drawable/flow_layout_button_selector"
     android:textColor="@color/content_text_color"
     android:textSize="14sp" >
 

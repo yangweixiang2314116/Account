@@ -2,6 +2,7 @@ package com.example.account;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.example.module.Account;
 import com.example.module.BaseActivity;
 import com.example.module.BrandHistory;
 import com.example.module.CategoryHistory;
+import com.example.module.DialogHelp;
 import com.example.module.OfflineHistory;
 import com.example.module.OnlineHistory;
 import com.example.module.SearchHistory;
@@ -62,7 +64,7 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
         mContext = this;
         mIntent = getIntent();
 
-        setTheme(R.style.MIS_NO_ACTIONBAR);
+        //setTheme(R.style.MIS_NO_ACTIONBAR);
         setContentView(R.layout.activity_account_search);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.search_toolbar);
@@ -141,10 +143,11 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
 
     }
 
-    public void addTextViewRecently(String tvName) {
+    public void addTextViewRecently(SearchHistory searchItem) {
 
         TextView recentlyTag = (TextView) LayoutInflater.from(this).inflate(R.layout.flow_layout_item, mSearchHistoryFlowLayout, false);
-        recentlyTag.setText(tvName);
+        recentlyTag.setText(searchItem.Content);
+        recentlyTag.setTag(searchItem);
         recentlyTag.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -167,9 +170,39 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
 
         });
 
+        recentlyTag.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                TextView offItem = (TextView) v;
+                SearchHistory chose = (SearchHistory) offItem.getTag();
+                if (null == chose) {
+                    Log.i(Constants.TAG, "------null == chose--------");
+                    return false;
+                }
+                m_ShowDeletePoup(chose, offItem);
+                return false;
+            }
+        });
+
         mSearchHistoryFlowLayout.addView(recentlyTag);
     }
 
+    private void m_ShowDeletePoup(SearchHistory chose , TextView view) {
+        final SearchHistory itemDelete = chose;
+        final TextView itemView = view;
+
+        Log.i(Constants.TAG, "------m_ShowDeletePoup--------" + itemDelete.Content);
+
+        android.support.v7.app.AlertDialog.Builder dialog = DialogHelp.getConfirmDialog(mContext, getString(R.string.confirm_to_delete_recently_use), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                itemDelete.delete();
+                mSearchHistoryFlowLayout.removeView(itemView);
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     public void addTextView(String tvName) {
 
@@ -211,7 +244,7 @@ public class AccountSearchActivity extends BaseActivity implements AdapterView.O
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
             mSearchHistoryFlowLayout.removeAllViews();
             for(int index = 0 ; index < mSearchHistoryDataSource.size(); index++){
-                addTextViewRecently(mSearchHistoryDataSource.get(index).Content);
+                addTextViewRecently(mSearchHistoryDataSource.get(index));
             }
 
             /*

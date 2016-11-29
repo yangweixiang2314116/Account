@@ -14,7 +14,7 @@
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="30dp"
         app:ci_animator="@anim/indicator_no_animator"
         app:ci_drawable="@drawable/blue_radius"
         app:ci_drawable_unselected="@drawable/black_radius"/>
