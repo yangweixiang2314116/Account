@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.account">
+    package="com.ywxzhuangxiula.account">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
 
     <application
-        android:name="com.example.account.MyApplication"
+        android:name="com.ywxzhuangxiula.account.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -72,53 +72,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.account.AccountTotalActivity"
+            android:name="com.ywxzhuangxiula.account.AccountTotalActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.example.account.AccountGuideActivity"
+            android:name="com.ywxzhuangxiula.account.AccountGuideActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
-            android:name="com.example.account.AccountStartActivity"
+            android:name="com.ywxzhuangxiula.account.AccountStartActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/start_input_title" >
         </activity>
         <activity
-            android:name="com.example.account.AccountDetailActivity"
+            android:name="com.ywxzhuangxiula.account.AccountDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/cost_detail_title" >
         </activity>
         <activity
-            android:name="com.example.account.AccountAddCategoryActivity"
+            android:name="com.ywxzhuangxiula.account.AccountAddCategoryActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_category_app_name" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountAddPositionActivity"
+            android:name="com.ywxzhuangxiula.account.AccountAddPositionActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_position_app_name" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountAddOnlineShoppingActivity"
+            android:name="com.ywxzhuangxiula.account.AccountAddOnlineShoppingActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_position_app_name" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountAddBrandActivity"
+            android:name="com.ywxzhuangxiula.account.AccountAddBrandActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/add_brand_app_name" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountAllImageActivity"
+            android:name="com.ywxzhuangxiula.account.AccountAllImageActivity"
             android:label="@string/account_browser_picture" >
         </activity>
 
@@ -129,29 +129,29 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <activity
-        android:name="com.example.account.AccountSortActivity"
+        android:name="com.ywxzhuangxiula.account.AccountSortActivity"
         android:label="@string/account_sort_asc" >
     </activity>
 
         <activity
-            android:name="com.example.account.AccountSearchActivity"
+            android:name="com.ywxzhuangxiula.account.AccountSearchActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/account_search" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountFeedbackActivity"
+            android:name="com.ywxzhuangxiula.account.AccountFeedbackActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/account_comment" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountSettingActivity"
+            android:name="com.ywxzhuangxiula.account.AccountSettingActivity"
             android:label="@string/account_my_user_info" >
         </activity>
 
         <activity
-            android:name="com.example.account.AccountUserInfoActivity"
+            android:name="com.ywxzhuangxiula.account.AccountUserInfoActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/account_setting" >
         </activity>
@@ -161,10 +161,10 @@
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:label="@string/image_selector_app_name"/>
 
-        <service android:name="com.example.account.AccountSyncService" android:exported="false" />
-        <service android:name="com.example.account.AccountDownloadService" android:exported="false" />
+        <service android:name="com.ywxzhuangxiula.account.AccountSyncService" android:exported="false" />
+        <service android:name="com.ywxzhuangxiula.account.AccountDownloadService" android:exported="false" />
 
-        <receiver android:name="com.example.account.AlarmReceiver" android:process=":remote"></receiver>
+        <receiver android:name="com.ywxzhuangxiula.account.AlarmReceiver" android:process=":remote"></receiver>
     </application>
 
 </manifest>

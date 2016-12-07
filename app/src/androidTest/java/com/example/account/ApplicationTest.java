@@ -1,4 +1,4 @@
-package com.example.account;
+package com.ywxzhuangxiula.account;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

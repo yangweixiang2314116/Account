@@ -90,7 +90,7 @@
             android:layout_marginBottom="10dp"
             android:textSize="16sp" />
 
-        <com.example.account.FlowLayout
+        <com.ywxzhuangxiula.account.FlowLayout
             android:id="@+id/search_history_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp" />
 
-        <com.example.account.FlowLayout
+        <com.ywxzhuangxiula.account.FlowLayout
             android:id="@+id/guess_search_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

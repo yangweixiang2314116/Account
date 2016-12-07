@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
-        <com.example.account.WheelView
+        <com.ywxzhuangxiula.account.WheelView
             android:id="@+id/wheel_view_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

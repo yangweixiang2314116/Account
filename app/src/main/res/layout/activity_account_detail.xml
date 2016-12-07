@@ -240,12 +240,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" >
 
-                <com.example.account.LinearLayoutForListView
+                <com.ywxzhuangxiula.account.LinearLayoutForListView
                     android:id="@+id/account_detail_image_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
  					android:orientation="vertical">
-                </com.example.account.LinearLayoutForListView>
+                </com.ywxzhuangxiula.account.LinearLayoutForListView>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

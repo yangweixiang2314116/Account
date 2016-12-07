@@ -1,4 +1,4 @@
-package com.example.account;
+package com.ywxzhuangxiula.account;
 
 import org.junit.Test;
 

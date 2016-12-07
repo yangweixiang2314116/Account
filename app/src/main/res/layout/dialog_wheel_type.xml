@@ -5,7 +5,7 @@
     android:padding="20dp"
     android:orientation="vertical">
 
-    <com.example.account.WheelView
+    <com.ywxzhuangxiula.account.WheelView
         android:id="@+id/dialog_wheel_view_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

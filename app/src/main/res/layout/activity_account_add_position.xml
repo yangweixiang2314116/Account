@@ -77,7 +77,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp" />
 
-        <com.example.account.FlowLayout
+        <com.ywxzhuangxiula.account.FlowLayout
             android:id="@+id/position_history_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

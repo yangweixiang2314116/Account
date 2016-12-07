@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.account.AccountTotalActivity"
+    tools:context="com.ywxzhuangxiula.account.AccountTotalActivity"
     tools:showIn="@layout/activity_account_total">
 
     <RelativeLayout
@@ -37,7 +37,7 @@
             android:textColor="#fff"
             android:textSize="18sp" />
 
-        <com.example.module.NumberScrollTextView
+        <com.ywxzhuangxiula.module.NumberScrollTextView
             android:id="@+id/total_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
